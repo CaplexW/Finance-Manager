@@ -1,6 +1,6 @@
 import express from "express";
 import ViteExpress from "vite-express";
-import config from "../config/config.js";
+import config from "../config/config.ts";
 
 const { PORT } = config;
 const app = express();
