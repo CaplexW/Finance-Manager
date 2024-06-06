@@ -6,7 +6,8 @@ const schema = {
   amount: { type: Number, required: true },
   balanceBefore: Number,
   balanceAfter: Number,
-  categorty: { type: Schema.Types.ObjectId, ref: 'Category' },
+  categorty: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
+  user: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
 };
 
 const operation = new Schema(schema, { timestamps: true });
