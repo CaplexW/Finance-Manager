@@ -13,16 +13,16 @@ const config:connectionConfig = {
   URL,
 };
 
-function getApiEndpoint() {
+function getApiEndpoint():string {
   return `http://${URL}:${PORT}/api/`;
 }
-function getPort() {
+function getPort():number {
   return isProd ? 80 : 80;
 }
-function getMongoServer() {
+function getMongoServer():string {
   return `mongodb://${URL}:27017/FinanceManager`;
 }
-function getUrl() {
+function getUrl():string {
   return isProd ? externalUrl : localUrl;
 }
 
@@ -34,3 +34,9 @@ type connectionConfig = {
 };
 
 export default config;
+
+// regex:
+// ^http:\/\/((25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.( 
+//   25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.( 
+//   25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.( 
+//   25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?))|(localhost):[1-9][0-9]{0,4}/api/$
