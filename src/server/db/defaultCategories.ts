@@ -1,10 +1,10 @@
 import { ReactElement } from 'react';
 import {
   blueColor, blueLightColor, brownColor, cyanColor, grayColor, greenColor, greenLightColor, greenToxicColor, orangeColor, pinkColor, purpleColor, redColor, redSolidColor, violetColor, yellowColor
-} from '../constants/colors.ts';
+} from '../../constants/colors.ts';
 import {
   beautyIcon, busIcon, cafeIcon, clothesIcon, debtIcon, detergentsIcon, entertainmentIcon, foodIcon, healthIcon, houseIcon, hygieneIcon, otherIcon, salaryIcon, techIcon, telecomIcon
-} from '../constants/defaultIcons.tsx';
+} from '../../constants/defaultIcons.tsx';
 
 
 const defaultCategories:Category[] = [
