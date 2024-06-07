@@ -12,4 +12,4 @@ const schema = {
 
 const operation = new Schema(schema, { timestamps: true });
 
-export default model('User', operation);
+export default model('Operation', operation);
