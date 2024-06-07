@@ -8,10 +8,6 @@ import startUp from "./startUp/startUp.ts";
 const { PORT, MONGO_SERVER } = config;
 const app = express();
 
-app.get("/hello", (_, res) => {
-  res.send("Hello Vite + React + TypeScript!");
-});
-
 startServer();
 
 async function startServer():Promise<void> {
