@@ -7,7 +7,7 @@ import {
 } from '../../constants/defaultIcons.tsx';
 
 
-const defaultCategories:Category[] = [
+const defaultCategories:TDefaultCategory[] = [
   {
     name: 'Зарплата',
     color: blueColor,
@@ -102,7 +102,7 @@ const defaultCategories:Category[] = [
 
 export default defaultCategories;
 
-type Category = {
+export type TDefaultCategory = {
   name: string,
   color: string,
   type: string,

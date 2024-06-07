@@ -8,4 +8,4 @@ const schema = {
 
 const goal = new Schema(schema, { timestamps: true });
 
-export default model('User', goal);
+export default model('Goal', goal);
