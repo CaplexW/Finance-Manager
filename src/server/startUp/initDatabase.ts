@@ -1,6 +1,7 @@
 import Category from "../models/Category.ts";
 import defaultCategories, { TDefaultCategory } from "../initialData/defaultCategories.ts";
 import { Mongoose } from "mongoose";
+import { redLog } from "../../utils/console/coloredLogs.ts";
 
 export default async function initDatabase() {
     const categories = await Category.find();
@@ -9,14 +10,14 @@ export default async function initDatabase() {
     if (!categoriesExists) await createInitialEntity(Category, defaultCategories);
 }
 
-async function createInitialEntity(model:Mongoose["Model"], mock:TDefaultCategory[]) {
-    await model.collection.drop();
+async function createInitialEntity(Model:Mongoose["Model"], mock:TDefaultCategory[]) {
+    await Model.collection.drop();
     mock.forEach((item:TDefaultCategory) => {
         try {
-            const newItem = new model(item);
+            const newItem = new Model(item);
             newItem.save().then((result:unknown) => result); //TODO specify tyoe
         } catch(err) {
-            console.log(err);
+            redLog(err);
         }
     });
 }
