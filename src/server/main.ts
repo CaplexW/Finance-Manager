@@ -5,9 +5,12 @@ import mongoose from "mongoose";
 import initDatabase from "./startUp/initDatabase.ts";
 import startUp from "./startUp/startUp.ts";
 import { greenLog, redLog, yellowLog } from "../utils/console/coloredLogs.ts";
+import routes from "./routes/index.ts";
 
 const { PORT, MONGO_SERVER } = config;
 const app = express();
+
+app.use('/api', routes);
 
 startServer();
 
