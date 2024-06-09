@@ -10,7 +10,10 @@ const validatorService = {
   },
   validatePassword: ():ValidationChain => {
     return check('password', 'Минимальная длина пароля 8 символов').isLength({ min: 8 });
-  }
+  },
+  getValidation: (name:string, message:string):ValidationChain => {
+    return check(name, message);
+  },
 };
 
 export default validatorService;

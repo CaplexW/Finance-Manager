@@ -1,5 +1,5 @@
 import jsonwebtoken from "jsonwebtoken";
-import { Mongoose, Types } from "mongoose";
+import { Types } from "mongoose";
 import config from "../../config/config.ts";
 import Token from "../models/Token.ts";
 
@@ -21,7 +21,7 @@ const tokenService = {
         }
         return await Token.create({ user: userId, refreshToken });
     },
-    async findToken(refreshToken: string): Promise<Mongoose["Model"] | null> {
+    async findToken(refreshToken: string) {
         try {
             return await Token.findOne({ refreshToken });
         } catch (e) {
@@ -31,14 +31,14 @@ const tokenService = {
     async removeTokens(userId: Types.ObjectId) {
         await Token.findOneAndDelete({ user: userId });
     },
-    validateRefresh(refreshToken: string): string | jsonwebtoken.JwtPayload | null {
+    validateRefresh(refreshToken: string) {
         try {
             return jsonwebtoken.verify(refreshToken, REFRESH_KEY);
         } catch (e) {
             return null;
         }
     },
-    validateAccess(accessToken: string): string | jsonwebtoken.JwtPayload | null {
+    validateAccess(accessToken: string) {
         try {
             return jsonwebtoken.verify(accessToken, ACCESS_KEY);
         } catch (e) {
