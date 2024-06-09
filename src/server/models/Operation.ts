@@ -11,5 +11,6 @@ const schema = {
 };
 
 const operation = new Schema(schema, { timestamps: true });
+const Operation = model('Operation', operation);
 
-export default model('Operation', operation);
+export default Operation;

@@ -10,5 +10,6 @@ const schema = {
 };
 
 const account = new Schema(schema, { timestamps: true });
+const Account = model('Account', account);
 
-export default model('Account', account);
+export default Account;

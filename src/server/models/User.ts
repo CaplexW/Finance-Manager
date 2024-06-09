@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, Types, model } from "mongoose";
 
 const schema = {
     email: { type: String, required: true, unique: true },
@@ -11,5 +11,16 @@ const schema = {
 };
 
 const user = new Schema(schema, { timestamps: true });
+const User = model('User', user);
 
-export default model('User', user);
+export default User;
+
+export interface IUser {
+    email: string,
+    password: string,
+    name: string,
+    currentBalance: number,
+    categories: Types.ObjectId[],
+    accounts: Types.ObjectId[],
+    image: string,
+}

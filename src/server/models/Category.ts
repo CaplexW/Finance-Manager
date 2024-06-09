@@ -9,8 +9,9 @@ const schema = {
 };
 
 const category = new Schema(schema);
+const Category = model('Category', category);
 
-export default model('Category', category);
+export default Category;
 
 export interface ICategory {
   name: string,
