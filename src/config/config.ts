@@ -13,6 +13,8 @@ const config:connectionConfig = {
   MONGO_SERVER,
   URL,
   IN_PRODUCTION: isProd,
+  ACCESS_KEY: "It's@$ecrETK€",
+  REFRESH_KEY: "It's@Refr€SHkEY",
 };
 
 function getApiEndpoint():string {
@@ -37,6 +39,8 @@ type connectionConfig = {
   MONGO_SERVER: string;
   URL: string;
   IN_PRODUCTION: boolean;
+  ACCESS_KEY: string,
+  REFRESH_KEY: string,
 };
 
 export default config;
