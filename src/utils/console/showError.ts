@@ -1,7 +1,5 @@
-import config from "../../config/config.ts";
+import { redLog } from "./coloredLogs.ts";
 
-export default function showError(message:string) {
-  if(!config.IN_PRODUCTION) {
-    console.error(message);
-  }
+export default function showError(message:unknown) {
+  redLog(`ERROR OCCURRED: ${message}`);
 }
