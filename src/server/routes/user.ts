@@ -39,7 +39,7 @@ async function removeUser(req: AuthedRequest, res: Response) {
     await tokenService.removeTokens(removingUser._id);
     // await removeOperations(removingUser._id); // TODO turn on when ready
     // await removeCategories(removingUser._id);
-    res.send(null);
+    res.status(200).send(null);
   } catch (e) {
     showError(e);
     serverError(res, 'auth/user/removeUser');

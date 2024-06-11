@@ -7,6 +7,7 @@ const schema = {
     currentBalance: { type: Number, required: true },
     categories: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
     accounts: [{ type: Schema.Types.ObjectId, ref: 'Account' }],
+    operations: [{ type: Schema.Types.ObjectId, ref: 'Operation' }],
     image: String,
 };
 
@@ -16,6 +17,7 @@ const User = model('User', user);
 export default User;
 
 export interface IUser {
+    _id?: Types.ObjectId | string,
     email: string,
     password: string,
     name: string,

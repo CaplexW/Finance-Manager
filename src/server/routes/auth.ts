@@ -47,6 +47,7 @@ async function signUp(req: Request, res: Response) {
             categories: defaultCategoriesList,
             accounts: [],
             currentBalance: 0,
+            operations: [],
             ...req.body, // email, name and password
             password: hashedPassword, // rewrite password
         };

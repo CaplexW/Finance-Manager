@@ -2,6 +2,7 @@ import jsonwebtoken from "jsonwebtoken";
 import { Types } from "mongoose";
 import config from "../../config/config.ts";
 import Token from "../models/Token.ts";
+import showElement from "../../utils/console/showElement.ts";
 
 const { ACCESS_KEY, REFRESH_KEY } = config;
 
@@ -42,6 +43,7 @@ const tokenService = {
         try {
             return jsonwebtoken.verify(accessToken, ACCESS_KEY);
         } catch (e) {
+            showElement(e, 'e');
             return null;
         }
     },
