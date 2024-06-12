@@ -1,5 +1,5 @@
 import React from "react";
-import { blueColor, blueLightColor, brownColor, cyanColor, grayColor, greenColor, greenLightColor, greenToxicColor, orangeColor, pinkColor, purpleColor, redColor, redSolidColor, violetColor, yellowColor } from "./colors.ts";
+import { blueColor, blueLightColor, brownColor, cyanColor, grayColor, greenColor, greenLightColor, greenToxicColor, orangeColor, pinkColor, purpleColor, redColor, redSolidColor, violetColor, yellowColor } from "../../constants/colors.ts";
 
 export const salaryIcon = (
   <svg className="bi bi-cash-coin" fill={blueColor} height="16" id="salaryIcon" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">

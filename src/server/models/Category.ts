@@ -4,8 +4,9 @@ import { ReactElement } from "react";
 const schema = {
   name: { type: String, required: true },
   color: { type: String, required: true },
-  type: { type: String, enum: ['income', 'outcome'], required: true },
-  user: { type: Schema.Types.ObjectId, ref: 'User' }
+  isIncome: { type: Boolean, required: true },
+  user: { type: Schema.Types.ObjectId, ref: 'User' },
+  icon: { type: Object, required: true },
 };
 
 const category = new Schema(schema);
@@ -16,7 +17,7 @@ export default Category;
 export interface ICategory {
   name: string,
   color: string,
-  type: string,
+  isIncome: boolean,
   icon: ReactElement,
   user: Types.ObjectId,
 }
