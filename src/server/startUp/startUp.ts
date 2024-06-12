@@ -11,4 +11,6 @@ export default function startUp() {
     cyanLog(`Server is started on port ${PORT} in development mode`);
     cyanLog(`You can reach it on url: "${URL}"`);
   }
+  test();
 }
+async function test() {}

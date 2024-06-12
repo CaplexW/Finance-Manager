@@ -4,98 +4,98 @@ import {
 } from '../../constants/colors.ts';
 import {
   beautyIcon, busIcon, cafeIcon, clothesIcon, debtIcon, detergentsIcon, entertainmentIcon, foodIcon, healthIcon, houseIcon, hygieneIcon, otherIcon, salaryIcon, techIcon, telecomIcon
-} from '../../constants/defaultIcons.tsx';
+} from './defaultIcons.tsx';
 
 
 const defaultCategories:TDefaultCategory[] = [
   {
     name: 'Зарплата',
     color: blueColor,
-    type: 'income',
+    isIncome: true,
     icon: salaryIcon,
   },
   {
     name: 'Продукты',
     color: redColor,
-    type: 'outcome',
+    isIncome: false,
     icon: foodIcon,
   },
   {
     name: 'Транспорт',
     color: yellowColor,
-    type: 'outcome',
+    isIncome: false,
     icon: busIcon,
   },
   {
     name: 'Гигиена',
     color: greenLightColor,
-    type: 'outcome',
+    isIncome: false,
     icon: hygieneIcon,
   },
   {
     name: 'Здоровье',
     color: greenColor,
-    type: 'outcome',
+    isIncome: false,
     icon: healthIcon,
   },
   {
     name: 'Жильё',
     color: grayColor,
-    type: 'outcome',
+    isIncome: false,
     icon: houseIcon,
   },
   {
     name: 'Уход за собой',
     color: pinkColor,
-    type: 'outcome',
+    isIncome: false,
     icon: beautyIcon,
   },
   {
     name: 'Долги',
     color: redSolidColor,
-    type: 'outcome',
+    isIncome: false,
     icon: debtIcon,
   },
   {
     name: 'Техника',
     color: orangeColor,
-    type: 'outcome',
+    isIncome: false,
     icon: techIcon,
   },
   {
     name: 'Развлечения',
     color: purpleColor,
-    type: 'outcome',
+    isIncome: false,
     icon: entertainmentIcon,
   },
   {
     name: 'Связь',
     color: blueLightColor,
-    type: 'outcome',
+    isIncome: false,
     icon: telecomIcon,
   },
   {
     name: 'Рестораны',
     color: cyanColor,
-    type: 'outcome',
+    isIncome: false,
     icon: cafeIcon,
   },
   {
     name: 'Одежда',
     color: violetColor,
-    type: 'outcome',
+    isIncome: false,
     icon: clothesIcon,
   },
   {
     name: 'Бытовая химия',
     color: greenToxicColor,
-    type: 'outcome',
+    isIncome: false,
     icon: detergentsIcon,
   },
   {
     name: 'Разное',
     color: brownColor,
-    type: 'outcome',
+    isIncome: false,
     icon: otherIcon,
   },
 ];
@@ -105,6 +105,6 @@ export default defaultCategories;
 export type TDefaultCategory = {
   name: string,
   color: string,
-  type: string,
+  isIncome: boolean,
   icon: ReactElement,
 };

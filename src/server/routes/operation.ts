@@ -49,9 +49,11 @@ async function create(req: AuthedRequest, res: Response) {
 }
 async function update(req: AuthedRequest, res: Response) {
   try {
+    if(!req.user) { sendAuthError(res, 'operation/update'); return; };
+
     const isPermitted: boolean = req.user?._id === req.body.user;
     if (!isPermitted) {
-      sendAuthError(res, 'operation/update while checking permission');
+      sendAuthError(res, 'operation/update', req.user._id);
       return;
     };
     const updatedUser = await Operation.findByIdAndUpdate(req.body._id, req.body, { new: true });
@@ -64,17 +66,19 @@ async function update(req: AuthedRequest, res: Response) {
 }
 async function remove(req: AuthedRequest, res: Response) {
   try {
+    if(!req.user) { sendAuthError(res, 'operation/update'); return; };
+
     const operationId: string = req.body._id;
 
     const removingOperation = await Operation.findById(operationId);
     if (!removingOperation) { sendNotFound(res, 'operation', operationId); return; };
 
     const userId: string = removingOperation._id.toString();
-    const authedUserId: string = req.user?._id;
+    const authedId: string = req.user._id;
 
-    const isPermitted: boolean = (authedUserId === userId) && (authedUserId !== undefined);
+    const isPermitted: boolean = (authedId === userId) && (authedId !== undefined);
     if (!isPermitted) {
-      sendAuthError(res, 'operation/update while checking permission');
+      sendAuthError(res, 'operation/update', authedId);
       return;
     };
 

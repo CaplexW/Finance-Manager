@@ -5,6 +5,7 @@ import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
 import serverError from '../../utils/errorsToClient/serverError.ts';
 import { redLog } from '../../utils/console/coloredLogs.ts';
 import showError from '../../utils/console/showError.ts';
+import sendAuthError from '../../utils/errorsToClient/sendAuthError.ts';
 
 const router = express.Router({ mergeParams: true });
 
@@ -16,7 +17,7 @@ async function updateUser(req: AuthedRequest, res: Response) {
     if (!req.user) { sendAuthError(res, 'req.user'); return; };
 
     const updateIsAuthorized = req.params.id === req.user._id;
-    if (!updateIsAuthorized) { sendAuthError(res, 'updateIsAuthorized'); return; }
+    if (!updateIsAuthorized) { sendAuthError(res, 'user/update', req.user._id); return; }
 
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.send(updatedUser);
@@ -27,14 +28,14 @@ async function updateUser(req: AuthedRequest, res: Response) {
 }
 async function removeUser(req: AuthedRequest, res: Response) {
   try {
-    if (!req.user) { sendAuthError(res, 'req.user'); return; };
+    if (!req.user) { sendAuthError(res, 'user/remove'); return; };
     
     const { id } = req.params;
     const removingUser = await User.findById(id);
     
     if (!removingUser) { { sendNotFoundError(res, id); return; }; }
     const isPermitted = (removingUser._id.toString() === req.user._id);
-    if (!isPermitted) return sendAuthError(res, 'isPermitted');
+    if (!isPermitted) return sendAuthError(res, 'user/remove', req.user._id);
     await User.findByIdAndDelete(removingUser._id);
     await tokenService.removeTokens(removingUser._id);
     // await removeOperations(removingUser._id); // TODO turn on when ready
@@ -46,10 +47,7 @@ async function removeUser(req: AuthedRequest, res: Response) {
   }
 }
 
-function sendAuthError(res: Response, target: string) {
-  res.status(401).json({ message: `Auth check failed on ${target}` });
-  redLog(`failed on check ${target}`);
-}
+
 function sendNotFoundError(res: Response, id: string) {
   res.status(404).json({ message: `User to rmove not found` });
   redLog(`User with id ${id} not found`);
