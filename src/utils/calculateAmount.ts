@@ -1,5 +1,4 @@
 import Category from "../server/models/Category.ts";
-import showElement from "./console/showElement.ts";
 import showError from "./console/showError.ts";
 
 export default async function calculateAmount(request: categoryCreateRequest) {

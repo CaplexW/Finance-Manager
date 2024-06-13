@@ -9,6 +9,7 @@ import { sendNotFound } from '../../utils/errorsToClient/sendNotFound.ts';
 import getCategoriesForUser from '../../utils/getCategoriesForUser.ts';
 import capitalize from '../../utils/capitalize.ts';
 import { sendAlreadyExists } from '../../utils/errorsToClient/sendAlreadyExists.ts';
+import { Types } from 'mongoose';
 
 const router = express.Router({ mergeParams: true });
 
@@ -118,9 +119,9 @@ async function remove(req: AuthedRequest, res: Response) {
     if (!removingCategory) { sendNotFound(res, 'category', categoryId); return; };
 
     const authedId: string = req.user._id;
-    const ownerId: string = req.body.user;
+    const ownerId: Types.ObjectId | null | undefined = removingCategory.user;
 
-    const isPermitted = (ownerId === authedId) || (ownerId === undefined);
+    const isPermitted = (!ownerId) || (ownerId.toString() === authedId);
     if (!isPermitted) {
       sendAuthError(res, 'operation/update', authedId);
       return;

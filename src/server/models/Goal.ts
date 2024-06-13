@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 const schema = {
   name: { type: String, required: true },
-  amount: { type: Number, required: true },
+  goalPoint: { type: Number, required: true },
   status: { type: String, enum: ['complete', 'in progress', 'abandoned']},
 };
 
