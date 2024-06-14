@@ -50,6 +50,9 @@ async function create(req: AuthedRequest, res: Response) {
 
     const authedUser: string = req.user._id;
 
+    const hostUser = await User.findById(authedUser);
+    if(!hostUser) { sendNotFound(res, 'user', authedUser); return; };
+
     const accountData: IAccount = {
       ...req.body, // name, type percent
       currentBalance: 0,
@@ -61,21 +64,33 @@ async function create(req: AuthedRequest, res: Response) {
     const containsGoal = Boolean(req.body.goal);
     if (containsGoal) {
       const userGoals = await getDataOfUser(authedUser, Goal);
-      const goalExist = userGoals?.some((goal) => goal.name = req.body.goal);
-
-      let accountsGoal: Document;
+      const goalExist = userGoals?.some((goal) => goal.name === req.body.goal);
+      let accountsGoal: Document; // TODO найти способ указать тип - goal.
       if (goalExist) {
-        [accountsGoal] = await Goal.find({ account: createdAccount._id });
+        const [foundGoal] = await Goal.find({ account: createdAccount._id });
+        await hostUser.goals.push(foundGoal._id); 
+        accountsGoal = foundGoal;
       } else {
-        accountsGoal = await createGoal(req.body.goal);
+        const goalData = {
+          name: req.body.goal.name,
+          goalPoint: req.body.goal.goalPoint,
+          status: 'in progress',
+          user: authedUser,
+        };
+        const createdGoal = await Goal.create(goalData);
+        await hostUser.goals.push(createdGoal._id);
+        accountsGoal = createdGoal;
       };
-      await createdAccount.updateOne({ goal: accountsGoal._id });
+      await accountsGoal.updateOne({ account: createdAccount._id}, { new: true });
+      await createdAccount.updateOne({ goal: accountsGoal._id }, { new: true });
     }
     await createdAccount.save();
 
-    await User.findByIdAndUpdate(authedUser, { accounts: createdAccount }, { new: true });
+    hostUser.accounts.push(createdAccount._id);
+    hostUser.save();
 
-    res.status(201).send(await getDataOfUser(authedUser, Account));
+    const account = await Account.findById(createdAccount._id); //TODO найти способ обновлять документ перед отправкой.
+    res.status(201).send(account);
   } catch (err) {
     showError(err);
     serverError(res, 'account/create');
@@ -120,7 +135,6 @@ async function remove(req: AuthedRequest, res: Response) {
 
   // requestBody: {
   //  _id: string,
-  //  user: string,
   // }
 
   try {
@@ -130,7 +144,7 @@ async function remove(req: AuthedRequest, res: Response) {
     const accountId: string = req.body._id;
 
     const removingAccount = await Account.findById(accountId);
-    if (!removingAccount) { sendNotFound(res, 'category', accountId); return; };
+    if (!removingAccount) { sendNotFound(res, 'account', accountId); return; };
 
     const authedId: string = req.user._id;
     const ownerId: Types.ObjectId = removingAccount.user;
@@ -144,25 +158,21 @@ async function remove(req: AuthedRequest, res: Response) {
     const hostUser = await User.findById(authedId);
     if (!hostUser) { sendNotFound(res, 'user', authedId); return; };
 
-    await Account.findByIdAndDelete(accountId);
-    const newList = await Account.find({ user: authedId });
+    const result = await Account.findByIdAndDelete(accountId);
+    const [accountGoal] = await Goal.find({ account: accountId });
+    if(accountGoal?.account) {
+      accountGoal.account = null;
+      accountGoal.save(); 
+    }
 
-    hostUser.updateOne({ accounts: newList }, { new: true });
-    res.status(200).send(null);
+    hostUser.accounts = hostUser.accounts.filter((acc) => acc._id.toString() !== accountId);
+    await hostUser.save();
+    res.status(200).send(result);
   } catch (err) {
     showError(err);
-    serverError(res, 'category/remove');
+    serverError(res, 'account/remove');
   }
 }
 
-async function createGoal(goal: { name: string, goalPoint: number }): Promise<Document> {
-  const goalData = {
-    name: goal.name,
-    goalPoint: goal.goalPoint,
-    status: 'in progress',
-  };
-  const result = await Goal.create(goalData);
-  return result;
-}
 
 export default router;
