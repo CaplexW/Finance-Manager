@@ -8,12 +8,11 @@ export function checkAuth(req: AuthedRequest, res: Response, next:NextFunction) 
     if (req.method === 'OPTIONS') return next();
     try {
         const token = req.headers.authorization?.split(' ')[1];
-        if (!token) { authCheckError('token'); return; };
+        if (!token) return authCheckError('token');
+        const authData = tokenService.validateAccess(token) as (JwtPayload | null);
+        if(!authData) return authCheckError('authData');
 
-        const data = tokenService.validateAccess(token) as (JwtPayload | null);
-        if(!data) { authCheckError('data'); return; };
-
-        req.user = data;
+        req.user = authData;
         next();
     } catch (e) {
         authCheckError('something and fallen to "catch"');
@@ -27,5 +26,5 @@ export function checkAuth(req: AuthedRequest, res: Response, next:NextFunction) 
 }
 
 export interface AuthedRequest extends Request{
-    user?: JwtPayload | null;
+    user?: JwtPayload;
 }

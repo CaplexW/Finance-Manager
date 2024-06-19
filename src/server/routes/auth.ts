@@ -7,6 +7,8 @@ import { redLog } from '../../utils/console/coloredLogs.ts';
 import Category, { ICategory } from '../models/Category.ts';
 import validatorService from '../services/validator.service.ts';
 import { JwtPayload } from 'jsonwebtoken';
+import sendCredentialsError from '../../utils/errorsToClient/sendCredentialsError.ts';
+import { sendNotFound } from '../../utils/errorsToClient/sendNotFound.ts';
 
 const router = Router({ mergeParams: true });
 const { getResult, getValidation } = validatorService;
@@ -24,21 +26,13 @@ router.post('/signInWithPassword', [...signInWithPasswordValidations, signInWith
 router.post('/updateToken', updateToken);
 
 async function signUp(req: Request, res: Response) {
+    const thisPlace = 'auth/signUp';
     try {
         const errors = getResult(req);
-        if (!errors.isEmpty()) {
-            const error = {
-                message: 'INVALID_DATA',
-                code: 400,
-                errors: errors.array(),
-            };
-            res.status(400).json({ error });
-            return;
-        }
-
+        if (!errors.isEmpty()) return sendCredentialsError(res, errors);
         const { email, password } = req.body;
         const userExists: boolean = Boolean(await User.findOne({ email }));
-        if (userExists) { sendEmailExistsError(res); return; };
+        if (userExists) return sendEmailExistsError(res);
 
         const hashedPassword: string = await cryptService.hash(password, 12);
         const defaultCategoriesList: ICategory[] = await Category.find({ user: undefined });
@@ -47,6 +41,7 @@ async function signUp(req: Request, res: Response) {
             categories: defaultCategoriesList,
             accounts: [],
             currentBalance: 0,
+            operations: [],
             ...req.body, // email, name and password
             password: hashedPassword, // rewrite password
         };
@@ -57,7 +52,7 @@ async function signUp(req: Request, res: Response) {
         res.status(201).send({ ...tokens, userId: newUser._id });
     } catch (err) {
         redLog(err);
-        serverError(res, 'auth/signUp');
+        serverError(res, thisPlace);
     }
 
     function createUserAvatar(seed: string) {
@@ -70,38 +65,15 @@ async function signUp(req: Request, res: Response) {
     }
 }
 async function signInWithPassword(req: Request, res: Response) {
+    const thisPlace = 'auth/SingInWithPassword';
     try {
         const errors = getResult(req);
-        if (!errors.isEmpty()) {
-            const error = {
-                message: 'INVALID_DATA',
-                code: 400,
-                errors
-            };
-            sendClientError(error);
-            return;
-        }
-
+        if (!errors.isEmpty()) sendCredentialsError(res, errors);
         const { email, password } = req.body;
         const signingUser = await User.findOne({ email });
-        if (!signingUser) {
-            const error = {
-                message: "EMAIL_NOT_FOUND",
-                code: 400,
-            };
-            sendClientError(error);
-            return;
-        }
-
+        if (!signingUser) return sendNotFound(res, 'Email');
         const isPasswordOk = await cryptService.compare(password, signingUser.password);
-        if (!isPasswordOk) {
-            const error = {
-                message: 'PASSWORD_IS_INVALID',
-                code: 400
-            };
-            sendClientError(error);
-            return;
-        }
+        if (!isPasswordOk) return sendCredentialsError(res);
 
         const tokens = tokenService.generate({ _id: signingUser._id });
         await tokenService.save(signingUser._id, tokens.refreshToken);
@@ -109,19 +81,15 @@ async function signInWithPassword(req: Request, res: Response) {
         res.status(201).send({ ...tokens, userId: signingUser._id });
     } catch (e) {
         redLog(e);
-        serverError(res, 'auth/SingInWithPassword');
-    }
-
-    function sendClientError(error: unknown) {
-        return res.status(400).json({ error });
+        serverError(res, thisPlace);
     }
 }
 async function updateToken(req: Request, res: Response) {
-    try{
+    const thisPlace = 'auth/updateToken';
+    try {
         const { refresh_token: refreshToken } = req.body;
         const data = tokenService.validateRefresh(refreshToken) as JwtPayload;
         const dbToken = await tokenService.findToken(refreshToken);
-
         const tokenIsInvalid = (!data || !dbToken || data._id !== dbToken?.user?.toString());
         if (tokenIsInvalid) return sendTokenError(res);
 
@@ -132,10 +100,10 @@ async function updateToken(req: Request, res: Response) {
 
     } catch (e) {
         redLog(e);
-        serverError(res, 'auth/updateToken');
+        serverError(res, thisPlace);
     }
 
-    function sendTokenError(response:Response) {
+    function sendTokenError(response: Response) {
         return response.status(401).json({ message: "Token is invalid" });
     }
 }

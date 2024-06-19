@@ -2,7 +2,7 @@ import express, { json, urlencoded } from "express";
 import ViteExpress from "vite-express";
 import config from "../config/config.ts";
 import mongoose from "mongoose";
-// import cors from 'cors'; //TODO istall
+import cors from 'cors';
 import initDatabase from "./startUp/initDatabase.ts";
 import startUp from "./startUp/startUp.ts";
 import { greenLog, redLog, yellowLog } from "../utils/console/coloredLogs.ts";
@@ -13,7 +13,7 @@ const app = express();
 
 app.use(json());
 app.use(urlencoded({ extended: false }));
-// app.use(cors()); NOT INSTALLED YET
+app.use(cors());
 app.use('/api', routes);
 
 startServer();
