@@ -8,22 +8,22 @@ import defaultIcons from "../initialData/defaultIcons.old.tsx";
 
 export default async function initDatabase() {
     const icons = await Icon.find();
-    const iconsExists:boolean = icons.length > 0;
+    const iconsExists: boolean = icons.length > 0;
 
     if (!iconsExists) await createInitialEntity(Icon, defaultIcons);
 
     const categories = await Category.find();
-    const categoriesExists:boolean = categories.length > 0;
+    const categoriesExists: boolean = categories.length > 0;
 
     if (!categoriesExists) createInitialEntity(Category, defaultCategories);
 }
 
-async function createInitialEntity(Model:Mongoose["Model"], mock:TDefaultCategory[] | IIcon[]) {
-    mock.forEach((item:TDefaultCategory | IIcon) => {
+async function createInitialEntity(Model: Mongoose["Model"], mock: TDefaultCategory[] | IIcon[]) {
+    mock.forEach((item: TDefaultCategory | IIcon) => {
         try {
             const newItem = new Model(item);
-            newItem.save().then((result:unknown) => result); //TODO specify type 
-        } catch(err) {
+            newItem.save().then((result: unknown) => result); //TODO уточнить тип
+        } catch (err) {
             catchError(err);
             redLog(err);
         }

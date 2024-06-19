@@ -1,13 +1,16 @@
 import express, { Response } from 'express';
 import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
-import Operation, { IOperation } from '../models/Operation.ts';
+import Operation from '../models/Operation.ts';
 import { getDisplayDate } from '../../utils/formatDate.ts';
 import showError from '../../utils/console/showError.ts';
 import serverError from '../../utils/errorsToClient/serverError.ts';
 import sendAuthError from '../../utils/errorsToClient/sendAuthError.ts';
-import User, { IUser } from '../models/User.ts';
+import User from '../models/User.ts';
 import Category from '../models/Category.ts';
 import calculateAmount from '../../utils/calculateAmount.ts';
+import checkRequest from '../../utils/checkRequest.ts';
+import sendBadRequest from '../../utils/errorsToClient/sendBadRequest.ts';
+import sendForbidden from '../../utils/errorsToClient/sendForbidden.ts';
 
 const router = express.Router({ mergeParams: true });
 
@@ -26,73 +29,90 @@ async function sendList(req: AuthedRequest, res: Response) {
   }
 }
 async function create(req: AuthedRequest, res: Response) {
+  // request = {
+  //   name: string,
+  //   amount: number,
+  //   category: string,
+  // }
+  const thisPlace = 'operation/create';
+  const body = ['name', 'amount', 'category'];
+  const requestIsOk = checkRequest(req, body);
   try {
-    if (!req.body) { sendNotFound(res, 'Request'); return; };
-
+    if (!requestIsOk) return sendBadRequest(res, thisPlace);
     const categoryId: string = req.body.category;
-    const authedUserId: string = req.user?._id;
-
+    const authedownerId: string = req.user?._id;
     const operationCategory = await Category.findById(categoryId);
-    if (!operationCategory) { sendNotFound(res, 'category', categoryId); return; };
-    const operationData: IOperation = {
+    if (!operationCategory) return sendNotFound(res, 'category', categoryId);
+
+    const operationData = {
       ...req.body,
-      user: authedUserId,
+      user: authedownerId,
       amount: await calculateAmount(req.body),
       date: req.body.date ? req.body.date : getDisplayDate(new Date),
     };
     const newOperation = await Operation.create(operationData);
+
     res.status(201).send(newOperation);
   } catch (err) {
     showError(err);
-    serverError(res, 'operation/create');
+    serverError(res, thisPlace);
   }
 }
 async function update(req: AuthedRequest, res: Response) {
+  // request = {
+  //   _id: string,
+  //   user: string,
+  //   name?: string,
+  //   amount?: number,
+  //   category?: string,
+  // }
+  const thisPlace = 'operation/update';
+  const body = ['_id', 'user'];
+  const requestIsOk = checkRequest(req, body);
   try {
-    if(!req.user) { sendAuthError(res, 'operation/update'); return; };
+    if (!requestIsOk) return sendBadRequest(res, thisPlace);
+    const authedUser = req.user?._id;
+    const isPermitted: boolean = authedUser === req.body.user;
+    if (!isPermitted) return sendForbidden(res, thisPlace);
 
-    const isPermitted: boolean = req.user?._id === req.body.user;
-    if (!isPermitted) {
-      sendAuthError(res, 'operation/update', req.user._id);
-      return;
-    };
     const updatedUser = await Operation.findByIdAndUpdate(req.body._id, req.body, { new: true });
+
     res.status(203).send(updatedUser);
   } catch (err) {
     showError(err);
-    serverError(res, 'operation/edit');
+    serverError(res, thisPlace);
   }
 
 }
 async function remove(req: AuthedRequest, res: Response) {
+  // request = {
+  //   _id: string,
+  //   user: string,
+  // }
+  const thisPlace = 'operation/remove';
+  const body = ['_id', 'user'];
+  const requestIsOk = checkRequest(req, body);
   try {
-    if(!req.user) { sendAuthError(res, 'operation/update'); return; };
-
+    if (!req.user) return sendAuthError(res, thisPlace);
+    if (!requestIsOk) return sendBadRequest(res, thisPlace);
     const operationId: string = req.body._id;
-
-    const removingOperation = await Operation.findById(operationId);
-    if (!removingOperation) { sendNotFound(res, 'operation', operationId); return; };
-
-    const userId: string = removingOperation._id.toString();
+    const ownerId: string = req.body.user;
     const authedId: string = req.user._id;
+    const removingOperation = await Operation.findById(operationId);
+    if (!removingOperation) return sendNotFound(res, 'operation', operationId);
+    const isPermitted = (authedId === ownerId) && (authedId !== undefined);
+    if (!isPermitted) sendForbidden(res, thisPlace);
+    const hostUser = await User.findById(ownerId);
+    if (!hostUser) return sendNotFound(res, 'user', ownerId);
 
-    const isPermitted: boolean = (authedId === userId) && (authedId !== undefined);
-    if (!isPermitted) {
-      sendAuthError(res, 'operation/update', authedId);
-      return;
-    };
-
-    const hostUser: (IUser | null) = await User.findById(userId);
-    if (!hostUser) { sendNotFound(res, 'user', userId); return; };
-
-    await Operation.findByIdAndDelete(operationId);
+    const result = await Operation.findByIdAndDelete(operationId);
     const newBalance: number = hostUser.currentBalance - removingOperation.amount;
     await User.findByIdAndUpdate(hostUser._id, { currentBalance: newBalance });
 
-    res.status(200).send({ updatedBalance: newBalance });
+    res.status(200).send({ result, newBalance });
   } catch (err) {
     showError(err);
-    serverError(res, 'operation/remove');
+    serverError(res, thisPlace);
   }
 }
 

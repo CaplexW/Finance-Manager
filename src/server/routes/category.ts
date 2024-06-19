@@ -9,7 +9,8 @@ import { sendNotFound } from '../../utils/errorsToClient/sendNotFound.ts';
 import getCategoriesForUser from '../../utils/getCategoriesForUser.ts';
 import capitalize from '../../utils/capitalize.ts';
 import { sendAlreadyExists } from '../../utils/errorsToClient/sendAlreadyExists.ts';
-import { Types } from 'mongoose';
+import checkRequest from '../../utils/checkRequest.ts';
+import sendBadRequest from '../../utils/errorsToClient/sendBadRequest.ts';
 
 const router = express.Router({ mergeParams: true });
 
@@ -19,17 +20,16 @@ router.patch('/update', checkAuth, update);
 router.delete('/remove', checkAuth, remove);
 
 async function sendList(req: AuthedRequest, res: Response) {
+  const thisPlace = 'category/sendList';
   try {
-    if (!req.user) { sendAuthError(res, 'category/sendList'); return; };
-
-    const authedUser = req.user._id;
-    const list = await getCategoriesForUser(authedUser);
-    if(!list) { sendNotFound(res, 'user', authedUser); return; };
+    if (!req.user) return sendAuthError(res, thisPlace);
+    const list = await getCategoriesForUser(req.user._id);
+    if (!list) return sendNotFound(res, 'user', req.user._id);
 
     res.status(200).send(list);
   } catch (err) {
     showError(err);
-    serverError(res, 'category/sendList');
+    serverError(res, thisPlace);
   }
 }
 async function create(req: AuthedRequest, res: Response) {
@@ -40,65 +40,61 @@ async function create(req: AuthedRequest, res: Response) {
   //  color: string,
   //  icon: ReactElement,
   // }
-
+  const thisPlace = 'category/create';
+  const request = ['name', 'isIncome', 'color', 'icon'];
+  const requestIsOk = checkRequest(req, request);
   try {
-    if (!req.user) { sendAuthError(res, 'category/create'); return; };
-    if (!req.body) { sendNotFound(res, 'Request'); return; };
-
+    if (!req.user) return sendAuthError(res, thisPlace);
+    if (!requestIsOk) return sendBadRequest(res, thisPlace);
     const authedUser: string = req.user._id;
-
     const userCategories = await getCategoriesForUser(authedUser);
-    if(!userCategories) { sendNotFound(res, 'user', authedUser); return; };
-
+    if (!userCategories) return sendNotFound(res, 'user', authedUser);
     const categoryExists = userCategories.some((category) => category?.name === capitalize(req.body.name));
-    if(categoryExists) { sendAlreadyExists(res, 'category', 'name', req.body.name); return; };
-
+    if (categoryExists) return sendAlreadyExists(res, 'category', 'name', req.body.name);
     const hostUser = await User.findById(authedUser);
-    if(!hostUser) { sendNotFound(res, 'user', authedUser); return; };
+    if (!hostUser) return sendNotFound(res, 'user', authedUser);
 
-    const newCategoryData:ICategory = {
+    const newCategoryData: ICategory = {
       ...req.body,
       user: hostUser._id,
     };
     const newCategory = await Category.create(newCategoryData);
     userCategories.push(newCategory);
-    await User.findByIdAndUpdate(authedUser, { categories: userCategories }, { new: true });
+    const updatedCategory = await User.findByIdAndUpdate(authedUser, { categories: userCategories }, { new: true });
 
-    res.status(201).send(await getCategoriesForUser(authedUser));
+    res.status(201).send(updatedCategory);
   } catch (err) {
     showError(err);
-    serverError(res, 'category/create');
+    serverError(res, thisPlace);
   }
 }
 async function update(req: AuthedRequest, res: Response) {
 
   // requestBody: {
   //  _id: string,
-  //  name:string,
-  //  isIncome: boolean,
-  //  color: string,
-  //  icon: ReactElement,
   //  user: string,
+  //  name?:string,
+  //  isIncome?: boolean,
+  //  color?: string,
+  //  icon?: ReactElement,
   // }
-
+  const thisPlace = 'category/update';
+  const request = ['_id', 'user'];
+  const requestIsOk = checkRequest(req, request);
   try {
-    if (!req.user) { sendAuthError(res, 'category/update'); return; };
-    if (!req.body) { sendNotFound(res, 'Request'); return; };
-    
+    if (!req.user) return sendAuthError(res, thisPlace);
+    if (!requestIsOk) return sendBadRequest(res, thisPlace);
     const isPermitted: boolean = req.user._id === req.body.user;
-    if (!isPermitted) {
-      sendAuthError(res, 'operation/update', req.user._id);
-      return;
-    };
-    
+    if (!isPermitted) return sendAuthError(res, thisPlace, req.user._id);
     const categoryExists = await Category.findById(req.body._id);
-    if(!categoryExists) { sendNotFound(res, 'category', req.body._id); return; };
+    if (!categoryExists) return sendNotFound(res, 'category', req.body._id);
 
     const updatedCategory = await Category.findByIdAndUpdate(req.body._id, req.body, { new: true });
-    res.status(203).send(updatedCategory);
+
+    res.status(200).send(updatedCategory);
   } catch (err) {
     showError(err);
-    serverError(res, 'category/update');
+    serverError(res, thisPlace);
   }
 
 }
@@ -108,44 +104,37 @@ async function remove(req: AuthedRequest, res: Response) {
   //  _id: string,
   //  user: string,
   // }
-
+  const thisPlace = 'category/remove';
+  const request = ['_id', 'user'];
+  const requestIsOk = checkRequest(req, request);
   try {
-    if (!req.user) { sendAuthError(res, 'category/update'); return; };
-    if (!req.body) { sendNotFound(res, 'Request'); return; };
-
+    if (!req.user) return sendAuthError(res, thisPlace);
+    if (!requestIsOk) return sendBadRequest(res, thisPlace);
     const categoryId: string = req.body._id;
-
     const removingCategory = await Category.findById(categoryId);
-    if (!removingCategory) { sendNotFound(res, 'category', categoryId); return; };
-
+    if (!removingCategory) return sendNotFound(res, 'category', categoryId);
     const authedId: string = req.user._id;
-    const ownerId: Types.ObjectId | null | undefined = removingCategory.user;
-
+    const ownerId = removingCategory.user;
     const isPermitted = (!ownerId) || (ownerId.toString() === authedId);
-    if (!isPermitted) {
-      sendAuthError(res, 'operation/update', authedId);
-      return;
-    };
-
+    if (!isPermitted) return sendAuthError(res, thisPlace, authedId);
     const hostUser = await User.findById(authedId);
     if (!hostUser) { sendNotFound(res, 'user', authedId); return; };
-
     const isCustomCategory = Boolean(ownerId);
-    let newList;
 
-    if(isCustomCategory) {
+    let newList;
+    if (isCustomCategory) {
       await Category.findByIdAndDelete(categoryId);
       newList = await Category.find({ user: authedId });
     } else {
       const list = await Category.find({ user: authedId });
       newList = list.filter((cat) => cat._id.toString() !== categoryId);
     }
+    const result = await User.findByIdAndUpdate(authedId, { categories: newList }, { new: true });
 
-    await User.findByIdAndUpdate(authedId, { categories: newList }, { new: true });
-    res.status(200).send(null);
+    res.status(200).send(result);
   } catch (err) {
     showError(err);
-    serverError(res, 'category/remove');
+    serverError(res, thisPlace);
   }
 }
 

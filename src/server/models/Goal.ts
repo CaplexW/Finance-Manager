@@ -9,7 +9,7 @@ const schema = {
 };
 
 const goal = new Schema(schema, { timestamps: true });
-const Goal =  model('Goal', goal);
+const Goal = model('Goal', goal);
 
 export default Goal;
 
