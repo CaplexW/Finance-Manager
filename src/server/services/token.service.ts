@@ -1,8 +1,8 @@
-import jsonwebtoken from "jsonwebtoken";
-import { Types } from "mongoose";
+import jsonwebtoken, { JwtPayload } from "jsonwebtoken";
+import { Document, Types } from "mongoose";
 import config from "../../config/config.ts";
 import Token from "../models/Token.ts";
-import showElement from "../../utils/console/showElement.ts";
+import showError from "../../utils/console/showError.ts";
 
 const { ACCESS_KEY, REFRESH_KEY } = config;
 
@@ -13,7 +13,7 @@ const tokenService = {
 
         return { accessToken, refreshToken, expiresIn: 3600 };
     },
-    async save(userId: Types.ObjectId, refreshToken: string) { //TODO does it return anything?
+    async save(userId: Types.ObjectId, refreshToken: string): Promise<Document> {
         const data = await Token.findOne({ user: userId });
 
         if (data) {
@@ -22,7 +22,7 @@ const tokenService = {
         }
         return await Token.create({ user: userId, refreshToken });
     },
-    async findToken(refreshToken: string) {
+    async findToken(refreshToken: string): Promise<Document | null> {
         try {
             return await Token.findOne({ refreshToken });
         } catch (e) {
@@ -32,18 +32,19 @@ const tokenService = {
     async removeTokens(userId: Types.ObjectId) {
         await Token.findOneAndDelete({ user: userId });
     },
-    validateRefresh(refreshToken: string) {
+    validateRefresh(refreshToken: string): string | JwtPayload | null {
         try {
             return jsonwebtoken.verify(refreshToken, REFRESH_KEY);
         } catch (e) {
+            showError(e);
             return null;
         }
     },
-    validateAccess(accessToken: string) {
+    validateAccess(accessToken: string): string | JwtPayload | null {
         try {
             return jsonwebtoken.verify(accessToken, ACCESS_KEY);
         } catch (e) {
-            showElement(e, 'e');
+            showError(e);
             return null;
         }
     },

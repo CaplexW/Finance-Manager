@@ -9,7 +9,9 @@ import serverError from '../../utils/errorsToClient/serverError.ts';
 import Goal from '../models/Goal.ts';
 import { Document } from 'mongoose';
 import User from '../models/User.ts';
-import { Types } from 'mongoose';
+import sendBadRequest from '../../utils/errorsToClient/sendBadRequest.ts';
+import sendForbidden from '../../utils/errorsToClient/sendForbidden.ts';
+import checkRequest from '../../utils/checkRequest.ts';
 
 const router = express.Router({ mergeParams: true });
 
@@ -19,21 +21,21 @@ router.patch('/update', checkAuth, update);
 router.delete('/remove', checkAuth, remove);
 
 async function sendList(req: AuthedRequest, res: Response) {
+  const thisPlace = 'account/sendList';
   try {
-    if (!req.user) { sendAuthError(res, 'account/sendList'); return; };
+    if (!req.user) return sendAuthError(res, thisPlace);
 
     const authedUser = req.user._id;
     const list = await getDataOfUser(authedUser, Account);
-    if (!list) { sendNotFound(res, 'account', authedUser); return; };
+    if (!list) return sendNotFound(res, 'account', authedUser);
 
     res.status(200).send(list);
   } catch (err) {
     showError(err);
-    serverError(res, 'account/sendList');
+    serverError(res, thisPlace);
   }
 }
 async function create(req: AuthedRequest, res: Response) {
-
   //  request: {
   //   name: string,
   //   type: enum-strings,
@@ -43,16 +45,15 @@ async function create(req: AuthedRequest, res: Response) {
   //    goalPoint: number
   //   },
   // }
-
+  const request = ['name', 'type'];
+  const thisPlace: string = 'account/create';
+  const requestIsOk = checkRequest(req, request);
   try {
-    if (!req.user) { sendAuthError(res, 'account/create'); return; };
-    if (!req.body) { sendNotFound(res, 'Request'); return; };
-
+    if (!req.user) return sendAuthError(res, thisPlace);
+    if (!requestIsOk) return sendBadRequest(res, thisPlace);
     const authedUser: string = req.user._id;
-
     const hostUser = await User.findById(authedUser);
-    if(!hostUser) { sendNotFound(res, 'user', authedUser); return; };
-
+    if (!hostUser) return sendNotFound(res, 'user', authedUser);
     const accountData: IAccount = {
       ...req.body, // name, type percent
       currentBalance: 0,
@@ -61,14 +62,13 @@ async function create(req: AuthedRequest, res: Response) {
     };
     const createdAccount = await Account.create(accountData);
 
-    const containsGoal = Boolean(req.body.goal);
-    if (containsGoal) {
+    if (req.body.goal) {
       const userGoals = await getDataOfUser(authedUser, Goal);
       const goalExist = userGoals?.some((goal) => goal.name === req.body.goal);
-      let accountsGoal: Document; // TODO найти способ указать тип - goal.
+      let accountsGoal: Document; // TODO найти способ указать точный тип - goal.
       if (goalExist) {
         const [foundGoal] = await Goal.find({ account: createdAccount._id });
-        await hostUser.goals.push(foundGoal._id); 
+        hostUser.goals.push(foundGoal._id);
         accountsGoal = foundGoal;
       } else {
         const goalData = {
@@ -78,99 +78,87 @@ async function create(req: AuthedRequest, res: Response) {
           user: authedUser,
         };
         const createdGoal = await Goal.create(goalData);
-        await hostUser.goals.push(createdGoal._id);
+        hostUser.goals.push(createdGoal._id);
         accountsGoal = createdGoal;
       };
-      await accountsGoal.updateOne({ account: createdAccount._id}, { new: true });
+      await accountsGoal.updateOne({ account: createdAccount._id });
       await createdAccount.updateOne({ goal: accountsGoal._id }, { new: true });
     }
     await createdAccount.save();
-
     hostUser.accounts.push(createdAccount._id);
     hostUser.save();
 
-    const account = await Account.findById(createdAccount._id); //TODO найти способ обновлять документ перед отправкой.
-    res.status(201).send(account);
+    //TODO проверить является ли createdAccount обновленным.
+    res.status(201).send(createdAccount);
   } catch (err) {
     showError(err);
-    serverError(res, 'account/create');
+    serverError(res, thisPlace);
   }
 }
 async function update(req: AuthedRequest, res: Response) {
-
+  const thisPlace: string = 'account/update';
   //  request: {
   //   _id: string,
   //   user: string,
-  //   name: string,
-  //   type: enum-strings,
+  //   name?: string,
+  //   type?: enum-strings,
   //   percent?: number,
   //   goal?: string,
-  //   currentBalance: number,
+  //   currentBalance?: number,
   // }
-
+  const request = ['_id', 'user'];
+  const requestIsOk = checkRequest(req, request);
   try {
-    if (!req.user) { sendAuthError(res, 'account/update'); return; };
-    if (!req.body) { sendNotFound(res, 'Request'); return; };
-
-    const isPermitted: boolean = req.user._id === req.body.user;
-    if (!isPermitted) {
-      sendAuthError(res, 'account/update', req.user._id);
-      return;
-    };
+    if (!req.user) return sendAuthError(res, thisPlace);
+    if (!requestIsOk) return sendBadRequest(res, thisPlace);
+    const authedUser: string = req.user._id;
+    const ownerUser: string = req.body._id;
+    if (!(authedUser === ownerUser)) return sendForbidden(res, thisPlace);
 
     const updatingAccount = await Account.findById(req.body._id);
-    if (!updatingAccount) { sendNotFound(res, 'account', req.body._id); return; };
+    if (!updatingAccount) return sendNotFound(res, 'account', req.body._id);
+    const updatedAccount = await updatingAccount.updateOne(req.body, { new: true });
 
-    await updatingAccount.updateOne(req.body, { new: true });
-    await updatingAccount.save();
-    const updatedAccount = await Account.findById(updatingAccount._id);
-    res.status(203).send(updatedAccount);
+    res.status(200).send(updatedAccount);
   } catch (err) {
     showError(err);
-    serverError(res, 'account/update');
+    serverError(res, thisPlace);
   }
 
 }
 async function remove(req: AuthedRequest, res: Response) {
-
   // requestBody: {
   //  _id: string,
   // }
-
+  const thisPlace: string = 'account/remove';
+  const request = ['_id'];
+  const requestIsOk = checkRequest(req, request);
   try {
-    if (!req.user) { sendAuthError(res, 'account/update'); return; };
-    if (!req.body) { sendNotFound(res, 'Request'); return; };
-
+    // TODO Найти способ вынести проверки в отдельную абстракцию
+    if (!req.user) return sendAuthError(res, thisPlace);
+    if (!requestIsOk) return sendBadRequest(res, thisPlace);
     const accountId: string = req.body._id;
-
     const removingAccount = await Account.findById(accountId);
-    if (!removingAccount) { sendNotFound(res, 'account', accountId); return; };
-
+    if (!removingAccount) return sendNotFound(res, 'account', accountId);
     const authedId: string = req.user._id;
-    const ownerId: Types.ObjectId = removingAccount.user;
-
-    const isPermitted = (ownerId.toString() === authedId);
-    if (!isPermitted) {
-      sendAuthError(res, 'account/update', authedId);
-      return;
-    };
-
+    const ownerId: string = removingAccount.user.toString();
+    if (!(ownerId === authedId)) return sendAuthError(res, thisPlace, authedId);
     const hostUser = await User.findById(authedId);
-    if (!hostUser) { sendNotFound(res, 'user', authedId); return; };
+    if (!hostUser) return sendNotFound(res, 'user', authedId);
 
     const result = await Account.findByIdAndDelete(accountId);
     const [accountGoal] = await Goal.find({ account: accountId });
-    if(accountGoal?.account) {
+    if (accountGoal?.account) {
       accountGoal.account = null;
-      accountGoal.save(); 
+      accountGoal.save();
     }
-
     hostUser.accounts = hostUser.accounts.filter((acc) => acc._id.toString() !== accountId);
     await hostUser.save();
+
     res.status(200).send(result);
   } catch (err) {
     showError(err);
-    serverError(res, 'account/remove');
+    serverError(res, thisPlace);
   }
 }
 

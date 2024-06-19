@@ -8,6 +8,8 @@ import serverError from '../../utils/errorsToClient/serverError.ts';
 import Goal, { IGoal } from '../models/Goal.ts';
 import User from '../models/User.ts';
 import { Types } from 'mongoose';
+import checkRequest from '../../utils/checkRequest.ts';
+import sendBadRequest from '../../utils/errorsToClient/sendBadRequest.ts';
 
 const router = express.Router({ mergeParams: true });
 
@@ -17,17 +19,17 @@ router.patch('/update', checkAuth, update);
 router.delete('/remove', checkAuth, remove);
 
 async function sendList(req: AuthedRequest, res: Response) {
+  const thisPlace = 'goal/sendList';
   try {
-    if (!req.user) { sendAuthError(res, 'account/sendList'); return; };
-
+    if (!req.user) return sendAuthError(res, thisPlace);
     const authedUser = req.user._id;
     const list = await getDataOfUser(authedUser, Goal);
-    if (!list) { sendNotFound(res, 'goal', authedUser); return; };
+    if (!list) return sendNotFound(res, 'goal', authedUser);
 
     res.status(200).send(list);
   } catch (err) {
     showError(err);
-    serverError(res, 'goal/sendList');
+    serverError(res, thisPlace);
   }
 }
 async function create(req: AuthedRequest, res: Response) {
@@ -36,12 +38,15 @@ async function create(req: AuthedRequest, res: Response) {
   //    name: string,
   //    goalPoint: number,
   //  }
-
+  const thisPlace = 'goal/create';
+  const request = ['name', 'goalPoint'];
+  const requestIsOk = checkRequest(req, request);
   try {
-    if (!req.user) { sendAuthError(res, 'account/create'); return; };
-    if (!req.body) { sendNotFound(res, 'Request'); return; };
-
+    if (!req.user) return sendAuthError(res, thisPlace);
+    if (!requestIsOk) return sendBadRequest(res, thisPlace);
     const authedUser: string = req.user._id;
+    const hostUser = await User.findById(authedUser);
+    if (!hostUser) return sendNotFound(res, 'user', authedUser);
 
     const goalData: IGoal = {
       ...req.body, // name, goalPoint
@@ -50,16 +55,13 @@ async function create(req: AuthedRequest, res: Response) {
     };
     const createdGoal = await Goal.create(goalData);
     await createdGoal.save();
-
-    const hostUser = await User.findById(authedUser);
-    if(!hostUser) { sendNotFound(res, 'user', authedUser); return; };
     hostUser.goals.push(createdGoal._id);
     hostUser.save();
 
     res.status(201).send(createdGoal);
   } catch (err) {
     showError(err);
-    serverError(res, 'account/create');
+    serverError(res, thisPlace);
   }
 }
 async function update(req: AuthedRequest, res: Response) {
@@ -71,28 +73,24 @@ async function update(req: AuthedRequest, res: Response) {
   //   status?: enum-strings,
   //   goalPoint?: number,
   // }
-
+  const thisPlace = 'goal/update';
+  const request = ['_id', 'user'];
+  const requestIsOk = checkRequest(req, request);
   try {
-    if (!req.user) { sendAuthError(res, 'goal/update'); return; };
-    if (!req.body) { sendNotFound(res, 'Request'); return; };
-
+    if (!req.user) return sendAuthError(res, thisPlace);
+    if (!requestIsOk) return sendBadRequest(res, thisPlace);
     const isPermitted: boolean = req.user._id === req.body.user;
-    if (!isPermitted) {
-      sendAuthError(res, 'goal/update', req.user._id);
-      return;
-    };
-
+    if (!isPermitted) return sendAuthError(res, thisPlace, req.user._id);
     const updatingGoal = await Goal.findById(req.body._id);
-    if (!updatingGoal) { sendNotFound(res, 'goal', req.body._id); return; };
+    if (!updatingGoal) return sendNotFound(res, 'goal', req.body._id);
 
-    await updatingGoal.updateOne(req.body, { new: true });
+    const result = await updatingGoal.updateOne(req.body, { new: true });
     await updatingGoal.save();
 
-    const updatedGoal = await Goal.findById(updatingGoal._id);
-    res.status(203).send(updatedGoal);
+    res.status(200).send(result);
   } catch (err) {
     showError(err);
-    serverError(res, 'goal/update');
+    serverError(res, thisPlace);
   }
 
 }
@@ -102,37 +100,31 @@ async function remove(req: AuthedRequest, res: Response) {
   //  _id: string,
   //  user: string,
   // }
-
+  const thisPlace = 'goal/remove';
+  const request = ['_id', 'user'];
+  const requestIsOk = checkRequest(req, request);
   try {
-    if (!req.user) { sendAuthError(res, 'goal/update'); return; };
-    if (!req.body) { sendNotFound(res, 'Request'); return; };
-
+    if (!req.user) return sendAuthError(res, thisPlace);
+    if (!requestIsOk) return sendBadRequest(res, thisPlace);
     const goalId: string = req.body._id;
-
     const removingGoal = await Goal.findById(goalId);
-    if (!removingGoal) { sendNotFound(res, 'goal', goalId); return; };
-
+    if (!removingGoal) return sendNotFound(res, 'goal', goalId);
     const authedId: string = req.user._id;
     const ownerId: Types.ObjectId = removingGoal.user;
-    if(!ownerId) { sendNotFound(res, 'user', removingGoal.user.toString()); return; };
-
+    if (!ownerId) return sendNotFound(res, 'user', goalId);
     const isPermitted = (ownerId.toString() === authedId);
-    if (!isPermitted) {
-      sendAuthError(res, 'goal/update', authedId);
-      return;
-    };
-
+    if (!isPermitted) return sendAuthError(res, thisPlace, authedId);
     const hostUser = await User.findById(authedId);
-    if (!hostUser) { sendNotFound(res, 'user', authedId); return; };
+    if (!hostUser) return sendNotFound(res, 'user', authedId);
 
     const result = await Goal.findByIdAndDelete(goalId);
     const newList = await Goal.find({ user: authedId });
-
     hostUser.updateOne({ goals: newList }, { new: true });
+
     res.status(200).send(result);
   } catch (err) {
     showError(err);
-    serverError(res, 'goal/remove');
+    serverError(res, thisPlace);
   }
 }
 

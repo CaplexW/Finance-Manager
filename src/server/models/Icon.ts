@@ -7,7 +7,7 @@ const schema = {
 };
 
 const icon = new Schema(schema);
-const Icon =  model('Icon', icon);
+const Icon = model('Icon', icon);
 
 export default Icon;
 
