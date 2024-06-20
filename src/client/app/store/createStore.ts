@@ -1,7 +1,8 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import userReducer from './user';
 
 const reducerConfig = {
-  // user: userReducer,
+  user: userReducer,
   // // categories: categoriesReducer,
   // // operations: opertionsReducer,
   // // goals: goalsReducer,
