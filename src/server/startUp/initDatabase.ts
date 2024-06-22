@@ -2,7 +2,7 @@ import Category from "../models/Category.ts";
 import defaultCategories, { TDefaultCategory } from "../initialData/defaultCategories.ts";
 import { Mongoose } from "mongoose";
 import { redLog } from "../../utils/console/coloredLogs.ts";
-import catchError from "../../utils/catchError.ts";
+import catchError from "../../utils/errors/catchError.ts";
 import Icon, { IIcon } from "../models/Icon.ts";
 import defaultIcons from "../initialData/defaultIcons.old.tsx";
 
