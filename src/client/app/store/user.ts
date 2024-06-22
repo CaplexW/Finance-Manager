@@ -50,7 +50,7 @@ export function signIn({ email, password }: Credentials) {
     try {
       const data = await authService.login(email, password);
       dispatch(authRequestSucceed(data.userId));
-      setTokents(data);
+      setTokens(data);
       return 'success';
     } catch (err) {
       authRequestFailed(err.message);
