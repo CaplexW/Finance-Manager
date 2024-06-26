@@ -1,16 +1,16 @@
 import express, { Response } from 'express';
 import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
 import showError from '../../utils/console/showError.ts';
-import serverError from '../../utils/errorsToClient/serverError.ts';
-import sendAuthError from '../../utils/errorsToClient/sendAuthError.ts';
 import User from '../models/User.ts';
 import Category, { ICategory } from '../models/Category.ts';
-import { sendNotFound } from '../../utils/errorsToClient/sendNotFound.ts';
 import getCategoriesForUser from '../../utils/getCategoriesForUser.ts';
 import capitalize from '../../utils/capitalize.ts';
-import { sendAlreadyExists } from '../../utils/errorsToClient/sendAlreadyExists.ts';
 import checkRequest from '../../utils/checkRequest.ts';
-import sendBadRequest from '../../utils/errorsToClient/sendBadRequest.ts';
+import sendAuthError from '../../utils/errors/fromServerToClient/sendAuthError.ts';
+import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound.ts';
+import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
+import sendBadRequest from '../../utils/errors/fromServerToClient/sendBadRequest.ts';
+import { sendAlreadyExists } from '../../utils/errors/fromServerToClient/sendAlreadyExists.ts';
 
 const router = express.Router({ mergeParams: true });
 

@@ -30,7 +30,7 @@ export function removeAuthData() {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(REFRESH_KEY);
   localStorage.removeItem(EXPIRES_KEY);
-  window.location.reload(); // TODO Проверить нужно ли это. По возможности убрать.
+  // window.location.reload(); // TODO Проверить нужно ли это. По возможности убрать.
 }
 
 const storageSerice = {

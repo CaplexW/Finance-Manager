@@ -2,20 +2,21 @@ import express, { Response } from 'express';
 import User from '../models/User.ts';
 import tokenService from '../services/token.service.ts';
 import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
-import serverError from '../../utils/errorsToClient/serverError.ts';
 import showError from '../../utils/console/showError.ts';
-import sendAuthError from '../../utils/errorsToClient/sendAuthError.ts';
 import Operation from '../models/Operation.ts';
 import Category from '../models/Category.ts';
 import Account from '../models/Account.ts';
 import Goal from '../models/Goal.ts';
-import { sendNotFound } from '../../utils/errorsToClient/sendNotFound.ts';
-import sendForbidden from '../../utils/errorsToClient/sendForbidden.ts';
+import sendAuthError from '../../utils/errors/fromServerToClient/sendAuthError.ts';
+import sendForbidden from '../../utils/errors/fromServerToClient/sendForbidden.ts';
+import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound.ts';
+import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
 
 const router = express.Router({ mergeParams: true });
 
 router.patch('/:id', checkAuth, updateUser);
 router.delete('/:id', checkAuth, removeUser);
+router.get('/:id', checkAuth, sendUserInfo);
 
 async function updateUser(req: AuthedRequest, res: Response) {
   // requestBody = {
@@ -57,6 +58,25 @@ async function removeUser(req: AuthedRequest, res: Response) {
   } catch (e) {
     showError(e);
     serverError(res, thisPlace);
+  }
+}
+async function sendUserInfo(req: AuthedRequest, res: Response) {
+  const thisPlace = 'user/sendUserInfo';
+  try {
+    if(!req.user) return sendAuthError(res, thisPlace);
+
+    const userInfo = await User.findById(req.params.id);
+    const filteredUserInfo = Object.fromEntries(
+      Object.entries(userInfo?._doc).filter(([key]) => !['__v', 'password', 'createdAt', 'updatedAt'].includes(key))
+    ); 
+    // Удаляю ненужные на фронте свойства. Делаю это через ._doc т.к. на самом деле именно там лежат поля пользователя.
+    // TS выдает ошибку т.к. _doc скрытое свойство, поэтому его "не существует".
+    // TODO найти способ удалить свойства из копии документа перед отправкой не возмущая TS.
+
+    res.status(200).send(filteredUserInfo);
+  } catch (err) {
+    serverError(res, thisPlace);
+    showError(err);
   }
 }
 

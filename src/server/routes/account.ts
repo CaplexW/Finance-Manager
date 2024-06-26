@@ -1,17 +1,17 @@
 import express, { Response } from 'express';
 import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
-import sendAuthError from '../../utils/errorsToClient/sendAuthError.ts';
 import Account, { IAccount } from '../models/Account.ts';
-import { sendNotFound } from '../../utils/errorsToClient/sendNotFound.ts';
 import getDataOfUser from '../../utils/getDataOfUser.ts';
 import showError from '../../utils/console/showError.ts';
-import serverError from '../../utils/errorsToClient/serverError.ts';
 import Goal from '../models/Goal.ts';
 import { Document } from 'mongoose';
 import User from '../models/User.ts';
-import sendBadRequest from '../../utils/errorsToClient/sendBadRequest.ts';
-import sendForbidden from '../../utils/errorsToClient/sendForbidden.ts';
+import sendAuthError from '../../utils/errors/fromServerToClient/sendAuthError.ts';
+import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound.ts';
+import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
 import checkRequest from '../../utils/checkRequest.ts';
+import sendBadRequest from '../../utils/errors/fromServerToClient/sendBadRequest.ts';
+import sendForbidden from '../../utils/errors/fromServerToClient/sendForbidden.ts';
 
 const router = express.Router({ mergeParams: true });
 

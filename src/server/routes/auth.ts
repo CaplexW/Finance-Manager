@@ -1,14 +1,16 @@
 import { Request, Response, Router } from 'express';
 import User, { IUser } from '../models/User.ts';
-import serverError from '../../utils/errorsToClient/serverError.ts';
 import cryptService from '../services/crypt.service.ts';
 import tokenService from '../services/token.service.ts';
 import { redLog } from '../../utils/console/coloredLogs.ts';
 import Category, { ICategory } from '../models/Category.ts';
 import validatorService from '../services/validator.service.ts';
 import { JwtPayload } from 'jsonwebtoken';
-import sendCredentialsError from '../../utils/errorsToClient/sendCredentialsError.ts';
-import { sendNotFound } from '../../utils/errorsToClient/sendNotFound.ts';
+import sendCredentialsError from '../../utils/errors/fromServerToClient/sendCredentialsError.ts';
+import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
+import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound.ts';
+import showElement from '../../utils/console/showElement.ts';
+import { IToken } from '../models/Token.ts';
 
 const router = Router({ mergeParams: true });
 const { getResult, getValidation } = validatorService;
@@ -89,7 +91,8 @@ async function updateToken(req: Request, res: Response) {
     try {
         const { refresh_token: refreshToken } = req.body;
         const data = tokenService.validateRefresh(refreshToken) as JwtPayload;
-        const dbToken = await tokenService.findToken(refreshToken);
+        const dbToken = await tokenService.findToken(refreshToken) as IToken;
+        showElement(dbToken, 'dbToken');
         const tokenIsInvalid = (!data || !dbToken || data._id !== dbToken?.user?.toString());
         if (tokenIsInvalid) return sendTokenError(res);
 

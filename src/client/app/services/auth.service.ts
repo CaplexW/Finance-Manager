@@ -1,8 +1,9 @@
 import axios, { AxiosResponse } from 'axios';
-import config from '../../../config/config';
-import { Credentials, RegisterPayload } from '../../../types/types';
-import handleError from '../../../utils/errors/onClient/handleError';
-import { getRefreshToken } from './storageService';
+import config from '../../../config/config.ts';
+import { Credentials, RegisterPayload } from '../../../types/types.ts';
+import handleError from '../../../utils/errors/onClient/handleError.ts';
+import { getRefreshToken } from './storage.service.ts';
+import showElement from '../../../utils/console/showElement.ts';
 
 const { API_ENDPOINT } = config;
 const httpAuth = axios.create({ baseURL: `${API_ENDPOINT}auth/` });

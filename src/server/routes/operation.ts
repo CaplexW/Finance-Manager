@@ -3,14 +3,14 @@ import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
 import Operation from '../models/Operation.ts';
 import { getDisplayDate } from '../../utils/formatDate.ts';
 import showError from '../../utils/console/showError.ts';
-import serverError from '../../utils/errorsToClient/serverError.ts';
-import sendAuthError from '../../utils/errorsToClient/sendAuthError.ts';
 import User from '../models/User.ts';
 import Category from '../models/Category.ts';
 import calculateAmount from '../../utils/calculateAmount.ts';
 import checkRequest from '../../utils/checkRequest.ts';
-import sendBadRequest from '../../utils/errorsToClient/sendBadRequest.ts';
-import sendForbidden from '../../utils/errorsToClient/sendForbidden.ts';
+import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
+import sendBadRequest from '../../utils/errors/fromServerToClient/sendBadRequest.ts';
+import sendForbidden from '../../utils/errors/fromServerToClient/sendForbidden.ts';
+import sendAuthError from '../../utils/errors/fromServerToClient/sendAuthError.ts';
 
 const router = express.Router({ mergeParams: true });
 

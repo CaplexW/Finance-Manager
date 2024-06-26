@@ -1,7 +1,7 @@
 import jsonwebtoken, { JwtPayload } from "jsonwebtoken";
 import { Document, Types } from "mongoose";
 import config from "../../config/config.ts";
-import Token from "../models/Token.ts";
+import Token, { IToken } from "../models/Token.ts";
 import showError from "../../utils/console/showError.ts";
 
 const { ACCESS_KEY, REFRESH_KEY } = config;
@@ -22,7 +22,7 @@ const tokenService = {
         }
         return await Token.create({ user: userId, refreshToken });
     },
-    async findToken(refreshToken: string): Promise<Document | null> {
+    async findToken(refreshToken: string): Promise<Document | IToken | null> {
         try {
             return await Token.findOne({ refreshToken });
         } catch (e) {
