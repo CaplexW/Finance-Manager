@@ -13,3 +13,11 @@ export const orangeColor: string = '#ff8324';
 export const purpleColor: string = '#6938fc';
 export const violetColor: string = '#df38fc';
 export const brownColor: string = '#fa4902';
+
+export const mainColor = '#00a2e8';
+export const categoryDefaultColor = '#e5ad06';
+export const secondaryColor = '#6c757d';
+export const outcomeColor = '#ff0000';
+export const incomeColor = '#04eb00';
+export const errorColor = 'red';
+export const succesColor = 'green';

@@ -1,6 +1,3 @@
-/* eslint-disable consistent-return */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable guard-for-in */
 export default function validator(data, config) {
   const errors = {};
   function validate(validateMethod, name, configLine) {

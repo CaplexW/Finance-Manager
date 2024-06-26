@@ -2,6 +2,8 @@ import showElement from "../../console/showElement.ts";
 
 export default function createErrorMessage(err: unknown): string | false {
   let errorMessage;
+  showElement(err, 'error');
+  if (err.response.data.message === 'INVALID_CREDANTIALS' || err.response.data.message === 'Email not found') return 'Неверный логин или пароль';
   if ('code' in err) {
     if (typeof err.code === 'number') {
       const { code, message } = err.response.data.error;

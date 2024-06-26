@@ -11,6 +11,7 @@ const Token = model('Token', token);
 export default Token;
 
 export interface IToken {
+  _id?: Types.ObjectId,
   user: Types.ObjectId,
   refreshToken: string,
 }
