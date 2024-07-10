@@ -1,12 +1,11 @@
 import { Dispatch, PayloadAction, createSlice } from "@reduxjs/toolkit";
 import showError from "../../../utils/console/showError";
-import { Credentials, GetStateFuncion, GlobalState, RegisterPayload, User, UserState } from "../../../types/types";
+import { Credentials, GlobalState, RegisterPayload, User, UserState } from "../../../types/types";
 import authService from "../services/auth.service";
 import { getAccessToken, getUserId, removeAuthData, setTokens } from "../services/storage.service";
 import userService from "../services/user.service";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from "../../../utils/console/showElement";
-
-// TODO Реализовать logout
 
 const initialState = initState();
 const sliceConfig = {
@@ -57,12 +56,11 @@ const {
 } = actions;
 
 export function loadUserData() {
-  return async function dispatchRequest(dispatch: Dispatch, getState: GetStateFuncion) {
+  return async function dispatchRequest(dispatch: Dispatch) {
     dispatch(userLoadRequested());
     try {
-      const userId = getState().user.auth as string;
-      const { content } = await userService.getById(userId);
-      dispatch(userLoadSucceed(content));
+      const user = await userService.getAuthed();
+      dispatch(userLoadSucceed(user));
     } catch (err) {
       userLoadFailed(err.message);
     }
@@ -115,7 +113,7 @@ export function getUser() {
   };
 }
 export function getLoginStatus() { return (s: GlobalState): boolean => s.user.isLogged; }
-export function getDataStatus() { return (s: GlobalState): boolean => s.user.dataLoaded; }
+export function getUserDataStatus() { return (s: GlobalState): boolean => s.user.dataLoaded; }
 
 function initState(): UserState {
   let state: UserState;

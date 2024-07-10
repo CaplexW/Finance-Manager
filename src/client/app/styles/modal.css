@@ -1,0 +1,105 @@
+.dialog {
+  max-width: 40rem;
+  min-width: 23rem;
+  background: #ffffff00;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 .2rem .5rem rgba(128, 128, 128, 0.453);
+  color: #222;
+  border: none;
+  border-radius: 0.5rem;
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.dialog input {
+  background: rgba(255, 255, 255, 0.503);
+}
+.dialog button {
+  /* /* height: 2.2rem; */
+  background: rgba(255, 255, 255, 0.503);
+  border-radius: 1rem;
+  padding: .5rem .7rem
+}
+.modal-body .form .css-b62m3t-container .css-13cymwt-control {
+  background: rgba(255, 255, 255, 0.503);
+}
+.modal-body .button-container {
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+.button-container .cancel-btn:hover {
+  background-color: #c2cbd1;
+}
+.dialog-content {
+  
+}
+.modal-header{
+  display: flex;
+  justify-content: space-between;
+  padding: .7rem 1.3rem 0 1.1rem;
+}
+.modal-body {
+  padding: .5rem 3rem 1.5rem 3rem;
+}
+
+.modal-header .close-button.close-button {
+  background-color: #22222200;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes slide-down {
+  0% {
+    transform: translateY(-325%);
+  }
+  100% {
+    transform: translateY(15%);
+  }
+}
+@keyframes slide-up {
+  0% {
+    transform: translateY(15%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+.dialog::backdrop {
+  background: #e1aafd / .5;
+  opacity: 0;
+}
+.dialog[open] {
+  animation: 
+    slide-down 700ms forwards,
+    fade-in 700ms forwards;
+}
+.dialog[closing] {
+  display: block;
+  pointer-events: none;
+  inset: 0;
+  animation: 
+    slide-up 700ms forwards,
+    fade-out 700ms forwards;
+}
+.dialog[open]::backdrop {
+  animation: fade-in 700ms forwards;
+}
+.dialog[closing]::backdrop {
+  animation: fade-out 700ms forwards;
+}

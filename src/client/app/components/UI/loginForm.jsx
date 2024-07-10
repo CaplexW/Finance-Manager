@@ -2,8 +2,9 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
-import Form, { Checkbox, InputField } from '../common/form';
+import Form, { Checkbox, FieldInput } from '../common/form';
 import { signIn } from '../../store/user';
+import { mainColor } from '../../../../constants/colors';
 
 export default function LoginForm() {
   const emptyData = { email: '', password: '', stayIn: false };
@@ -58,10 +59,10 @@ export default function LoginForm() {
     <div className="container mt-5">
       <h2>Авторизация</h2>
       <Form dataScheme={emptyData} onSubmit={handleSubmit} validatorConfig={validatorConfig}>
-        <InputField label="E-mail" name="email" placeholder="adress@mail.com" type="text" />
-        <InputField label="Пароль" name="password" placeholder="It1sAGo0dP@ss!" type="password" />
+        <FieldInput label="E-mail" name="email" placeholder="adress@mail.com" type="text" />
+        <FieldInput label="Пароль" name="password" placeholder="It1sAGo0dP@ss!" type="password" />
         <Checkbox name="stayIn"><span>Оставаться в системе</span></Checkbox>
-        <button className="btn btn-primary mt-2 mx-auto w-100" type="submit">Войти</button>
+        <button className="mt-2 mx-auto w-100" style={{ "height": "1.8rem" }} type="submit">Войти</button>
       </Form>
       <span className="w-100">
         Нет аккаунта?

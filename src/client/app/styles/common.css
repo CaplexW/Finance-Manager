@@ -1,0 +1,25 @@
+button {
+  border: none;
+  border-radius: .8rem;
+  background-color: white;
+  transition: .5s;
+}
+button:hover {
+  border-radius: .5rem;
+  background-color: #93bbca;
+  transition: .5s;
+}
+p {
+  margin: 0;
+}
+a {
+  text-decoration: none;
+}
+
+.icon-button {
+  border: none;
+  background: none;
+}
+.icon-button:hover {
+  background: none;
+}

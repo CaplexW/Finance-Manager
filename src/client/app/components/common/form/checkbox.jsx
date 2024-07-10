@@ -16,13 +16,13 @@ export default function Checkbox({
   return (
     <div className="form-check">
       <input
-        type="checkbox"
         checked={value}
         className={inputClass}
         id={name}
         onChange={handleChange}
+        type="checkbox"
       />
-      <label htmlFor={name} className="form-check-label">{children}</label>
+      <label className="form-check-label" htmlFor={name}>{children}</label>
     </div>
   );
 }
@@ -30,12 +30,12 @@ Checkbox.propTypes = {
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
   error: PropTypes.string,
   name: PropTypes.string.isRequired,
-  value: PropTypes.bool,
   onChange: PropTypes.func,
+  value: PropTypes.bool,
 };
 Checkbox.defaultProps = {
-  onChange: undefined,
-  value: false,
   children: undefined,
   error: undefined,
+  onChange: undefined,
+  value: false,
 };

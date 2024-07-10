@@ -21,9 +21,9 @@ export function todayInput() {
 // export function tomorrowDisplay() {
 //   return formatDisplayDate(new Date().setDate(new Date().getDate() + 1));
 // }
-// export function tomorrowInput() {
-//   return getInputDate(new Date().setDate(new Date().getDate() + 1));
-// }
+export function tomorrowInput(): string {
+  return getInputDate(new Date().setDate(new Date().getDate() + 1));
+}
 // export function yesterdayDisplay() {
 //   return formatDisplayDate(new Date().setDate(new Date().getDate() - 1));
 // }

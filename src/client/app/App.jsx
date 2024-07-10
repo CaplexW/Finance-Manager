@@ -6,6 +6,7 @@ import { Route, Routes } from "react-router-dom";
 import Login from "./layouts/login";
 import MainPage from "./layouts/mainPage";
 import LogOut from "./layouts/logOut";
+import Operations from "./layouts/operations";
 
 export default function App() {
 return ( 
@@ -16,7 +17,8 @@ return (
       <Route Component={MainPage} index />
       <Route Component={Login} path="/login/:register?" />
       <Route Component={LogOut} path="/logout" />
+      <Route Component={Operations} path="/operations" />
     </Routes>
   </div>
- );
+ ); 
 };

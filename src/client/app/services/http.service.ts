@@ -11,7 +11,6 @@ const http = axios.create({
 });
 
 http.interceptors.request.use(modifyRequest, handleError);
-http.interceptors.response.use(modifyResponse, handleError);
 
 const httpService = {
   get: http.get,
@@ -21,10 +20,6 @@ const httpService = {
   delete: http.delete,
 };
 
-function modifyResponse(response: AxiosResponse) {
-  response.data = { content: response.data };
-  return response;
-}
 async function modifyRequest(request: InternalAxiosRequestConfig) {
   const expiresDate = Number(getTokenExpiresDate());
   const refreshToken = getRefreshToken();

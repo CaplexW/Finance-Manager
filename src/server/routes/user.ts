@@ -16,7 +16,7 @@ const router = express.Router({ mergeParams: true });
 
 router.patch('/:id', checkAuth, updateUser);
 router.delete('/:id', checkAuth, removeUser);
-router.get('/:id', checkAuth, sendUserInfo);
+router.get('/', checkAuth, sendUserInfo);
 
 async function updateUser(req: AuthedRequest, res: Response) {
   // requestBody = {
@@ -65,7 +65,7 @@ async function sendUserInfo(req: AuthedRequest, res: Response) {
   try {
     if(!req.user) return sendAuthError(res, thisPlace);
 
-    const userInfo = await User.findById(req.params.id);
+    const userInfo = await User.findById(req.user._id);
     const filteredUserInfo = Object.fromEntries(
       Object.entries(userInfo?._doc).filter(([key]) => !['__v', 'password', 'createdAt', 'updatedAt'].includes(key))
     ); 

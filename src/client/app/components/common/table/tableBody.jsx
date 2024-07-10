@@ -1,12 +1,7 @@
-/* eslint-disable react/jsx-no-useless-fragment */
-/* eslint-disable array-callback-return */
-/* eslint-disable no-underscore-dangle */
 import React from 'react';
 import lod from 'lodash';
 import PropTypes from 'prop-types';
 // Утилиты
-// eslint-disable-next-line no-unused-vars
-import showElement from '../../../utils/debug/showElement';
 
 export default function TableBody({ data, columns }) {
   function renderContent(item, column) {

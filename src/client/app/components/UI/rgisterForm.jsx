@@ -1,8 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import InputField from '../common/form/inputField';
 import Checkbox from '../common/form/checkbox';
-import Form from '../common/form';
+import Form, { FieldInput } from '../common/form';
 import { signUp } from '../../store/user';
 
 export default function RegisterForm() {
@@ -63,19 +62,19 @@ export default function RegisterForm() {
     <div>
       <h2>Регистрация</h2>
       <Form dataScheme={defaultData} onSubmit={handleSubmit} validatorConfig={validatorConfig}>
-        <InputField
+        <FieldInput
           label="Электронная почта"
           name="email"
           placeholder="adress@mail.com"
           type="text"
         />
-        <InputField
+        <FieldInput
           label="Ваше имя"
           name="name"
           placeholder="Джеймс Бонд"
           type="text"
         />
-        <InputField
+        <FieldInput
           label="Пароль"
           name="password"
           placeholder="It1sAGo0dP@ss!"
@@ -90,7 +89,8 @@ export default function RegisterForm() {
           </a>
         </Checkbox>
         <button
-          className="btn btn-primary mt-2 mx-auto w-100"
+          className="mt-2 mx-auto w-100"
+          style={{ "height": "1.8rem" }}
           type="submit"
         >
           Зарегестрироваться

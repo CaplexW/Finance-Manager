@@ -92,7 +92,6 @@ async function updateToken(req: Request, res: Response) {
         const { refresh_token: refreshToken } = req.body;
         const data = tokenService.validateRefresh(refreshToken) as JwtPayload;
         const dbToken = await tokenService.findToken(refreshToken) as IToken;
-        showElement(dbToken, 'dbToken');
         const tokenIsInvalid = (!data || !dbToken || data._id !== dbToken?.user?.toString());
         if (tokenIsInvalid) return sendTokenError(res);
 

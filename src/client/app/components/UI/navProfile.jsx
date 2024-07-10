@@ -4,10 +4,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import UserAvatar from './userAvatar';
 import showElement from '../../../../utils/console/showElement';
 import { useDispatch, useSelector } from 'react-redux';
-import { getDataStatus, getUser, loadUserData } from '../../store/user';
+import { getUserDataStatus, getUser, loadUserData } from '../../store/user';
 
 export default function NavProfile() {
-  const isLoaded = useSelector(getDataStatus());
+  const isLoaded = useSelector(getUserDataStatus());
   const user = useSelector(getUser());
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const userPagePath = '/user/myProfile';

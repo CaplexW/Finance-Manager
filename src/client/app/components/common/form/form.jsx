@@ -4,12 +4,15 @@ import React, {
 import PropTypes from 'prop-types';
 import forbidExtraProps from 'prop-types-exact';
 import validator from '../../../../../utils/validator';
+import showElement from '../../../../../utils/console/showElement';
 
 export default function Form({
   children, validatorConfig, onSubmit, defaultData, dataScheme,
 }) {
   const [data, setData] = useState(defaultData);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => setData(defaultData), [defaultData]);
 
   const formIsValidating = !!validatorConfig;
   const dataExists = Object.keys(data).length > 0;
@@ -18,6 +21,7 @@ export default function Form({
   const validate = useCallback((validatingData) => {
     const errorsObj = validator(validatingData, validatorConfig);
     setErrors(errorsObj);
+  
     return Object.keys(errorsObj).length === 0;
   }, [validatorConfig, setData]);
 

@@ -6,8 +6,8 @@ import httpService from "./http.service";
 const userEndpoint = 'user/';
 
 const userService = {
-  async getById(id: string): Promise<{ content: User }> {
-    const { data } = await httpService.get(userEndpoint + id);
+  async getAuthed(): Promise<User> {
+    const { data } = await httpService.get(userEndpoint);
     return data;
   },
 };

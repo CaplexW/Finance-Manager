@@ -1,9 +1,9 @@
-import InputField from './inputField';
+import FieldInput from './fieldInput';
 import MultiSelectInput from './multiSelectInput';
 import RadioInput from './radioInput';
 import SelectInput from './selectInput';
 import Checkbox from './checkbox';
 
 export {
-  InputField, MultiSelectInput, RadioInput, SelectInput, Checkbox,
+  FieldInput, MultiSelectInput, RadioInput, SelectInput, Checkbox,
 };
