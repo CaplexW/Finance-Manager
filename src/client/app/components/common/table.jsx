@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import lod from 'lodash';
+import { arrowRightIcon } from '../../../assets/icons';
 
 export default function Table({ columns, data, onSort, sortConfig, title, searchBar, importButton, addButton, onAdd }) {
   // const caretUp = <i className="bi bi-caret-up-fill" />;
@@ -34,7 +35,12 @@ export default function Table({ columns, data, onSort, sortConfig, title, search
       <div className="table_container">
         <section className='table_header'>
           <h3 className='table_title'>{title}</h3>
+          <div className='button-group'>
           {addButton ? <button className="table_button" onClick={onAdd} type="button">Добавить</button> : ''}
+            <div className='import_export-file'>
+              <label className='import_export-file-label' htmlFor="import_export" title='Импортировать файл' />
+            </div>
+          </div>
         </section>
         <section className='table_body'>
           <table className='table_content'>

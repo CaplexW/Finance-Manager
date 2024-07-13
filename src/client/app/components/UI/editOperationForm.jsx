@@ -41,7 +41,7 @@ export default function EditOperationForm({ existingData }) {
   async function handleUpdate(inputValue) {
     const normolizedData = {
       ...existingData,
-      name: inputValue.operationName.trim(),
+      name: inputValue.name.trim(),
       date: inputValue.date,
       category: inputValue.category.value,
       amount: Number(inputValue.amount),

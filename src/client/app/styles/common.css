@@ -1,7 +1,7 @@
 button {
   border: none;
   border-radius: .8rem;
-  background-color: white;
+  background-color: #fff9;
   transition: .5s;
 }
 button:hover {

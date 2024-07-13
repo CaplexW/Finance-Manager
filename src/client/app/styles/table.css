@@ -36,24 +36,46 @@
 .table_header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   max-height: 10%;
   background-color: #FFF4;
-  padding: .6rem 1rem;
+  padding: .5rem 1rem;
+}
+.table_header .button-group {
+  display: flex;
+  justify-content: space-between;
+  width: 25%;
 }
 .table_header button {
   border: none;
   border-radius: .9rem;
-  padding: 0 .8rem;
+  padding: 0 .6rem;
+  margin: .05rem;
+  margin-left: 1rem;
   transition: .8s;
-  /* transition: ease-in-out; */
 }
 .table_header button:hover {
   border-radius: .5rem;
-  background-color: #93bbca;
+  background-color: #93bbca7d;
   box-shadow: .2rem .3rem rgba(101, 224, 255, 0.083);
   transition: .8s;
-  /* transition: ease-in-out; */
+}
+.table_header .import_export-file {
+  display: flex;
+  align-items: center;
+}
+.table_header .import_export-file-label {
+  width: 2rem;
+  height: 2rem;
+  background: #fff9 url(../../assets/icons/uploadIcon.svg) center / 80% no-repeat;
+  border-radius: 50%;
+  transition: .8s ease-in-out;
+}
+.table_header .import_export-file-label:hover {
+  border-radius: 45%;
+  background-color: #93bbca7d;
+  transform: scale(1.02);
 }
 .table_body {
   width: 95%;
@@ -94,6 +116,8 @@ td img {
   width: 36px;
   height: 36px;
 }
+
+
 
 @media (max-width: 1000px) {
   td:not(:first-of-type) {

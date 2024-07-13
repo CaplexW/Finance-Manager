@@ -39,7 +39,7 @@ export const arrowLeftIcon = (
   </svg>
 );
 export const arrowRightIcon = (
-  <svg className="bi bi-arrow-right-short" fill="gray" height="64" viewBox="0 0 16 16" width="64" xmlns="http://www.w3.org/2000/svg">
+  <svg className="bi bi-arrow-right-short" fill="gray" height="24" viewBox="0 0 16 16" width="24" xmlns="http://www.w3.org/2000/svg">
     <path d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z" fillRule="evenodd" />
   </svg>
 );
@@ -94,5 +94,10 @@ export const defaultAvatar = (
   <svg className="bi bi-person-circle" fill="white" height="40" viewBox="0 0 16 16" width="40" xmlns="http://www.w3.org/2000/svg">
     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
     <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" fillRule="evenodd" />
+  </svg>
+);
+export const filesIcon = (
+  <svg className="bi bi-files" fill="currentColor" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2m0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1M3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" />
   </svg>
 );
