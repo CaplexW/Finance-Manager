@@ -19,6 +19,11 @@ const operationsService = {
     const { data } = await httpService.post(operationEndpoint + 'create', payload);
     return data;
   },
+  async upload(payload: FormData) {
+    const URL = operationEndpoint + 'upload';
+    const { data } = await httpService.post(URL, payload);
+    return data;
+  },
   async delete(id: string): Promise<RemoveResult> {
     const { data } = await httpService.delete(operationEndpoint + id);
     return data;

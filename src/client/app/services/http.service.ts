@@ -5,6 +5,7 @@ import {
 import authService from './auth.service';
 import handleError from '../../../utils/errors/onClient/handleError';
 import config from '../../../config/config';
+import showElement from '../../../utils/console/showElement';
 
 const http = axios.create({
   baseURL: config.API_ENDPOINT,
@@ -21,6 +22,7 @@ const httpService = {
 };
 
 async function modifyRequest(request: InternalAxiosRequestConfig) {
+  showElement(request, 'request');
   const expiresDate = Number(getTokenExpiresDate());
   const refreshToken = getRefreshToken();
   const tokenIsExpired = refreshToken && (expiresDate < Date.now());
