@@ -37,14 +37,17 @@ export default function EditOperationForm({ existingData }) {
       },
     },
   };
-  
+  const displayedData = {
+    ...existingData,
+    amount: Math.abs(parseFloat(existingData.amount)),
+  };
   async function handleUpdate(inputValue) {
     const normolizedData = {
       ...existingData,
       name: inputValue.name.trim(),
       date: inputValue.date,
       category: inputValue.category.value,
-      amount: Number(inputValue.amount),
+      amount: Math.abs(parseFloat(inputValue.amount)),
     };
     const result = await dispatch(updateOperation(normolizedData));
     if (result) handleClose();
@@ -52,9 +55,9 @@ export default function EditOperationForm({ existingData }) {
   function handleClose() {
     closeModalWindow(document.querySelector("#edit-operation-modal"));
   }
-  
+
   return (
-    <Form defaultData={existingData} onSubmit={handleUpdate} validatorConfig={validatorConfig} >
+    <Form defaultData={displayedData} onSubmit={handleUpdate} validatorConfig={validatorConfig} >
       <SelectInputWithCreate data={categories} label="Категория" name="category" />
       <FieldInput autoFocus label="Название" name="name" />
       <FieldInput label="Сумма" minimumValue={1} name="amount" type="number" />

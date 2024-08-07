@@ -1,6 +1,6 @@
 /* eslint-disable react/forbid-prop-types */
 import React from 'react';
-import PropTypes, { shape } from 'prop-types';
+import PropTypes from 'prop-types';
 import TableHeader from './tableHeader';
 import TableBody from './tableBody';
 
@@ -17,9 +17,9 @@ export default function Table({
       || (
       <>
         <TableHeader
-          selectedSort={selectedSort}
-          onSort={onSort}
           columns={columns}
+          onSort={onSort}
+          selectedSort={selectedSort}
         />
         <TableBody columns={columns} data={data} />
       </>

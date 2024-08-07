@@ -8,6 +8,7 @@ const categoryEndpoint = 'category/';
 const categoriesService: CrudService<Category> = {
   async getList(): Promise<Category[]> {
     const { data } = await httpService.get(categoryEndpoint);
+    showElement(data, 'data');
     return data;
   },
   async update(payload: Category): Promise<Category> {

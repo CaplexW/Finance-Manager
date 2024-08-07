@@ -9,6 +9,18 @@ import showElement from '../../../../../utils/console/showElement';
 export default function Form({
   children, validatorConfig, onSubmit, defaultData, dataScheme,
 }) {
+  // Документация:
+  // defaultData и dataScheme - оба представляют из себя оьбъект ключ:значение.
+  // Ключ - это название поля, он должен соответствовать параметру name элемента input.
+  // Пример { email: "value", password: "value" }
+  // defaultData и dataScheme - взаимоисключающие параметры.
+  // defaultData следует использовать когда нужно передать в поля формы
+  // какие-то существующие данные, например в форме для редактирования { name: "existing name", pass: "existing pass"}.
+  // dataScheam же это объект с ключами-полями формы, но с пустыми значениями { name: "", pass: "" }.
+  // Этот параметр используется для формы где не должно быть изначальных значений.
+  // Его следует задать, чтобы не триггерить валидацию на только-что открывшейся форме.
+  // В случае отсутствие этого параметра или передачи пустых полей в defaultData, форма будет отрабатывать корректно,
+  // но валидатор сразу выдаст все ошибки при открытии формы.
   const [data, setData] = useState(defaultData);
   const [errors, setErrors] = useState({});
 

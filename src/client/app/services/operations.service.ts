@@ -1,6 +1,7 @@
 import { Operation, RemoveResult } from "../../../types/types";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from "../../../utils/console/showElement";
+import displayError from "../../../utils/errors/onClient/displayError";
 import httpService from "./http.service";
 
 const operationEndpoint = 'operation/';
@@ -19,8 +20,13 @@ const operationsService = {
     const { data } = await httpService.post(operationEndpoint + 'create', payload);
     return data;
   },
-  async upload(payload: FormData) {
-    const URL = operationEndpoint + 'upload';
+  async uploadCSV(payload: FormData, dataSource: string) {
+    showElement(dataSource, 'dataSource');
+    let endpoint;
+    if (dataSource === 'tinkoff') endpoint = 'upload/csv/tinkoff';
+    if (!endpoint) return displayError('Не могу определить банк!');
+    showElement(endpoint, 'endpoint');
+    const URL = operationEndpoint + endpoint;
     const { data } = await httpService.post(URL, payload);
     return data;
   },

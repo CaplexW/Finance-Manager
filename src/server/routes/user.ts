@@ -66,6 +66,7 @@ async function sendUserInfo(req: AuthedRequest, res: Response) {
     if(!req.user) return sendAuthError(res, thisPlace);
 
     const userInfo = await User.findById(req.user._id);
+    if (!userInfo) return sendNotFound(res, 'user', req.user._id);
     const filteredUserInfo = Object.fromEntries(
       Object.entries(userInfo?._doc).filter(([key]) => !['__v', 'password', 'createdAt', 'updatedAt'].includes(key))
     ); 

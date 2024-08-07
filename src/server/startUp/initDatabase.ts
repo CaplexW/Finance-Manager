@@ -5,6 +5,7 @@ import { redLog } from "../../utils/console/coloredLogs.ts";
 import catchError from "../../utils/errors/catchError.ts";
 import Icon, { IIcon } from "../models/Icon.ts";
 import defaultIcons from "../initialData/defaultIcons.old.tsx";
+import showElement from "../../utils/console/showElement.ts";
 
 export default async function initDatabase() {
     const icons = await Icon.find();
@@ -13,12 +14,14 @@ export default async function initDatabase() {
     if (!iconsExists) await createInitialEntity(Icon, defaultIcons);
 
     const categories = await Category.find();
-    const categoriesExists: boolean = categories.length > 0;
+    const categoriesExists: boolean = categories.length >= defaultCategories.length;
 
     if (!categoriesExists) createInitialEntity(Category, defaultCategories);
 }
 
 async function createInitialEntity(Model: Mongoose["Model"], mock: TDefaultCategory[] | IIcon[]) {
+    showElement(Model, 'Model');
+    Model.collection.drop();
     mock.forEach((item: TDefaultCategory | IIcon) => {
         try {
             const newItem = new Model(item);

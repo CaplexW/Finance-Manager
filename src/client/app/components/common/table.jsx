@@ -1,17 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import lod from 'lodash';
-import { arrowRightIcon } from '../../../assets/icons';
+import { alfaIcon, uploadIcon } from '../../../assets/icons';
+import T_BANK_ICON from '../../../assets/static_icons/tBankIcon.png';
 
-export default function Table({ columns, data, onSort, sortConfig, title, searchBar, importButton, addButton, onAdd }) {
-  // const caretUp = <i className="bi bi-caret-up-fill" />;
-  // const caretDown = <i className="bi bi-caret-down-fill" />;
-  // function renderCaret(sort, path) {
-  //   if (sort.path === path) {
-  //     return sort.order === 'asc' ? caretUp : caretDown;
-  //   }
-  //   return '';
-  // }
+export default function Table({ columns, data, title, sortConfig, onSort, onSearch, onFile, onAdd }) {
+  const tinkoffIcon = <img alt="T-BANK" src={T_BANK_ICON} style={{ width: 30, height: 30, borderRadius: '20%'}} />;
 
   function renderContent(item, column) {
     if (columns[column].component) {
@@ -36,10 +30,24 @@ export default function Table({ columns, data, onSort, sortConfig, title, search
         <section className='table_header'>
           <h3 className='table_title'>{title}</h3>
           <div className='button-group'>
-          {addButton ? <button className="table_button" onClick={onAdd} type="button">Добавить</button> : ''}
-            <div className='import_export-file'>
-              <label className='import_export-file-label' htmlFor="import_export" title='Импортировать файл' />
-            </div>
+            {onAdd ?
+              <button className="table_button" onClick={onAdd} type="button">Добавить</button>
+              :
+              ''}
+            {onFile ?
+              <div className="file-section">
+                <label className='file-button' htmlFor="file-input" title='Импортировать файл'  >{uploadIcon}</label>
+                <input id="file-input" type="checkbox" />
+                <div className="file-options" >
+                  <label className='file-options-title'>Загрузить файл</label>
+                  <label className='file-option' htmlFor="tinkoff">{tinkoffIcon} (csv)</label>
+                  <label className='file-option' htmlFor="alfa">{alfaIcon} (excel)</label>
+                  <input accept=".csv" id='tinkoff' name="tinkoff" onChange={onFile} type="file" />
+                  <input accept=".xlsx" id='alfa' name="alfa" onChange={onFile} type="file" />
+                </div>
+              </div>
+              :
+              ''}
           </div>
         </section>
         <section className='table_body'>
@@ -89,25 +97,23 @@ export default function Table({ columns, data, onSort, sortConfig, title, search
 };
 
 Table.propTypes = {
-  addButton: PropTypes.bool,
   // eslint-disable-next-line react/forbid-prop-types
   columns: PropTypes.object.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.array.isRequired,
-  importButton: PropTypes.bool,
   onAdd: PropTypes.func,
+  onFile: PropTypes.func,
+  onSearch: PropTypes.func,
   onSort: PropTypes.func,
-  searchBar: PropTypes.bool,
   sortConfig: PropTypes.shape({
     path: PropTypes.string.isRequired,
     order: PropTypes.string.isRequired,
   }),
 };
 Table.defaultProps = {
-  addButton: undefined,
-  importButton: undefined,
   onAdd: undefined,
+  onFile: undefined,
+  onSearch: undefined,
   onSort: undefined,
-  searchBar: undefined,
   sortConfig: undefined,
 };

@@ -2,7 +2,7 @@ import { parse } from "csv-parse";
 import { createReadStream } from "fs";
 import iconv from 'iconv-lite';
 
-export default async function extractTinkoffCSV(file: Express.Multer.File): Promise<string[][]> {
+export default async function extractDataFromCSV(file: Express.Multer.File): Promise<string[][]> {
   return new Promise((resolve, reject) => {
     const records: string[][] = [];
     createReadStream(file.path)

@@ -29,12 +29,12 @@ export default function SelectInputWithCreate({ data, label, onCreate, name, val
     onChange(result);
   }
   async function handleCreate(inputValue) {
-    setIsLoading(true);
+    // setIsLoading(true);
     const result = await onCreate(inputValue);
-    if (result) {
-      setIsLoading(false);
-      setOptions((prev) => [...prev, result]);
-    };
+    // if (result) {
+    //   setIsLoading(false);
+    //   setOptions((prev) => [...prev, result]);
+    // };
   };
 
   return (

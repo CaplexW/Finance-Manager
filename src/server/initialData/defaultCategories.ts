@@ -98,6 +98,18 @@ const defaultCategories:TDefaultCategory[] = [
     isIncome: false,
     icon: otherIcon,
   },
+  {
+    name: 'Переводы',
+    color: 'red',
+    isIncome: false,
+    icon: salaryIcon,
+  },
+  {
+    name: 'Поступления',
+    color: 'green',
+    isIncome: true,
+    icon: salaryIcon,
+  },
 ];
 
 export default defaultCategories;

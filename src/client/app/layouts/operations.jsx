@@ -13,11 +13,11 @@ import BalanceCounter from '../components/UI/balanceCounter';
 import OperationTable from '../components/UI/operationTable';
 import ModalWindow from '../components/common/modalWindow';
 
-// TODO 2. Забить методы категорий в лейаут.
-// TODO 3. Сделать таблицу.
+// TODO 1. Реализовать создание и редактирование категорий.
+// TODO 2. Реализовать диаграммы.
 // TODO 4. Реализовать фильтрацию и сортировку.
 // TODO 5. Реализовать модальные окна и формы.
-// TODO 6. Протестить CRUD-функционал на интерфейсе.
+// TODO 7. Протестить CRUD-функционал на интерфейсе.
 
 export default function Operations() {
   const [switchPosition, setSwitchPosition] = useState('both');
@@ -88,14 +88,6 @@ export default function Operations() {
     // Чарт
     //  Свитч
     // Баланс
-    // Таблица
-    //  Отображение:
-    //    Сумма. Цвет в зависимости от типа
-    //    Название.
-    //    Ионка. Категория.
-    //    Дата.
-    //    Кнопки.
-    //  Кнопка "Добавить"
-    //  Кнопка "Показать больше"
+    // Кнопка "Показать больше"
   );
 };

@@ -1,4 +1,4 @@
-import React, { cloneElement } from 'react';
+import React, { cloneElement, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { nodesPropType } from '../../../../types/propTypes';
 import { mainColor } from '../../../../constants/colors';
@@ -7,11 +7,12 @@ import closeModalWindow from '../../../../utils/modals/closeModalWindow';
 export default function ModalWindow({
   id, headTitle, children, text,
 }) {
+  const ref = useRef();
   function closeWindow() {
     closeModalWindow(document.querySelector(`#${id}`));
   }
   return (
-    <dialog className="dialog" id={id}>
+    <dialog className="dialog" id={id} ref={ref}>
       <div className="dialog-content" id="dialogContent">
         <div className="container modal-header">
           <h4 className='me-5'>{headTitle}</h4>
@@ -26,7 +27,7 @@ export default function ModalWindow({
           </button>
         </div>
         <div className="container modal-body" id="modalBody">
-          {children ? cloneElement(children, { id }) : text}
+          {children ? cloneElement(children, { parent: ref.current }) : text}
         </div>
         {text ? (
           <div className="container modal-buttons" id="modalFooter">

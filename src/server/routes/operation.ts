@@ -1,7 +1,6 @@
 import express, { Response } from 'express';
 import multer from 'multer';
-import { parse } from 'csv-parse';
-import iconv from 'iconv-lite';
+import fs from 'fs';
 import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
 import Operation from '../models/Operation.ts';
 import { getDisplayDate } from '../../utils/formatDate.ts';
@@ -15,18 +14,15 @@ import sendBadRequest from '../../utils/errors/fromServerToClient/sendBadRequest
 import sendForbidden from '../../utils/errors/fromServerToClient/sendForbidden.ts';
 import sendAuthError from '../../utils/errors/fromServerToClient/sendAuthError.ts';
 import showElement from '../../utils/console/showElement.ts';
-import { createReadStream } from 'fs';
-import { TextDecoderStream } from 'node:stream/web';
-import extractTinkoffCSV from '../../utils/import/extractTinkoffCSV.ts';
-import getCategoryIdByName from '../../utils/categories/getCategoryByName.ts';
+import extractDataFromCSV from '../../utils/import/extractDataFromCSV.ts';
+import createOperationFromTinkoffData from '../../utils/import/createOperationFromTinkoffData.ts';
 
 const router = express.Router({ mergeParams: true });
 const upload = multer({ dest: './src/server/uploads' });
-const parser = parse({});
 
 router.get('/', checkAuth, sendList);
 router.post('/create', checkAuth, create);
-router.post('/upload', checkAuth, upload.single('file'), importOperations);
+router.post('/upload/csv/tinkoff', checkAuth, upload.single('file'), importCSVTinkoff);
 router.patch('/', checkAuth, update);
 router.delete('/:operationId', checkAuth, remove);
 
@@ -78,29 +74,27 @@ async function create(req: AuthedRequest, res: Response) {
     serverError(res, thisPlace);
   }
 }
-async function importOperations(req: AuthedRequest, res: Response) {
-  try {
-    const file = req.file;
-    showElement(file, 'file');
-    if (!file) return sendNotFound(res, 'imported file');
-    const rawOperation = await extractTinkoffCSV(file);
-    showElement(rawOperation, 'rawOperation');
-    const operationsArray = rawOperation.map((row, index) => {
-      if(index > 0) {
-        const operation = {
-          date: row[1],
-          amount: Number(row[6]),
-          name: row[11],
-          category: getCategoryIdByName(row[9]) || getCategoryByMCC(row[10]),
-          user: req.user._id,
-        };
-      }
-    });
+async function importCSVTinkoff(req: AuthedRequest, res: Response) {
+  const thisPlace = 'operation/import/csv/tinkoff';
 
-      // TODO преобразовать в объект.
-      // TODO обстрагировать как tinkoffCSV
-    // showElement(records, 'records');
-    // return res.status(200).json(records);
+  try {
+    if (!req.user) return sendAuthError(res, thisPlace);
+    if (!req.file) return sendNotFound(res, 'imported file');
+
+    const rawData = await extractDataFromCSV(req.file);
+    if (!rawData) return serverError(res, 'rawData');
+
+    rawData.shift();
+    const authedUser = req.user._id;
+    const operationsArray = await createOperationFromTinkoffData(rawData);
+    const result = await Promise.all(operationsArray.map(async (operationData) => {
+      operationData.user = authedUser;
+      const operation = await Operation.create(operationData);
+      return operation;
+    }));
+
+    res.status(200).send(result);
+    fs.rm(req.file.path, showElement);
   } catch (err) {
     showElement(err, 'err');
     serverError(res, 'operation/import');
@@ -124,12 +118,12 @@ async function update(req: AuthedRequest, res: Response) {
     if (!isPermitted) return sendForbidden(res, thisPlace);
     const currentOperation = await Operation.findById(req.body._id);
     if (!currentOperation) return sendNotFound(res, 'operation', req.body._id);
-    const id = currentOperation._id;
     const hostUser = await User.findById(authedUser);
     if (!hostUser) return sendNotFound(res, 'user', authedUser);
 
     const balanceDifference = Number(req.body.amount) - currentOperation.amount;
-    const updatedOperation = await Operation.findByIdAndUpdate(req.body._id, req.body, { new: true });
+    const newData = { ...req.body, amount: await calculateAmount(req.body) };
+    const updatedOperation = await Operation.findByIdAndUpdate(req.body._id, newData, { new: true });
     await hostUser.updateOne({ currentBalance: hostUser.currentBalance + balanceDifference });
     await hostUser.save();
 

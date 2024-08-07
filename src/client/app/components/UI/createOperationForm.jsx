@@ -8,10 +8,10 @@ import closeModalWindow from '../../../../utils/modals/closeModalWindow';
 import showElement from '../../../../utils/console/showElement';
 import { createOperation } from '../../store/operations';
 
-export default function CreateOperationForm() {
+export default function CreateOperationForm({ onCreateCategory, parent }) {
   const dispatch = useDispatch();
   const categories = useSelector(getCategoriesList());
-  const defaultData = { operationName: '', category: '', amount: '', date: '' };
+  const emptyFields = { operationName: '', category: '', amount: '', date: '' };
   const validatorConfig = {
     operationName: {
       isRequired: {
@@ -37,6 +37,8 @@ export default function CreateOperationForm() {
       },
     },
   };
+  const modalId = "add-operation-modal";
+  const modal = document.querySelector(`#${modalId}`);
   async function handleCreate(rawData) {
     const normolizedData = {
       name: rawData.operationName.trim(),
@@ -48,12 +50,18 @@ export default function CreateOperationForm() {
     if (result) handleClose();
     showElement(result, 'result');
   }
-  function handleClose() {
-    closeModalWindow(document.querySelector("#add-operation-modal"));
+  function handleCreateCategory(enteredName) {
+    showElement(parent, 'parent');
+    showElement(enteredName, 'enteredName');
+    onCreateCategory(enteredName, parent);
   }
+  function handleClose() {
+    if (modal) closeModalWindow(modal);
+  }
+
   return (
-    <Form dataScheme={defaultData} onSubmit={handleCreate} validatorConfig={validatorConfig} >
-      <SelectInputWithCreate data={categories} label="Категория" name="category" />
+    <Form dataScheme={emptyFields} onSubmit={handleCreate} validatorConfig={validatorConfig} >
+      <SelectInputWithCreate data={categories} label="Категория" name="category" onCreate={handleCreateCategory} />
       <FieldInput autoFocus label="Название" name="operationName" />
       <FieldInput label="Сумма" minimumValue={1} name="amount" type="number" />
       <FieldInput label="Дата" name="date" type="date" />
