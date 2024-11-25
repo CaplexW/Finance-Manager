@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-max-depth */
 import 'bootstrap/dist/css/bootstrap.css';
 import "./index.css";
 import React from "react";

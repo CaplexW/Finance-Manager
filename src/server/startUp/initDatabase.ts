@@ -6,18 +6,18 @@ import catchError from "../../utils/errors/catchError.ts";
 import Icon, { IIcon } from "../models/Icon.ts";
 import defaultIcons from "../initialData/defaultIcons.old.tsx";
 import showElement from "../../utils/console/showElement.ts";
-import heroIconsNames from "../initialData/heroIconsNames.ts";
-import HeroIconName, { IHeroIconName } from "../models/heroIconName.ts";
+// import heroIconsNames from "../initialData/heroIconsNames.ts";
+// import HeroIconName, { IHeroIconName } from "../models/heroIconName.ts";
 
 export default async function initDatabase() {
     const icons = await Icon.find();
     const iconsExists: boolean = icons.length > 0;
     
-    const iconNames = await HeroIconName.find();
-    const namesExists: boolean = iconNames.length > 0;
+    // const iconNames = await HeroIconName.find();
+    // const namesExists: boolean = iconNames.length > 0;
 
     if (!iconsExists) await createInitialEntity(Icon, defaultIcons);
-    if (!namesExists) await createInitialEntity(HeroIconName, heroIconsNames);
+    // if (!namesExists) await createInitialEntity(HeroIconName, heroIconsNames);
 
     const categories = await Category.find();
     const categoriesExists: boolean = categories.length >= defaultCategories.length;
