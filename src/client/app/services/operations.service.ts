@@ -16,7 +16,6 @@ const operationsService = {
     return data;
   },
   async create(payload: Operation): Promise<Operation> {
-    showElement(payload, 'creating from');
     const { data } = await httpService.post(operationEndpoint + 'create', payload);
     return data;
   },

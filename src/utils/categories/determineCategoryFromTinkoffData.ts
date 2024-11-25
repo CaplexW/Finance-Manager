@@ -12,6 +12,6 @@ export default async function determineCategoryFromTinkoffData(rowCSV: string[])
   result = await determineTransferType(rowCSV[6]);
   if (result) return result;
 
-  throw new Error(`Cannot determine categoryfrom row named ${rowCSV[9]}, with MCC ${rowCSV[10]}`);
+  throw new Error(`Cannot determine category from row named ${rowCSV[9]}, with MCC ${rowCSV[10]}`);
   
 }

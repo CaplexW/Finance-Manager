@@ -102,12 +102,15 @@ export type CrudActions = {
   loadRequested: ActionCreatorWithoutPayload<`${string}/loadRequested`>,
   loadSucceed: ActionCreatorWithPayload<CrudData[], `${string}/loadSucceed`>,
   loadFailed: ActionCreatorWithNonInferrablePayload<`${string}/loadFailed`>,
+
   updateRequested: ActionCreatorWithoutPayload<`${string}/updateRequested`>,
   updateSucceed: ActionCreatorWithPayload<CrudData, `${string}/updateSucceed`>,
   updateFailed: ActionCreatorWithNonInferrablePayload<`${string}/updateFailed`>,
+
   creationRequested: ActionCreatorWithoutPayload<`${string}/creationRequested`>,
   creationSucceed: ActionCreatorWithPayload<CrudData, `${string}/creationSucceed`>,
   creationFailed: ActionCreatorWithNonInferrablePayload<`${string}/creationFailed`>,
+
   deleteRequested: ActionCreatorWithoutPayload<`${string}/deleteRequested`>,
   deleteSucceed: ActionCreatorWithPayload<string, `${string}/deleteSucceed`>,
   deleteFailed: ActionCreatorWithNonInferrablePayload<`${string}/deleteFailed`>,

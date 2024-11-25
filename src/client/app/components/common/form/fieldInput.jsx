@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { eyeOpenIcon, eyeShutIcon } from '../../../../assets/icons';
 import flashInvalidInputs from '../../../../../utils/flashInvalidInputs';
@@ -16,11 +16,13 @@ function FieldInput({
   minimumValue
 }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const input = useRef();
   useEffect(flashIfInvalid, [error]);
+  showElement(error, 'error');
 
   function flashIfInvalid() {
-    const thisInput = document.querySelector(`#${name}`);
-    if (error) flashInvalidInputs(thisInput);
+    // const thisInput = document.querySelector(`#${name}`);
+    if (error) flashInvalidInputs(input.current);
   }
   function handleChange({ target }) {
     const result = {
@@ -51,6 +53,7 @@ function FieldInput({
           name={name}
           onChange={handleChange}
           placeholder={placeholder}
+          ref={input}
           type={passwordVisible ? 'text' : type}
           value={value}
         />

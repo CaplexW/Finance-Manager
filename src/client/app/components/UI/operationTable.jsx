@@ -51,7 +51,6 @@ export default function OperationTable({ displayedOperations, onSort, sortConfig
     const isConfirmed = confirm('Вы хотите удалить опирацию?');
     if (isConfirmed) {
       const result = await dispatch(deleteOperation(id));
-      showElement(result, 'result');
       // if (result.deleteCount) {
       //   onDelete((prevState) => prevState.filter((op) => op._id !== id)); //TODO Проверить нужно ли иди будет обновлятся с сервера и приходить в компонент обновленным?
       // }
@@ -61,7 +60,6 @@ export default function OperationTable({ displayedOperations, onSort, sortConfig
     const file = target.files[0];
     if (!file) return displayError('Произошла ошибка! Файл не загружен!');
 
-    showElement(target.name, 'file');
     const formData = new FormData();
     formData.append('file', file);
 
@@ -71,7 +69,7 @@ export default function OperationTable({ displayedOperations, onSort, sortConfig
     // if (type === 'alfa/excel') result = await operationsService.uploadEXCEL(file, 'alfa');
 
     if (!result) displayError('Некорректный файл');
-    if (result) showElement(result, 'result');
+    // TODO отправить результат в стор.
   }
   function OpenAddModal() {
     openModalById('add-operation-modal');

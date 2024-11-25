@@ -7,7 +7,6 @@ import { blueColor } from '../../../../constants/colors';
 
 export default function CategoryLabel({ source }) {
   const category = useSelector(getCategoryById(source));
-  showElement(category.icon, 'category.icon');
   function createIconChildren(children) {
     if (Array.isArray(children)) {
       return category.icon.props.children.map((child) => React.createElement(child.type, child.props));

@@ -1,6 +1,11 @@
+import showElement from "./console/showElement";
+
 export default function validator(data, config) {
+  showElement(data, 'data');
   const errors = {};
   function validate(validateMethod, name, configLine) {
+    showElement(name, 'worked on');
+    showElement(name, 'name');
     let isInvalid;
     switch (validateMethod) {
       case 'isRequired':

@@ -9,7 +9,6 @@ import { JwtPayload } from 'jsonwebtoken';
 import sendCredentialsError from '../../utils/errors/fromServerToClient/sendCredentialsError.ts';
 import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
 import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound.ts';
-import showElement from '../../utils/console/showElement.ts';
 import { IToken } from '../models/Token.ts';
 
 const router = Router({ mergeParams: true });

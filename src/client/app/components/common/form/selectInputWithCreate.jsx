@@ -1,7 +1,8 @@
+/* eslint-disable react/require-default-props */
 /* eslint-disable react/forbid-component-props */
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import CreatableSelect from 'react-select/creatable';
-import showElement from '../../../../../utils/console/showElement';
 import flashInvalidInputs from '../../../../../utils/flashInvalidInputs';
 
 export default function SelectInputWithCreate({ data, label, onCreate, name, value, onChange, error }) {
@@ -14,7 +15,7 @@ export default function SelectInputWithCreate({ data, label, onCreate, name, val
     });
   };
   const [isLoading, setIsLoading] = useState(false);
-  const [options, setOptions] = useState(createOptions(data));
+  const options = createOptions(data);
   useEffect(flashIfInvalid, [error]);
 
   function flashIfInvalid() {
@@ -44,6 +45,7 @@ export default function SelectInputWithCreate({ data, label, onCreate, name, val
       </label>
       <div id={name}>
         <CreatableSelect
+          aria-invalid={Boolean(error)}
           className="select from-control"
           isClearable
           isDisabled={isLoading}
@@ -52,10 +54,20 @@ export default function SelectInputWithCreate({ data, label, onCreate, name, val
           onChange={handleChange}
           onCreateOption={handleCreate}
           options={options}
+          required
           value={value || null}
         />
-        {/* {error ? <div className='ms-2' style={{ color: 'red' }}>{error}</div> : null} */}
       </div>
     </div>
   );
+};
+SelectInputWithCreate.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  data: PropTypes.array.isRequired,
+  error: PropTypes.string,
+  label: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onCreate: PropTypes.func,
+  value: PropTypes.string.isRequired,
 };

@@ -81,11 +81,11 @@ async function importCSVTinkoff(req: AuthedRequest, res: Response) {
     if (!req.user) return sendAuthError(res, thisPlace);
     if (!req.file) return sendNotFound(res, 'imported file');
 
+    const authedUser = req.user._id;
     const rawData = await extractDataFromCSV(req.file);
     if (!rawData) return serverError(res, 'rawData');
 
     rawData.shift();
-    const authedUser = req.user._id;
     const operationsArray = await createOperationFromTinkoffData(rawData);
     const result = await Promise.all(operationsArray.map(async (operationData) => {
       operationData.user = authedUser;

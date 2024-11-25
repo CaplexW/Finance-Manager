@@ -7,7 +7,7 @@ import validator from '../../../../../utils/validator';
 import showElement from '../../../../../utils/console/showElement';
 
 export default function Form({
-  children, validatorConfig, onSubmit, defaultData, dataScheme,
+  children, validatorConfig, onSubmit, defaultData, dataScheme, id,
 }) {
   // Документация:
   // defaultData и dataScheme - оба представляют из себя оьбъект ключ:значение.
@@ -21,9 +21,11 @@ export default function Form({
   // Его следует задать, чтобы не триггерить валидацию на только-что открывшейся форме.
   // В случае отсутствие этого параметра или передачи пустых полей в defaultData, форма будет отрабатывать корректно,
   // но валидатор сразу выдаст все ошибки при открытии формы.
+  
   const [data, setData] = useState(defaultData);
   const [errors, setErrors] = useState({});
-
+  showElement(defaultData, 'default data');
+  showElement(id, 'in form');
   useEffect(() => setData(defaultData), [defaultData]);
 
   const formIsValidating = !!validatorConfig;
@@ -100,7 +102,7 @@ export default function Form({
     return cloneElement(child, props);
   });
 
-  return <form className="form" onKeyDown={handleKeyDown} onSubmit={handleSubmit}>{clonedChildren}</form>;
+  return <form className="form" id={id} onKeyDown={handleKeyDown} onSubmit={handleSubmit}>{clonedChildren}</form>;
 }
 
 Form.propTypes = forbidExtraProps({

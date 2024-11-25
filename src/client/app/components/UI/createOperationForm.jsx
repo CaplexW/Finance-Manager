@@ -48,7 +48,6 @@ export default function CreateOperationForm({ onCreateCategory, parent }) {
     };
     const result = await dispatch(createOperation(normolizedData));
     if (result) handleClose();
-    showElement(result, 'result');
   }
   function handleCreateCategory(enteredName) {
     showElement(parent, 'parent');
@@ -60,7 +59,7 @@ export default function CreateOperationForm({ onCreateCategory, parent }) {
   }
 
   return (
-    <Form dataScheme={emptyFields} onSubmit={handleCreate} validatorConfig={validatorConfig} >
+    <Form dataScheme={emptyFields} id="create-operation-form" onSubmit={handleCreate} validatorConfig={validatorConfig} >
       <SelectInputWithCreate data={categories} label="Категория" name="category" onCreate={handleCreateCategory} />
       <FieldInput autoFocus label="Название" name="operationName" />
       <FieldInput label="Сумма" minimumValue={1} name="amount" type="number" />

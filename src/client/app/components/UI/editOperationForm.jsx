@@ -57,7 +57,7 @@ export default function EditOperationForm({ existingData }) {
   }
 
   return (
-    <Form defaultData={displayedData} onSubmit={handleUpdate} validatorConfig={validatorConfig} >
+    <Form defaultData={displayedData} id="edit-operation-form" onSubmit={handleUpdate} validatorConfig={validatorConfig} >
       <SelectInputWithCreate data={categories} label="Категория" name="category" />
       <FieldInput autoFocus label="Название" name="name" />
       <FieldInput label="Сумма" minimumValue={1} name="amount" type="number" />
