@@ -25,7 +25,7 @@ export default async function initDatabase() {
     if (!categoriesExists) createInitialEntity(Category, defaultCategories);
 }
 
-async function createInitialEntity(Model: Mongoose["Model"], mock: TDefaultCategory[] | IIcon[] | IHeroIconName[]) {
+async function createInitialEntity(Model: Mongoose["Model"], mock: TDefaultCategory[] | IIcon[]) {
     showElement(Model, 'Model');
     Model.collection.drop();
     mock.forEach((item: TDefaultCategory | IIcon) => {
