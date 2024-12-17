@@ -6,7 +6,7 @@ export interface IOperation {
   amount: number,
   balanceBefore?: number
   balanceAfter?: number,
-  category: Types.ObjectId[],
+  category: Types.ObjectId,
   user: Types.ObjectId,
 }
 

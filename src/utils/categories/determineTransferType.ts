@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import defaultCategories from "../../server/initialData/defaultCategories.ts";
+import defaultCategories from "../../db/initialData/defaultCategories.ts";
 import getCategoryIdByName from "./getCategoryByName.ts";
 
 export default async function determineTransferType(amount: string): Promise <Types.ObjectId> {

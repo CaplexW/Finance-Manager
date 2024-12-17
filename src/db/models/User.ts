@@ -25,5 +25,7 @@ export interface IUser {
     currentBalance: number,
     categories: Types.ObjectId[],
     accounts: Types.ObjectId[],
+    goals: Types.ObjectId[],
+    operations: Types.ObjectId[],
     image: string,
 }

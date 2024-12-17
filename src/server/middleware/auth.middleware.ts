@@ -3,6 +3,7 @@ import tokenService from "../services/token.service.ts";
 import { Response, Request, NextFunction } from "express";
 import showError from '../../utils/console/showError.ts';
 import { redLog } from '../../utils/console/coloredLogs.ts';
+import showElement from '../../utils/console/showElement.ts';
 
 export function checkAuth(req: AuthedRequest, res: Response, next: NextFunction) {
     if (req.method === 'OPTIONS') return next();
@@ -16,6 +17,7 @@ export function checkAuth(req: AuthedRequest, res: Response, next: NextFunction)
         next();
     } catch (e) {
         authCheckError('something and fallen to "catch"');
+        showElement(e, 'e');
         showError(e);
     }
 

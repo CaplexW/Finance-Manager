@@ -3,6 +3,7 @@ import closeModalWindow from "./closeModalWindow.ts";
 
 export default function openModalById(modalId: string) {
   const modal: HTMLDialogElement | null = document.querySelector(`#${modalId}`);
+  showElement(modal, 'modal');
   if (modal) {
     // const table = document.querySelector('#operations-table-container');
     // table?.setAttribute('hidden', 'true');

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import Table from '../common/table';
 import { operationPropType } from '../../../../types/propTypes';
@@ -18,10 +18,18 @@ import displayError from '../../../../utils/errors/onClient/displayError';
 import CreateCategoryForm from './CreateCategoryForm';
 import closeModalWindow from '../../../../utils/modals/closeModalWindow';
 
+// TODO 1. Реализовать условный рендеринг модальных окон
+
 export default function OperationTable({ displayedOperations, onSort, sortConfig }) {
   const [editingData, setEditingData] = useState({});
   const [newCategoryName, setNewCategoryName] = useState(null);
+
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [openCategoryModal, setOpenCategoryModal] = useState(false);
+
   const dispatch = useDispatch();
+
   const columns = {
     name: {
       path: 'name',
@@ -37,16 +45,13 @@ export default function OperationTable({ displayedOperations, onSort, sortConfig
       name: 'Категория',
       path: 'category',
       // eslint-disable-next-line react/no-unstable-nested-components
-      component: (operation) => <CategoryLabel source={operation.category} />,
+      component: (operation) => <CategoryLabel categoryId={operation.category} />,
     },
     date: { path: 'date', name: 'Дата' },
     editButton: { component: renderEditButton },
     deleteButton: { component: renderDeleteButton },
   };
 
-  async function handleEdit(operation) {
-    showElement(operation, 'Editing operation...');
-  }
   async function handleDelete(id) {
     const isConfirmed = confirm('Вы хотите удалить опирацию?');
     if (isConfirmed) {
@@ -71,28 +76,38 @@ export default function OperationTable({ displayedOperations, onSort, sortConfig
     if (!result) displayError('Некорректный файл');
     // TODO отправить результат в стор.
   }
-  function OpenAddModal() {
-    openModalById('add-operation-modal');
-  }
+
+  const handleOpenCreateModal = useCallback(() => setOpenCreateModal(true));
+  const handleCloseCreateModal = useCallback(() => setOpenCreateModal(false));
+
+  const handleOpenEditModal = useCallback(() => setOpenEditModal(true));
+  const handleCloseEditModal = useCallback(() => setOpenEditModal(false));
+
+  const handleOpenCategoryModal = useCallback(() => setOpenCategoryModal(true));
+  const handleCloseCategoryModal = useCallback(() => setOpenCategoryModal(false));
+
   function OpenEditModal(operation) {
+    handleOpenEditModal(true);
     setEditingData({ ...operation });
-    openModalById('edit-operation-modal');
   }
+
+  // TODO пересмотреть методы, подумать о мемоизации
   function renderDeleteButton(operation) {
     return <DeleteButton onDelete={() => handleDelete(operation._id)} />;
   }
   function renderEditButton(operation) {
     return <EditButton onClick={() => OpenEditModal(operation)} />;
   }
+
   function switchModals(prevModal, nextModal) {
     closeModalWindow(prevModal);
     openModalById(nextModal.id);
   }
   function handleCreateCategory(enteredName, prevModal) {
-    const createCategoryModal = document.querySelector('#create-category-modal');
+    setOpenCategoryModal(p => !p);
+    // const createCategoryModal = document.querySelector('#create-category-modal');
     setNewCategoryName(enteredName);
-    switchModals(prevModal, createCategoryModal);
-    showElement(enteredName, 'enteredName');
+    // switchModals(prevModal, createCategoryModal);
   }
 
   return (
@@ -100,7 +115,7 @@ export default function OperationTable({ displayedOperations, onSort, sortConfig
       <Table
         columns={columns}
         data={displayedOperations}
-        onAdd={OpenAddModal}
+        onAdd={handleOpenCreateModal}
         onDelete={handleDelete}
         onFile={handleImport}
         onSort={onSort}
@@ -108,15 +123,15 @@ export default function OperationTable({ displayedOperations, onSort, sortConfig
         sortConfig={sortConfig}
         title="Операции"
       />
-      <ModalWindow headTitle="Добавьте операцию" id="add-operation-modal">
-        <CreateOperationForm onCreateCategory={handleCreateCategory} />
-      </ModalWindow>
-      <ModalWindow headTitle="Измените операцию" id="edit-operation-modal">
-        <EditOperationForm existingData={editingData} onCreateCategory={handleCreateCategory} />
-      </ModalWindow>
-      <ModalWindow headTitle="Создайте категорию" id="create-category-modal">
-        <CreateCategoryForm enteredName={newCategoryName} />
-      </ModalWindow>
+        <ModalWindow headTitle="Добавьте операцию" isOpen={openCreateModal} onClose={handleCloseCreateModal} >
+          <CreateOperationForm onCreateCategory={handleCreateCategory} />
+        </ModalWindow>
+        <ModalWindow headTitle="Измените операцию" isOpen={openEditModal} onClose={handleCloseEditModal} >
+          <EditOperationForm existingData={editingData} onCreateCategory={handleCreateCategory} />
+        </ModalWindow>
+        <ModalWindow headTitle="Создайте категорию" isOpen={openCategoryModal} onClose={handleCloseCategoryModal} >
+          <CreateCategoryForm enteredName={newCategoryName} />
+        </ModalWindow>
     </div>
   );
 };

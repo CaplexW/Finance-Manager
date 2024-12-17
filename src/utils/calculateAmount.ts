@@ -1,4 +1,4 @@
-import Category from "../server/models/Category.ts";
+import Category from "../db/models/Category.ts";
 import showError from "./console/showError.ts";
 
 export default async function calculateAmount(request: OperationCreateRequest) {

@@ -5,7 +5,7 @@
   padding: 1rem;
 }
 .table_container {
-  width: 60vw;
+  min-width: 60vw;
   height: 80vh;
 
   border-radius: .8rem;
@@ -40,12 +40,14 @@
   width: 100%;
   max-height: 10%;
   background-color: #FFF4;
-  padding: .5rem 1rem;
+  padding: 1.5rem 1rem;
 }
 .table_header .button-group {
   display: flex;
   justify-content: space-between;
-  width: 25%;
+}
+.button-group > .table_button {
+  margin-inline-end: 1rem;
 }
 .table_header .button-group .file-button {
   display: flex;

@@ -1,8 +1,9 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { eyeOpenIcon, eyeShutIcon } from '../../../../assets/icons';
-import flashInvalidInputs from '../../../../../utils/flashInvalidInputs';
 import showElement from '../../../../../utils/console/showElement';
+import flashInvalidInputs from '../../../../../utils/flashInvalidInputs';
+import flashOffInvalidInputs from '../../../../../utils/flashOffInvalidInputs';
 
 function FieldInput({
   value,
@@ -17,12 +18,14 @@ function FieldInput({
 }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const input = useRef();
-  useEffect(flashIfInvalid, [error]);
-  showElement(error, 'error');
 
-  function flashIfInvalid() {
-    // const thisInput = document.querySelector(`#${name}`);
-    if (error) flashInvalidInputs(input.current);
+  useEffect(handelInvalid, [error]);
+
+  showElement(error, `error of ${name}`);
+
+  function handelInvalid() {
+    if (input.current && !error) flashOffInvalidInputs(input.current);
+    if (input.current && error) flashInvalidInputs(input.current);
   }
   function handleChange({ target }) {
     const result = {
@@ -31,6 +34,7 @@ function FieldInput({
     };
     onChange(result);
   }
+
   function togglePasswordVisibility() {
     setPasswordVisible((prevState) => !prevState);
   }

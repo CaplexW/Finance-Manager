@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUser, getUserDataStatus, loadUserData } from '../store/user';
 import { deleteOperation, getOperationsList, getOperationsLoadStatus, loadOperations, updateOperation } from '../store/operations';
 import { getCategoriesList, getCategoriesLoadStatus, loadCategories } from '../store/categories';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../utils/console/showElement';
 import CategoriesList from '../components/UI/categoriesList';
 import Chart from '../components/UI/chart';
@@ -12,6 +11,7 @@ import DateRangePicker from '../components/common/dateRangePicker';
 import BalanceCounter from '../components/UI/balanceCounter';
 import OperationTable from '../components/UI/operationTable';
 import ModalWindow from '../components/common/modalWindow';
+import { orderBy } from 'lodash';
 
 // TODO 1. Реализовать создание и редактирование категорий.
 // TODO 2. Реализовать диаграммы.
@@ -23,18 +23,28 @@ export default function Operations() {
   const [switchPosition, setSwitchPosition] = useState('both');
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
   const [filter, setFilter] = useState({ category: null, type: null, date: null });
-  const [sort, setSort] = useState({ path: 'date', order: 'asc' });
+  const [sort, setSort] = useState({ path: 'date', order: 'desc' });
+
   const operationsIsLoaded = useSelector(getOperationsLoadStatus());
   const categoriesIsLoaded = useSelector(getCategoriesLoadStatus());
-  const userLoaded = useSelector(getUserDataStatus());
-  const isLoaded = (operationsIsLoaded && categoriesIsLoaded && userLoaded);
-  const user = useSelector(getUser());
+  const userIsLoaded = useSelector(getUserDataStatus());
   const operations = useSelector(getOperationsList());
   const categories = useSelector(getCategoriesList());
-  const filteredOperations = operations;
+  const user = useSelector(getUser());
+
   const dispatch = useDispatch();
 
-  useEffect(loadData, [operationsIsLoaded, categoriesIsLoaded, userLoaded]);
+  const isLoaded = (operationsIsLoaded && categoriesIsLoaded && userIsLoaded);
+
+  const filteredOperations = operations;
+  const sortedOperations = orderBy(filteredOperations, [sort.path], [sort.order]);
+  const displayedOperations = sortedOperations;
+
+  useEffect(loadData, [isLoaded]);
+  // useEffect(() => {
+  //   console.log('render');
+  //   showElement(isLoaded, 'all data is loaded');
+  // });
 
   function loadData() {
     if (!operationsIsLoaded) dispatch(loadOperations());
@@ -77,7 +87,7 @@ export default function Operations() {
         {/* <Currency />
         <DateRangePicker onPick={handlePick} pick={dateRange} />
         <BalanceCounter source={user.currentBalance} /> */}
-        <OperationTable displayedOperations={filteredOperations} onSort={handleSort} sortConfig={sort} />
+        <OperationTable displayedOperations={displayedOperations} onSort={handleSort} sortConfig={sort} />
       </section>
       <section id="modals">
         <ModalWindow onClose={closeModal} />

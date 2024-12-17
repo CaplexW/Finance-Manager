@@ -1,122 +1,129 @@
-import { ReactElement } from 'react';
 import {
   blueColor, blueLightColor, brownColor, cyanColor, grayColor, greenColor, greenLightColor, greenToxicColor, orangeColor, pinkColor, purpleColor, redColor, redSolidColor, violetColor, yellowColor
 } from '../../constants/colors.ts';
-import {
-  beautyIcon, busIcon, cafeIcon, clothesIcon, debtIcon, detergentsIcon, entertainmentIcon, foodIcon, healthIcon, houseIcon, hygieneIcon, otherIcon, salaryIcon, techIcon, telecomIcon
-} from './defaultIcons.tsx';
+import { TDefaultCategory } from '../models/DefaultCategory.ts';
 
 
 const defaultCategories:TDefaultCategory[] = [
   {
     name: 'Зарплата',
+    iconName: "money",
     color: blueColor,
     isIncome: true,
-    icon: salaryIcon,
+    icon: null,
   },
   {
     name: 'Продукты',
+    iconName: "food",
     color: redColor,
     isIncome: false,
-    icon: foodIcon,
+    icon: null,
   },
   {
     name: 'Транспорт',
+    iconName: "bus",
     color: yellowColor,
     isIncome: false,
-    icon: busIcon,
+    icon: null,
   },
   {
     name: 'Гигиена',
+    iconName: "hygiene",
     color: greenLightColor,
     isIncome: false,
-    icon: hygieneIcon,
+    icon: null,
   },
   {
     name: 'Здоровье',
+    iconName: "heart",
     color: greenColor,
     isIncome: false,
-    icon: healthIcon,
+    icon: null,
   },
   {
     name: 'Жильё',
+    iconName: "house",
     color: grayColor,
     isIncome: false,
-    icon: houseIcon,
+    icon: null,
   },
   {
     name: 'Уход за собой',
+    iconName: "beauty",
     color: pinkColor,
     isIncome: false,
-    icon: beautyIcon,
+    icon: null,
   },
   {
     name: 'Долги',
+    iconName: "debt",
     color: redSolidColor,
     isIncome: false,
-    icon: debtIcon,
+    icon: null,
   },
   {
     name: 'Техника',
+    iconName: "debt",
     color: orangeColor,
     isIncome: false,
-    icon: techIcon,
+    icon: null,
   },
   {
     name: 'Развлечения',
+    iconName: "joystick",
     color: purpleColor,
     isIncome: false,
-    icon: entertainmentIcon,
+    icon: null,
   },
   {
     name: 'Связь',
+    iconName: "telephone",
     color: blueLightColor,
     isIncome: false,
-    icon: telecomIcon,
+    icon: null,
   },
   {
     name: 'Рестораны',
+    iconName: "cafe",
     color: cyanColor,
     isIncome: false,
-    icon: cafeIcon,
+    icon: null,
   },
   {
     name: 'Одежда',
+    iconName: "clothes",
     color: violetColor,
     isIncome: false,
-    icon: clothesIcon,
+    icon: null,
   },
   {
     name: 'Бытовая химия',
+    iconName: "detergents",
     color: greenToxicColor,
     isIncome: false,
-    icon: detergentsIcon,
+    icon: null,
   },
   {
     name: 'Разное',
+    iconName: "other",
     color: brownColor,
     isIncome: false,
-    icon: otherIcon,
+    icon: null,
   },
   {
     name: 'Переводы',
+    iconName: "money",
     color: 'red',
     isIncome: false,
-    icon: salaryIcon,
+    icon: null,
   },
   {
     name: 'Поступления',
+    iconName: "money",
     color: 'green',
     isIncome: true,
-    icon: salaryIcon,
+    icon: null,
   },
 ];
 
 export default defaultCategories;
-
-export type TDefaultCategory = {
-  name: string,
-  color: string,
-  isIncome: boolean,
-  icon: ReactElement,
-};

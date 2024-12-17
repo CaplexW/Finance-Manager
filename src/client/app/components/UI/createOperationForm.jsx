@@ -7,8 +7,9 @@ import { getCategoriesList } from '../../store/categories';
 import closeModalWindow from '../../../../utils/modals/closeModalWindow';
 import showElement from '../../../../utils/console/showElement';
 import { createOperation } from '../../store/operations';
+import { formatDisplayDateFromInput } from '../../../../utils/formatDate';
 
-export default function CreateOperationForm({ onCreateCategory, parent }) {
+export default function CreateOperationForm({ onCreateCategory, parent, onClose }) {
   const dispatch = useDispatch();
   const categories = useSelector(getCategoriesList());
   const emptyFields = { operationName: '', category: '', amount: '', date: '' };
@@ -37,32 +38,27 @@ export default function CreateOperationForm({ onCreateCategory, parent }) {
       },
     },
   };
-  const modalId = "add-operation-modal";
-  const modal = document.querySelector(`#${modalId}`);
+  
   async function handleCreate(rawData) {
     const normolizedData = {
       name: rawData.operationName.trim(),
-      date: rawData.date,
+      date: formatDisplayDateFromInput(rawData.date),
       category: rawData.category.value,
-      amount: Number(rawData.amount),
+      amount: parseFloat(rawData.amount),
     };
     const result = await dispatch(createOperation(normolizedData));
     if (result) handleClose();
   }
   function handleCreateCategory(enteredName) {
-    showElement(parent, 'parent');
-    showElement(enteredName, 'enteredName');
     onCreateCategory(enteredName, parent);
   }
-  function handleClose() {
-    if (modal) closeModalWindow(modal);
-  }
+  function handleClose() { onClose(); }
 
   return (
-    <Form dataScheme={emptyFields} id="create-operation-form" onSubmit={handleCreate} validatorConfig={validatorConfig} >
+    <Form dataScheme={emptyFields} onSubmit={handleCreate} validatorConfig={validatorConfig} >
       <SelectInputWithCreate data={categories} label="Категория" name="category" onCreate={handleCreateCategory} />
       <FieldInput autoFocus label="Название" name="operationName" />
-      <FieldInput label="Сумма" minimumValue={1} name="amount" type="number" />
+      <FieldInput label="Сумма" name="amount" type="number" />
       <FieldInput label="Дата" name="date" type="date" />
       <div className="button-container">
         <button className='add-btn' type='submit' >Добавить</button>

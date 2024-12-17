@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import Category from '../../server/models/Category.ts';
+import Category from '../../db/models/Category.ts';
 import capitalize from '../capitalize.ts';
 
 export default async function getCategoryIdByName(categoryName: string): Promise<Types.ObjectId | null> {

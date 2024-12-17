@@ -11,7 +11,7 @@ const Icon = model('Icon', icon);
 
 export default Icon;
 
-export interface IIcon {
+export type TIcon = {
   name: string,
   src: ReactElement,
-}
+};

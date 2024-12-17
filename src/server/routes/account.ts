@@ -1,11 +1,11 @@
 import express, { Response } from 'express';
 import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
-import Account, { IAccount } from '../models/Account.ts';
+import Account, { IAccount } from '../../db/models/Account.ts';
 import getDataOfUser from '../../utils/getDataOfUser.ts';
 import showError from '../../utils/console/showError.ts';
-import Goal from '../models/Goal.ts';
+import Goal from '../../db/models/Goal.ts';
 import { Document } from 'mongoose';
-import User from '../models/User.ts';
+import User from '../../db/models/User.ts';
 import sendAuthError from '../../utils/errors/fromServerToClient/sendAuthError.ts';
 import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound.ts';
 import serverError from '../../utils/errors/fromServerToClient/serverError.ts';

@@ -1,11 +1,17 @@
 /* eslint-disable react/require-default-props */
 /* eslint-disable react/forbid-component-props */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import CreatableSelect from 'react-select/creatable';
 import flashInvalidInputs from '../../../../../utils/flashInvalidInputs';
+import showElement from '../../../../../utils/console/showElement';
+import flashOffInvalidInputs from '../../../../../utils/flashOffInvalidInputs';
 
 export default function SelectInputWithCreate({ data, label, onCreate, name, value, onChange, error }) {
+  // Документация:
+    // В value следует передавать объект формата
+    // { label: [отображаемое название], value: [передоваемое значение] }
+
   function createOptions(arrayOfObjects) {
     return arrayOfObjects.map((obj) => {
       if (obj.label && obj.value) return obj;
@@ -15,13 +21,17 @@ export default function SelectInputWithCreate({ data, label, onCreate, name, val
     });
   };
   const [isLoading, setIsLoading] = useState(false);
-  const options = createOptions(data);
-  useEffect(flashIfInvalid, [error]);
+  const thisInput = useRef(undefined);
 
-  function flashIfInvalid() {
-    const thisInput = document.querySelector(`#${name}`);
-    if (error) flashInvalidInputs(thisInput);
+  const options = createOptions(data);
+
+  useEffect(handleInvalid, [error]);
+
+  function handleInvalid() {
+    if (thisInput && !error) flashOffInvalidInputs(thisInput.current);
+    if (thisInput.current && error) flashInvalidInputs(thisInput.current);
   }
+
   function handleChange(inputValue) {
     const result = {
       name: 'category',
@@ -37,13 +47,12 @@ export default function SelectInputWithCreate({ data, label, onCreate, name, val
     //   setOptions((prev) => [...prev, result]);
     // };
   };
-
   return (
     <div>
       <label className="label-control" htmlFor={name}>
         {label}
       </label>
-      <div id={name}>
+      <div id={name} ref={thisInput}>
         <CreatableSelect
           aria-invalid={Boolean(error)}
           className="select from-control"
@@ -51,10 +60,10 @@ export default function SelectInputWithCreate({ data, label, onCreate, name, val
           isDisabled={isLoading}
           isLoading={isLoading}
           name={name}
+          placeholder="Выберите категорию"
           onChange={handleChange}
           onCreateOption={handleCreate}
           options={options}
-          required
           value={value || null}
         />
       </div>

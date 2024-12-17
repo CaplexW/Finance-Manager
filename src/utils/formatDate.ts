@@ -7,11 +7,16 @@ export function getInputDate(date: Date): string {
   const valueDate = `${splitedDate[2]}-${splitedDate[1]}-${splitedDate[0]}`;
   return valueDate;
 }
-// export function formatDisplayDateFromInput(date) {
-//   const splitedDate = date.split('-');
-//   const formatedDate = `${splitedDate[2]}.${splitedDate[1]}.${splitedDate[0]}`;
-//   return formatedDate;
-// } 
+export function formatDisplayDateFromInput(date: string): string {
+  const splitedDate = date.split('-');
+  const formatedDate = `${splitedDate[2]}.${splitedDate[1]}.${splitedDate[0]}`;
+  return formatedDate;
+}
+export function formatInputDateFromDisplay(date: string): string {
+  const splitedDate = date.split('.');
+  const formatedDate = `${splitedDate[2]}-${splitedDate[1]}-${splitedDate[0]}`;
+  return formatedDate;
+}
 export function todayDisplay() {
   return getDisplayDate(new Date());
 }

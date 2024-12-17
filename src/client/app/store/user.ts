@@ -76,6 +76,7 @@ export function signUp(payload: RegisterPayload) {
       dispatch(authRequestSucceed(data.userId)); // Пишим id авторизованного юзера в стор.
     } catch (err) {
       dispatch(authRequestFailed(err));
+      console.log(err);
       showError(err);
     }
   };

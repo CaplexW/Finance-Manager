@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import Icon from "../server/models/Icon.ts";
+import Icon from "../db/models/Icon.ts";
 import { cyanLog } from "./console/coloredLogs.ts";
 import showElement from "./console/showElement.ts";
 

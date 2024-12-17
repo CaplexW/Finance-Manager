@@ -2,11 +2,11 @@ import express, { Response } from 'express';
 import multer from 'multer';
 import fs from 'fs';
 import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
-import Operation from '../models/Operation.ts';
+import Operation from '../../db/models/Operation.ts';
 import { getDisplayDate } from '../../utils/formatDate.ts';
 import showError from '../../utils/console/showError.ts';
-import User from '../models/User.ts';
-import Category from '../models/Category.ts';
+import User from '../../db/models/User.ts';
+import Category from '../../db/models/Category.ts';
 import calculateAmount from '../../utils/calculateAmount.ts';
 import checkRequest from '../../utils/checkRequest.ts';
 import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
@@ -125,7 +125,7 @@ async function update(req: AuthedRequest, res: Response) {
     const newData = { ...req.body, amount: await calculateAmount(req.body) };
     const updatedOperation = await Operation.findByIdAndUpdate(req.body._id, newData, { new: true });
     await hostUser.updateOne({ currentBalance: hostUser.currentBalance + balanceDifference });
-    await hostUser.save();
+    // await hostUser.save();
 
     res.status(203).send(updatedOperation);
   } catch (err) {

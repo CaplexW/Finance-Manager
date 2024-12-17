@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 import getCategoryIdByName from "./getCategoryByName.ts";
-import defaultCategories from "../../server/initialData/defaultCategories.ts";
+import defaultCategories from "../../db/initialData/defaultCategories.ts";
 
 export default async function getCategoryByMCC(MCC: string): Promise<Types.ObjectId | null> {
   let categoryId;

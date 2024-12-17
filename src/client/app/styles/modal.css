@@ -1,39 +1,40 @@
 .dialog {
-  max-width: 40rem;
-  min-width: 23rem;
+  /* display: grid; */
+  max-width: 45rem;
+  /* min-width: 23rem; */
   background: #ffffff00;
   backdrop-filter: blur(10px);
-  box-shadow: 0 .2rem .5rem rgba(128, 128, 128, 0.453);
+  box-shadow: 0 0 1rem rgba(21, 21, 21, 0.377);
   color: #222;
   border: none;
   border-radius: 0.5rem;
   position: relative;
   margin: 0 auto;
+  padding-block-end: 1rem;
   overflow: hidden;
 }
 .dialog input {
   background: rgba(255, 255, 255, 0.503);
 }
 .dialog button {
-  /* /* height: 2.2rem; */
   background: rgba(255, 255, 255, 0.503);
   border-radius: 1rem;
-  padding: .5rem .7rem
+  padding: .5em .7em
 }
-.modal-body .form .css-b62m3t-container .css-13cymwt-control {
+.modal-body .form .css-b62m3t-container .css-13cymwt-control { 
+  /* It's a style of ReactSelect component */
   background: rgba(255, 255, 255, 0.503);
+  border-radius: .375rem;
 }
 .modal-body .button-container {
   padding: 0;
+  padding-block-start: .5rem;
   display: flex;
   justify-content: space-between;
   margin-top: 1.5rem;
 }
 .button-container .cancel-btn:hover {
   background-color: #c2cbd1;
-}
-.dialog-content {
-  
 }
 .modal-header{
   display: flex;

@@ -7,7 +7,7 @@ import validator from '../../../../../utils/validator';
 import showElement from '../../../../../utils/console/showElement';
 
 export default function Form({
-  children, validatorConfig, onSubmit, defaultData, dataScheme, id,
+  children, validatorConfig, onSubmit, defaultData, dataScheme,
 }) {
   // Документация:
   // defaultData и dataScheme - оба представляют из себя оьбъект ключ:значение.
@@ -24,13 +24,13 @@ export default function Form({
   
   const [data, setData] = useState(defaultData);
   const [errors, setErrors] = useState({});
-  showElement(defaultData, 'default data');
-  showElement(id, 'in form');
+  const [formIsInvalid, setFormIsInvalid] = useState(Object.keys(errors).length !== 0);
+
   useEffect(() => setData(defaultData), [defaultData]);
+  useEffect(() => setFormIsInvalid(Object.keys(errors).length !== 0), [errors]);
 
   const formIsValidating = !!validatorConfig;
   const dataExists = Object.keys(data).length > 0;
-  const formIsInvalid = Object.keys(errors).length !== 0;
 
   const validate = useCallback((validatingData) => {
     const errorsObj = validator(validatingData, validatorConfig);
@@ -39,9 +39,7 @@ export default function Form({
     return Object.keys(errorsObj).length === 0;
   }, [validatorConfig, setData]);
 
-  if (formIsValidating) {
-    useEffect(() => { if (dataExists) validate(data); }, [data]);
-  }
+  useEffect(() => { if (formIsValidating && dataExists) validate(data); }, [data]);
 
   const handleChange = useCallback((target) => {
     if (target.value !== undefined) {
@@ -51,6 +49,7 @@ export default function Form({
       }));
     }
   }, []);
+
   function handleSubmit(event) {
     event.preventDefault();
     if (formIsValidating) {
@@ -102,7 +101,7 @@ export default function Form({
     return cloneElement(child, props);
   });
 
-  return <form className="form" id={id} onKeyDown={handleKeyDown} onSubmit={handleSubmit}>{clonedChildren}</form>;
+  return <form className="form" onKeyDown={handleKeyDown} onSubmit={handleSubmit}>{clonedChildren}</form>;
 }
 
 Form.propTypes = forbidExtraProps({

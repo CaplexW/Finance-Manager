@@ -21,3 +21,10 @@ export interface ICategory {
   icon: ReactElement,
   user: Types.ObjectId,
 }
+export type TCategory = {
+  name: string,
+  color: string,
+  IsIncome: boolean,
+  icon: Types.ObjectId,
+  user: Types.ObjectId,
+};

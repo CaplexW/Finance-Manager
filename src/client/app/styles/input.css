@@ -13,9 +13,10 @@
 }
 
 .invalid {
-  animation: flashborder 10s;
+  /* animation: flashborder 10s; */
+  border-color: red;
 }
 .bordered {
-  border-radius: .6rem;
-  border:solid .05rem;
+  border-radius: .4rem;
+  border:solid .05rem red;
 }

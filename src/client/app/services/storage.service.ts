@@ -30,10 +30,10 @@ export function removeAuthData() {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(REFRESH_KEY);
   localStorage.removeItem(EXPIRES_KEY);
-  // window.location.reload(); // TODO Проверить нужно ли это. По возможности убрать.
+  window.location.reload();
 }
 
-const storageSerice = {
+const storageService = {
   setTokens,
   getAccessToken,
   getRefreshToken,
@@ -41,7 +41,7 @@ const storageSerice = {
   removeAuthData,
 };
 
-export default storageSerice;
+export default storageService;
 
 type tokenRequest = {
   refreshToken: string,
