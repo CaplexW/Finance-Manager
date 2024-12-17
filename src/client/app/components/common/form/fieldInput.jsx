@@ -21,8 +21,6 @@ function FieldInput({
 
   useEffect(handelInvalid, [error]);
 
-  showElement(error, `error of ${name}`);
-
   function handelInvalid() {
     if (input.current && !error) flashOffInvalidInputs(input.current);
     if (input.current && error) flashInvalidInputs(input.current);
@@ -40,14 +38,15 @@ function FieldInput({
   }
 
   const eyeIcon = passwordVisible ? eyeOpenIcon : eyeShutIcon;
-  const inputClass = `form-control mt-1 mb-1`;
+  const inputClass = `form-control mt-1 mb-1 ${type === 'color' ? 'w-25' : ''}`;
+  const parentClass = `${type === 'color' ? '' : 'input-group'} ${error ? 'has-validation' : ''}`;
 
   return (
     <div>
       <label className="label-control" htmlFor={name}>
         {label}
       </label>
-      <div className="input-group has-validation">
+      <div className={parentClass}>
         <input
           autoFocus={autoFocus}
           className={inputClass}
