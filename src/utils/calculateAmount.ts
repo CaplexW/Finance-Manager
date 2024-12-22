@@ -1,7 +1,7 @@
-import Category from "../server/models/Category.ts";
+import Category from "../db/models/Category.ts";
 import showError from "./console/showError.ts";
 
-export default async function calculateAmount(request: categoryCreateRequest) {
+export default async function calculateAmount(request: OperationCreateRequest) {
   const operationCategory = await Category.findById(request.category);
   if (operationCategory) {
     return operationCategory.isIncome ? Number(request.amount) : Number(-request.amount);
@@ -11,7 +11,7 @@ export default async function calculateAmount(request: categoryCreateRequest) {
   }
 }
 
-type categoryCreateRequest = {
+type OperationCreateRequest = {
   category: string,
   amount: number | string,
 };

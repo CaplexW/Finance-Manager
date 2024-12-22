@@ -1,21 +1,26 @@
 import express, { Response } from 'express';
-import User from '../models/User.ts';
+import User from '../../db/models/User.ts';
 import tokenService from '../services/token.service.ts';
 import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
-import serverError from '../../utils/errorsToClient/serverError.ts';
 import showError from '../../utils/console/showError.ts';
-import sendAuthError from '../../utils/errorsToClient/sendAuthError.ts';
-import Operation from '../models/Operation.ts';
-import Category from '../models/Category.ts';
-import Account from '../models/Account.ts';
-import Goal from '../models/Goal.ts';
-import { sendNotFound } from '../../utils/errorsToClient/sendNotFound.ts';
-import sendForbidden from '../../utils/errorsToClient/sendForbidden.ts';
+import Operation from '../../db/models/Operation.ts';
+import Category from '../../db/models/Category.ts';
+import Account from '../../db/models/Account.ts';
+import Goal from '../../db/models/Goal.ts';
+import sendAuthError from '../../utils/errors/fromServerToClient/sendAuthError.ts';
+import sendForbidden from '../../utils/errors/fromServerToClient/sendForbidden.ts';
+import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound.ts';
+import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
+import cryptService from '../services/crypt.service.ts';
+import sendCredentialsError from '../../utils/errors/fromServerToClient/sendCredentialsError.ts';
+import { cyanLog } from '../../utils/console/coloredLogs.ts';
+import showElement from '../../utils/console/showElement.ts';
 
 const router = express.Router({ mergeParams: true });
 
 router.patch('/:id', checkAuth, updateUser);
 router.delete('/:id', checkAuth, removeUser);
+router.get('/', checkAuth, sendUserInfo);
 
 async function updateUser(req: AuthedRequest, res: Response) {
   // requestBody = {
@@ -40,14 +45,26 @@ async function updateUser(req: AuthedRequest, res: Response) {
 async function removeUser(req: AuthedRequest, res: Response) {
   const thisPlace = 'user/remove';
   try {
+    cyanLog('user delete requested');
     if (!req.user) return sendAuthError(res, thisPlace);
+    cyanLog('auth check passed');
+
     const { id } = req.params;
-    const isPermitted = (id === req.user._id);
-    if (!isPermitted) return sendForbidden(res, thisPlace);
     const removingUser = await User.findById(id);
     if (!removingUser) return sendNotFound(res, "user", id);
+    cyanLog('user existence check passed');
+
+    if (!req?.headers?.authorization) return sendForbidden(res, thisPlace);
+    const password = req.headers.authorization.split(' ')[1];
+    const passwordIsOk = cryptService.compare(password, removingUser.password);
+    if (!passwordIsOk) sendCredentialsError(res);
+    cyanLog('password check passed')
+    const isPermitted = (id === req.user._id);
+    if (!isPermitted) return sendForbidden(res, thisPlace);
+    cyanLog('permition check passed');
 
     const result = await removingUser.deleteOne();
+    showElement(result, 'result');
     if (result.deletedCount) {
       await tokenService.removeTokens(removingUser._id);
       await removeUserData(req.user._id);
@@ -57,6 +74,26 @@ async function removeUser(req: AuthedRequest, res: Response) {
   } catch (e) {
     showError(e);
     serverError(res, thisPlace);
+  }
+}
+async function sendUserInfo(req: AuthedRequest, res: Response) {
+  const thisPlace = 'user/sendUserInfo';
+  try {
+    if(!req.user) return sendAuthError(res, thisPlace);
+
+    const userInfo = await User.findById(req.user._id);
+    if (!userInfo) return sendNotFound(res, 'user', req.user._id);
+    const filteredUserInfo = Object.fromEntries(
+      Object.entries(userInfo?._doc).filter(([key]) => !['__v', 'password', 'createdAt', 'updatedAt'].includes(key))
+    ); 
+    // Удаляю ненужные на фронте свойства. Делаю это через ._doc т.к. на самом деле именно там лежат поля пользователя.
+    // TS выдает ошибку т.к. _doc скрытое свойство, поэтому его "не существует".
+    // TODO найти способ удалить свойства из копии документа перед отправкой не возмущая TS.
+
+    res.status(200).send(filteredUserInfo);
+  } catch (err) {
+    serverError(res, thisPlace);
+    showError(err);
   }
 }
 
