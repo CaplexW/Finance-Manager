@@ -1,15 +1,15 @@
 import express, { Response } from 'express';
 import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
-import sendAuthError from '../../utils/errorsToClient/sendAuthError.ts';
 import getDataOfUser from '../../utils/getDataOfUser.ts';
-import { sendNotFound } from '../../utils/errorsToClient/sendNotFound.ts';
 import showError from '../../utils/console/showError.ts';
-import serverError from '../../utils/errorsToClient/serverError.ts';
-import Goal, { IGoal } from '../models/Goal.ts';
-import User from '../models/User.ts';
+import Goal, { IGoal } from '../../db/models/Goal.ts';
+import User from '../../db/models/User.ts';
 import { Types } from 'mongoose';
+import sendAuthError from '../../utils/errors/fromServerToClient/sendAuthError.ts';
+import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound.ts';
+import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
 import checkRequest from '../../utils/checkRequest.ts';
-import sendBadRequest from '../../utils/errorsToClient/sendBadRequest.ts';
+import sendBadRequest from '../../utils/errors/fromServerToClient/sendBadRequest.ts';
 
 const router = express.Router({ mergeParams: true });
 

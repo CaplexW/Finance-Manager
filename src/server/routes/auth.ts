@@ -1,14 +1,16 @@
 import { Request, Response, Router } from 'express';
-import User, { IUser } from '../models/User.ts';
-import serverError from '../../utils/errorsToClient/serverError.ts';
+import User, { IUser } from '../../db/models/User.ts';
 import cryptService from '../services/crypt.service.ts';
 import tokenService from '../services/token.service.ts';
 import { redLog } from '../../utils/console/coloredLogs.ts';
-import Category, { ICategory } from '../models/Category.ts';
+import Category, { ICategory } from '../../db/models/Category.ts';
 import validatorService from '../services/validator.service.ts';
 import { JwtPayload } from 'jsonwebtoken';
-import sendCredentialsError from '../../utils/errorsToClient/sendCredentialsError.ts';
-import { sendNotFound } from '../../utils/errorsToClient/sendNotFound.ts';
+import sendCredentialsError from '../../utils/errors/fromServerToClient/sendCredentialsError.ts';
+import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
+import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound.ts';
+import { IToken } from '../../db/models/Token.ts';
+import showElement from '../../utils/console/showElement.ts';
 
 const router = Router({ mergeParams: true });
 const { getResult, getValidation } = validatorService;
@@ -24,7 +26,7 @@ const signInWithPasswordValidations = [
 router.post('/signUp', [...singUpValidations, signUp]);
 router.post('/signInWithPassword', [...signInWithPasswordValidations, signInWithPassword]);
 router.post('/updateToken', updateToken);
-
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjlmZDE5MDQzMTY4OWU3N2RiYTlmYWIiLCJpYXQiOjE3MzMwNTAwNDR9.an0c52zdOQqR3EjsUJsNMNYsrrfMrVKMXzDlqZLOlco
 async function signUp(req: Request, res: Response) {
     const thisPlace = 'auth/signUp';
     try {
@@ -89,7 +91,9 @@ async function updateToken(req: Request, res: Response) {
     try {
         const { refresh_token: refreshToken } = req.body;
         const data = tokenService.validateRefresh(refreshToken) as JwtPayload;
-        const dbToken = await tokenService.findToken(refreshToken);
+        const dbToken = await tokenService.findToken(refreshToken) as IToken;
+        if(data?._id && !dbToken) return sendTokenIsOutDated(res);
+
         const tokenIsInvalid = (!data || !dbToken || data._id !== dbToken?.user?.toString());
         if (tokenIsInvalid) return sendTokenError(res);
 
@@ -105,6 +109,9 @@ async function updateToken(req: Request, res: Response) {
 
     function sendTokenError(response: Response) {
         return response.status(401).json({ message: "Token is invalid" });
+    }
+    function sendTokenIsOutDated(response: Response) {
+        return response.status(401).json({ message: "Token is outdated" });
     }
 }
 

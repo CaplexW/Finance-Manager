@@ -1,31 +1,40 @@
 import express, { Response } from 'express';
+import multer from 'multer';
+import fs from 'fs';
 import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
-import Operation from '../models/Operation.ts';
+import Operation from '../../db/models/Operation.ts';
 import { getDisplayDate } from '../../utils/formatDate.ts';
 import showError from '../../utils/console/showError.ts';
-import serverError from '../../utils/errorsToClient/serverError.ts';
-import sendAuthError from '../../utils/errorsToClient/sendAuthError.ts';
-import User from '../models/User.ts';
-import Category from '../models/Category.ts';
+import User from '../../db/models/User.ts';
+import Category from '../../db/models/Category.ts';
 import calculateAmount from '../../utils/calculateAmount.ts';
 import checkRequest from '../../utils/checkRequest.ts';
-import sendBadRequest from '../../utils/errorsToClient/sendBadRequest.ts';
-import sendForbidden from '../../utils/errorsToClient/sendForbidden.ts';
+import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
+import sendBadRequest from '../../utils/errors/fromServerToClient/sendBadRequest.ts';
+import sendForbidden from '../../utils/errors/fromServerToClient/sendForbidden.ts';
+import sendAuthError from '../../utils/errors/fromServerToClient/sendAuthError.ts';
+import showElement from '../../utils/console/showElement.ts';
+import extractDataFromCSV from '../../utils/import/extractDataFromCSV.ts';
+import createOperationFromTinkoffData from '../../utils/import/createOperationFromTinkoffData.ts';
 
 const router = express.Router({ mergeParams: true });
+const upload = multer({ dest: './src/server/uploads' });
 
 router.get('/', checkAuth, sendList);
 router.post('/create', checkAuth, create);
-router.patch('/update', checkAuth, update);
-router.delete('/remove', checkAuth, remove);
+router.post('/upload/csv/tinkoff', checkAuth, upload.single('file'), importCSVTinkoff);
+router.patch('/', checkAuth, update);
+router.delete('/:operationId', checkAuth, remove);
 
 async function sendList(req: AuthedRequest, res: Response) {
+  const thisPlace = 'operation/sendList';
   try {
-    const list = await Operation.find({ user: req.user?._id });
+    if (!req.user) return sendAuthError(res, thisPlace);
+    const list = await Operation.find({ user: req.user._id });
     res.status(200).send(list);
   } catch (err) {
     showError(err);
-    serverError(res, 'user/update');
+    serverError(res, thisPlace);
   }
 }
 async function create(req: AuthedRequest, res: Response) {
@@ -33,10 +42,11 @@ async function create(req: AuthedRequest, res: Response) {
   //   name: string,
   //   amount: number,
   //   category: string,
+  //   date?: string,
   // }
   const thisPlace = 'operation/create';
-  const body = ['name', 'amount', 'category'];
-  const requestIsOk = checkRequest(req, body);
+  const requestBody = ['name', 'amount', 'category'];
+  const requestIsOk = checkRequest(req, requestBody);
   try {
     if (!requestIsOk) return sendBadRequest(res, thisPlace);
     const categoryId: string = req.body.category;
@@ -51,11 +61,43 @@ async function create(req: AuthedRequest, res: Response) {
       date: req.body.date ? req.body.date : getDisplayDate(new Date),
     };
     const newOperation = await Operation.create(operationData);
+    const hostUser = await User.findById(newOperation.user);
+    if (hostUser) {
+      hostUser.operations.push(newOperation._id);
+      await hostUser.updateOne({ currentBalance: hostUser.currentBalance + newOperation.amount });
+      await hostUser.save();
+    }
 
     res.status(201).send(newOperation);
   } catch (err) {
     showError(err);
     serverError(res, thisPlace);
+  }
+}
+async function importCSVTinkoff(req: AuthedRequest, res: Response) {
+  const thisPlace = 'operation/import/csv/tinkoff';
+
+  try {
+    if (!req.user) return sendAuthError(res, thisPlace);
+    if (!req.file) return sendNotFound(res, 'imported file');
+
+    const authedUser = req.user._id;
+    const rawData = await extractDataFromCSV(req.file);
+    if (!rawData) return serverError(res, 'rawData');
+
+    rawData.shift();
+    const operationsArray = await createOperationFromTinkoffData(rawData);
+    const result = await Promise.all(operationsArray.map(async (operationData) => {
+      operationData.user = authedUser;
+      const operation = await Operation.create(operationData);
+      return operation;
+    }));
+
+    res.status(200).send(result);
+    fs.rm(req.file.path, showElement);
+  } catch (err) {
+    showElement(err, 'err');
+    serverError(res, 'operation/import');
   }
 }
 async function update(req: AuthedRequest, res: Response) {
@@ -74,10 +116,18 @@ async function update(req: AuthedRequest, res: Response) {
     const authedUser = req.user?._id;
     const isPermitted: boolean = authedUser === req.body.user;
     if (!isPermitted) return sendForbidden(res, thisPlace);
+    const currentOperation = await Operation.findById(req.body._id);
+    if (!currentOperation) return sendNotFound(res, 'operation', req.body._id);
+    const hostUser = await User.findById(authedUser);
+    if (!hostUser) return sendNotFound(res, 'user', authedUser);
 
-    const updatedUser = await Operation.findByIdAndUpdate(req.body._id, req.body, { new: true });
+    const balanceDifference = Number(req.body.amount) - currentOperation.amount;
+    const newData = { ...req.body, amount: await calculateAmount(req.body) };
+    const updatedOperation = await Operation.findByIdAndUpdate(req.body._id, newData, { new: true });
+    await hostUser.updateOne({ currentBalance: hostUser.currentBalance + balanceDifference });
+    // await hostUser.save();
 
-    res.status(203).send(updatedUser);
+    res.status(203).send(updatedOperation);
   } catch (err) {
     showError(err);
     serverError(res, thisPlace);
@@ -85,31 +135,27 @@ async function update(req: AuthedRequest, res: Response) {
 
 }
 async function remove(req: AuthedRequest, res: Response) {
-  // request = {
-  //   _id: string,
-  //   user: string,
-  // }
   const thisPlace = 'operation/remove';
-  const body = ['_id', 'user'];
-  const requestIsOk = checkRequest(req, body);
+  const { operationId } = req.params;
   try {
     if (!req.user) return sendAuthError(res, thisPlace);
-    if (!requestIsOk) return sendBadRequest(res, thisPlace);
-    const operationId: string = req.body._id;
-    const ownerId: string = req.body.user;
-    const authedId: string = req.user._id;
     const removingOperation = await Operation.findById(operationId);
     if (!removingOperation) return sendNotFound(res, 'operation', operationId);
-    const isPermitted = (authedId === ownerId) && (authedId !== undefined);
+    const ownerId = removingOperation.user.toString();
+    const authedId = req.user._id;
+    const isPermitted = (authedId === ownerId);
     if (!isPermitted) sendForbidden(res, thisPlace);
     const hostUser = await User.findById(ownerId);
     if (!hostUser) return sendNotFound(res, 'user', ownerId);
 
-    const result = await Operation.findByIdAndDelete(operationId);
+    const result = await removingOperation.deleteOne();
+    const filtered = hostUser.operations.filter((op) => op.toString() !== operationId);
+    showElement(filtered, 'filtered');
     const newBalance: number = hostUser.currentBalance - removingOperation.amount;
-    await User.findByIdAndUpdate(hostUser._id, { currentBalance: newBalance });
+    await hostUser.updateOne({ currentBalance: newBalance, operations: filtered });
+    // await User.findByIdAndUpdate(hostUser._id, { currentBalance: newBalance, operations: filtered });
 
-    res.status(200).send({ result, newBalance });
+    res.status(200).send({ result: result.deletedCount, newBalance });
   } catch (err) {
     showError(err);
     serverError(res, thisPlace);
