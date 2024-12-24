@@ -42,6 +42,7 @@ export default function Form({
   useEffect(() => { if (formIsValidating && dataExists) validate(data); }, [data]);
 
   const handleChange = useCallback((target) => {
+    showElement(target, 'target');
     if (target.value !== undefined) {
       setData((prevState) => ({
         ...prevState,

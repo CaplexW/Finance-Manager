@@ -16,8 +16,6 @@ const userService = {
     cyanLog('user delete requested');
     const headers = { Authorization: `Bearer ${userPassword}` };
     const response = await httpService.delete(userEndpoint + userId, { headers });
-    showElement(response.data, 'response.data');
-    showElement(response.data.deletedCount, 'response.data.deleteCount');
 
     return response.data.deletedCount;
   }
