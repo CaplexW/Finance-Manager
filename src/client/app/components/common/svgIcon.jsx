@@ -6,18 +6,17 @@ export default function SVGIcon({ source, classes, size = 24, color }) {
     ...source.props,
     width: size,
     height: size,
-    color: color ? color : '#fff',
+    color: color || '#fff',
   };
 
   function createSVGFromObject(object, color = '') {
-    showElement(object, 'object');
     function createSVGChildren(childrenObject) {
       const childrenIsArray = Array.isArray(childrenObject);
       const childrenIsObject = typeof childrenObject === 'object';
 
       if (childrenIsArray) {
         return childrenObject.map((child) => {
-          return React.createElement(child.type, { ...child.props, ...color });
+          return React.createElement(child.type, { ...child.props, color, key: child.props.d });
         });
       }
 
@@ -26,7 +25,7 @@ export default function SVGIcon({ source, classes, size = 24, color }) {
       if (childrenIsObject) {
         return React.createElement(
           childrenObject.type,
-          { ...childrenObject.props, ...color },
+          { ...childrenObject.props, color },
           hasChildren ? createSVGChildren(childrenObject.props.children) : '',
         );
       }
