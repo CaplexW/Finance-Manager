@@ -1,0 +1,22 @@
+@keyframes flashborder {
+  0% {
+    border-color: red;
+  }
+
+  50% {
+    border-color:  rgba(236, 129, 129, 0.424);
+  }
+
+  100% {
+    border-color: #dee2e6;
+  }
+}
+
+.invalid {
+  /* animation: flashborder 10s; */
+  border-color: red;
+}
+.bordered {
+  border-radius: .4rem;
+  border:solid .05rem red;
+}
