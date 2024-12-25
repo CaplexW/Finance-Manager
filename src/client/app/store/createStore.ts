@@ -1,11 +1,13 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import userReducer from './user';
 import config from '../../../config/config';
+import operationsReducer from './operations';
+import categoriesReducer from './categories';
 
 const reducerConfig = {
   user: userReducer,
-  // // categories: categoriesReducer,
-  // // operations: opertionsReducer,
+  operations: operationsReducer,
+  categories: categoriesReducer,
   // // goals: goalsReducer,
   // // accounts: accountsReducer,
 };

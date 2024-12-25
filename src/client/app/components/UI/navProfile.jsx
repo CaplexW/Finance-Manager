@@ -4,19 +4,19 @@ import { Link, useNavigate } from 'react-router-dom';
 import UserAvatar from './userAvatar';
 import showElement from '../../../../utils/console/showElement';
 import { useDispatch, useSelector } from 'react-redux';
-import { getDataStatus, getUser, loadUserData } from '../../store/user';
+import { getUserDataStatus, getUser, loadUserData } from '../../store/user';
+import userService from '../../services/user.service';
+import { removeAuthData } from '../../services/storage.service';
 
 export default function NavProfile() {
-  const isLoaded = useSelector(getDataStatus());
+  const isLoaded = useSelector(getUserDataStatus());
   const user = useSelector(getUser());
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const userPagePath = '/user/myProfile';
   const redirectTo = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if(!isLoaded) dispatch(loadUserData());
-  }, [isLoaded]);
+  useEffect(() => { if (!isLoaded) dispatch(loadUserData()); }, [isLoaded]);
 
   function toggleMenu() { setMenuIsOpen((prevState) => !prevState); }
   function handleLogout() {
@@ -28,12 +28,12 @@ export default function NavProfile() {
     if (confirmed) {
       const password = prompt('Тогда введите свой пароль');
       const result = await deleteUserAccount(user._id, password);
-      if (result) redirectTo('/deleteAccount');
+      if (result) { removeAuthData(); alert('Ваш аккаунт удален! Спасибо, что были с нами!'); };
       if (!result) alert('Неверный пароль!');
     }
   }
 
-  if(isLoaded) return (
+  if (isLoaded) return (
     <div className="dropdown w-100" onClick={toggleMenu} role="button" tabIndex={0}>
       <div className="btn dropdown-toggle d-flex align-items-center">
         <div className="me-2">{user.name}</div>
@@ -48,8 +48,7 @@ export default function NavProfile() {
   );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function deleteUserAccount(id, password) {
-  // Обращаемся к api user/remove, отправляем туда id и password.
-  // Возвращаем результат deleteCount;
+  const result = await userService.deleteUser(id, password);
+  return result;
 }

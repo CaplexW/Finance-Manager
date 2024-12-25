@@ -1,12 +1,12 @@
 import React from "react";
-import { blueColor, blueLightColor, brownColor, cyanColor, grayColor, greenColor, greenLightColor, greenToxicColor, orangeColor, pinkColor, purpleColor, redColor, redSolidColor, violetColor, yellowColor } from "../../constants/colors.ts";
-import { IIcon } from "../models/Icon.ts";
+import { blueLightColor, brownColor, cyanColor, grayColor, greenColor, greenLightColor, greenToxicColor, orangeColor, pinkColor, purpleColor, redColor, redSolidColor, violetColor, yellowColor } from "../../constants/colors.ts";
+import { TIcon } from "../models/Icon.ts";
 
-const defaultIcons:IIcon[] = [
+const defaultIcons:TIcon[] = [
   {
-    name: "salary",
+    name: "money",
     src: (
-      <svg className="bi bi-cash-coin" fill={blueColor} height="16" id="salary" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+      <svg className="bi bi-cash-coin" fill='currentColor' height="16" id="salary" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
         <path d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8m5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0" fillRule="evenodd" />
     
         <path d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195z" />
@@ -45,7 +45,7 @@ const defaultIcons:IIcon[] = [
     ),
   },
   {
-    name: "health",
+    name: "heart",
     src: (
       <svg className="bi bi-heart-pulse-fill" fill={greenColor} height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
         <path d="M1.475 9C2.702 10.84 4.779 12.871 8 15c3.221-2.129 5.298-4.16 6.525-6H12a.5.5 0 0 1-.464-.314l-1.457-3.642-1.598 5.593a.5.5 0 0 1-.945.049L5.889 6.568l-1.473 2.21A.5.5 0 0 1 4 9z" />
@@ -89,7 +89,7 @@ const defaultIcons:IIcon[] = [
     ),
   },
   {
-    name: "entertainment",
+    name: "joystick",
     src: (
       <svg className="bi bi-joystick" fill={purpleColor} height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
         <path d="M10 2a2 2 0 0 1-1.5 1.937v5.087c.863.083 1.5.377 1.5.726 0 .414-.895.75-2 .75s-2-.336-2-.75c0-.35.637-.643 1.5-.726V3.937A2 2 0 1 1 10 2" />
@@ -99,7 +99,7 @@ const defaultIcons:IIcon[] = [
     ),
   },
   {
-    name: "telecom",
+    name: "telephone",
     src: (
       <svg className="bi bi-telephone-fill" fill={blueLightColor} height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
         <path d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" fillRule="evenodd" />

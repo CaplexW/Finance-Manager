@@ -1,10 +1,8 @@
 /* eslint-disable react/forbid-prop-types */
 import React from 'react';
-import PropTypes, { shape } from 'prop-types';
-
+import PropTypes from 'prop-types';
 import TableHeader from './tableHeader';
 import TableBody from './tableBody';
-import { userScheme } from '../../../mockData/propTypesScheme';
 
 export default function Table({
   children,
@@ -19,9 +17,9 @@ export default function Table({
       || (
       <>
         <TableHeader
-          selectedSort={selectedSort}
-          onSort={onSort}
           columns={columns}
+          onSort={onSort}
+          selectedSort={selectedSort}
         />
         <TableBody columns={columns} data={data} />
       </>
@@ -35,15 +33,15 @@ Table.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]),
-  selectedSort: PropTypes.object,
-  onSort: PropTypes.func,
   columns: PropTypes.array,
-  data: PropTypes.arrayOf(shape(userScheme)),
+  data: PropTypes.array,
+  onSort: PropTypes.func,
+  selectedSort: PropTypes.object,
 };
 Table.defaultProps = {
   children: null,
-  selectedSort: null,
-  onSort: null,
   columns: null,
   data: null,
+  onSort: null,
+  selectedSort: null,
 };

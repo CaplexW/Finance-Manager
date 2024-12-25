@@ -6,15 +6,18 @@ const URL: string = getUrl();
 const PORT: number = getPort();
 const MONGO_SERVER: string = getMongoServer();
 const PROTOCOL: string = getProtocol();
+const API_ENDPOINT: string = getApiEndpoint();
+const ACCESS_KEY: string = "It's@$ecrETK€";
+const REFRESH_KEY: string = "It's@Refr€SHkEY";
 
 const config: connectionConfig = {
-  API_ENDPOINT: getApiEndpoint(),
+  API_ENDPOINT,
   PORT,
   MONGO_SERVER,
   URL,
   IN_PRODUCTION: isProd,
-  ACCESS_KEY: "It's@$ecrETK€",
-  REFRESH_KEY: "It's@Refr€SHkEY",
+  ACCESS_KEY,
+  REFRESH_KEY,
 };
 
 function getApiEndpoint(): string {

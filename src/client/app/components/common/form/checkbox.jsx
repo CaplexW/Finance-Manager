@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export default function Checkbox({
-  children, name, value, onChange, error,
+  label, name, value, onChange, error,
 }) {
-  const inputClass = `form-check-input + ${error ? 'is-invalid' : ''}`;
+  const inputClass = `form-check-input me-3`;
 
   function handleChange() {
     const result = {
@@ -14,28 +14,29 @@ export default function Checkbox({
     onChange(result);
   }
   return (
-    <div className="form-check">
+    <div className="mt-3">
       <input
-        type="checkbox"
         checked={value}
         className={inputClass}
         id={name}
         onChange={handleChange}
+        type="checkbox"
       />
-      <label htmlFor={name} className="form-check-label">{children}</label>
+      <label className="form-check-label" htmlFor={name}>{label}</label>
     </div>
   );
 }
 Checkbox.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
   error: PropTypes.string,
+  // children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+  label: PropTypes.string,
   name: PropTypes.string.isRequired,
-  value: PropTypes.bool,
   onChange: PropTypes.func,
+  value: PropTypes.bool,
 };
 Checkbox.defaultProps = {
+  error: undefined,
+  label: undefined,
   onChange: undefined,
   value: false,
-  children: undefined,
-  error: undefined,
 };

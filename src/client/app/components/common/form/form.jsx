@@ -4,26 +4,43 @@ import React, {
 import PropTypes from 'prop-types';
 import forbidExtraProps from 'prop-types-exact';
 import validator from '../../../../../utils/validator';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import showElement from '../../../../../utils/console/showElement';
 
 export default function Form({
   children, validatorConfig, onSubmit, defaultData, dataScheme,
 }) {
+  // Документация:
+  // defaultData и dataScheme - оба представляют из себя оьбъект ключ:значение.
+  // Ключ - это название поля, он должен соответствовать параметру name элемента input.
+  // Пример { email: "value", password: "value" }
+  // defaultData и dataScheme - взаимоисключающие параметры.
+  // defaultData следует использовать когда нужно передать в поля формы
+  // какие-то существующие данные, например в форме для редактирования { name: "existing name", pass: "existing pass"}.
+  // dataScheam же это объект с ключами-полями формы, но с пустыми значениями { name: "", pass: "" }.
+  // Этот параметр используется для формы где не должно быть изначальных значений.
+  // Его следует задать, чтобы не триггерить валидацию на только-что открывшейся форме.
+  // В случае отсутствие этого параметра или передачи пустых полей в defaultData, форма будет отрабатывать корректно,
+  // но валидатор сразу выдаст все ошибки при открытии формы.
+  
   const [data, setData] = useState(defaultData);
   const [errors, setErrors] = useState({});
+  const [formIsInvalid, setFormIsInvalid] = useState(Object.keys(errors).length !== 0);
+
+  useEffect(() => setData(defaultData), [defaultData]);
+  useEffect(() => setFormIsInvalid(Object.keys(errors).length !== 0), [errors]);
 
   const formIsValidating = !!validatorConfig;
   const dataExists = Object.keys(data).length > 0;
-  const formIsInvalid = Object.keys(errors).length !== 0;
 
   const validate = useCallback((validatingData) => {
     const errorsObj = validator(validatingData, validatorConfig);
     setErrors(errorsObj);
+  
     return Object.keys(errorsObj).length === 0;
   }, [validatorConfig, setData]);
 
-  if (formIsValidating) {
-    useEffect(() => { if (dataExists) validate(data); }, [data]);
-  }
+  useEffect(() => { if (formIsValidating && dataExists) validate(data); }, [data]);
 
   const handleChange = useCallback((target) => {
     if (target.value !== undefined) {

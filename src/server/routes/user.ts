@@ -1,22 +1,26 @@
 import express, { Response } from 'express';
-import User from '../models/User.ts';
+import User from '../../db/models/User.ts';
 import tokenService from '../services/token.service.ts';
 import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
 import showError from '../../utils/console/showError.ts';
-import Operation from '../models/Operation.ts';
-import Category from '../models/Category.ts';
-import Account from '../models/Account.ts';
-import Goal from '../models/Goal.ts';
+import Operation from '../../db/models/Operation.ts';
+import Category from '../../db/models/Category.ts';
+import Account from '../../db/models/Account.ts';
+import Goal from '../../db/models/Goal.ts';
 import sendAuthError from '../../utils/errors/fromServerToClient/sendAuthError.ts';
 import sendForbidden from '../../utils/errors/fromServerToClient/sendForbidden.ts';
 import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound.ts';
 import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
+import cryptService from '../services/crypt.service.ts';
+import sendCredentialsError from '../../utils/errors/fromServerToClient/sendCredentialsError.ts';
+import { cyanLog } from '../../utils/console/coloredLogs.ts';
+import showElement from '../../utils/console/showElement.ts';
 
 const router = express.Router({ mergeParams: true });
 
 router.patch('/:id', checkAuth, updateUser);
 router.delete('/:id', checkAuth, removeUser);
-router.get('/:id', checkAuth, sendUserInfo);
+router.get('/', checkAuth, sendUserInfo);
 
 async function updateUser(req: AuthedRequest, res: Response) {
   // requestBody = {
@@ -41,12 +45,23 @@ async function updateUser(req: AuthedRequest, res: Response) {
 async function removeUser(req: AuthedRequest, res: Response) {
   const thisPlace = 'user/remove';
   try {
+    cyanLog('user delete requested');
     if (!req.user) return sendAuthError(res, thisPlace);
+    cyanLog('auth check passed');
+
     const { id } = req.params;
-    const isPermitted = (id === req.user._id);
-    if (!isPermitted) return sendForbidden(res, thisPlace);
     const removingUser = await User.findById(id);
     if (!removingUser) return sendNotFound(res, "user", id);
+    cyanLog('user existence check passed');
+
+    if (!req?.headers?.authorization) return sendForbidden(res, thisPlace);
+    const password = req.headers.authorization.split(' ')[1];
+    const passwordIsOk = cryptService.compare(password, removingUser.password);
+    if (!passwordIsOk) sendCredentialsError(res);
+    cyanLog('password check passed')
+    const isPermitted = (id === req.user._id);
+    if (!isPermitted) return sendForbidden(res, thisPlace);
+    cyanLog('permition check passed');
 
     const result = await removingUser.deleteOne();
     if (result.deletedCount) {
@@ -65,7 +80,8 @@ async function sendUserInfo(req: AuthedRequest, res: Response) {
   try {
     if(!req.user) return sendAuthError(res, thisPlace);
 
-    const userInfo = await User.findById(req.params.id);
+    const userInfo = await User.findById(req.user._id);
+    if (!userInfo) return sendNotFound(res, 'user', req.user._id);
     const filteredUserInfo = Object.fromEntries(
       Object.entries(userInfo?._doc).filter(([key]) => !['__v', 'password', 'createdAt', 'updatedAt'].includes(key))
     ); 

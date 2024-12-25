@@ -1,8 +1,8 @@
 import express, { Response } from 'express';
 import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
 import showError from '../../utils/console/showError.ts';
-import User from '../models/User.ts';
-import Category, { ICategory } from '../models/Category.ts';
+import User from '../../db/models/User.ts';
+import Category, { ICategory } from '../../db/models/Category.ts';
 import getCategoriesForUser from '../../utils/getCategoriesForUser.ts';
 import capitalize from '../../utils/capitalize.ts';
 import checkRequest from '../../utils/checkRequest.ts';
@@ -15,9 +15,9 @@ import { sendAlreadyExists } from '../../utils/errors/fromServerToClient/sendAlr
 const router = express.Router({ mergeParams: true });
 
 router.get('/', checkAuth, sendList);
-router.post('/create', checkAuth, create);
-router.patch('/update', checkAuth, update);
-router.delete('/remove', checkAuth, remove);
+router.post('/', checkAuth, create);
+router.patch('/', checkAuth, update);
+router.delete('/', checkAuth, remove);
 
 async function sendList(req: AuthedRequest, res: Response) {
   const thisPlace = 'category/sendList';
@@ -139,3 +139,4 @@ async function remove(req: AuthedRequest, res: Response) {
 }
 
 export default router;
+ 

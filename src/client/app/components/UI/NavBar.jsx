@@ -13,9 +13,10 @@ import showElement from '../../../../utils/console/showElement';
 
 export default function NavBar() {
   const isLogged = useSelector(getLoginStatus());
+  // style={{ backgroundColor: mainColor }}
   return (
-    <nav className="navbar row gutter-md p-3 d-flex justify-content-between" style={{ backgroundColor: mainColor }}>
-      <div className="col-md-1 align-items-center d-flex justify-content-center ms-4 my-1" id="main">
+    <nav className="navbar row gutter-md py-1 px-4 d-flex justify-content-between">
+      <div className="col-md-1 align-items-center d-flex justify-content-center" id="main">
         <NavLink
           aria-current="page"
           className={({ isActive }) => (isActive ? 'nav-link navbar-brand' : 'nav-link')}
@@ -24,7 +25,7 @@ export default function NavBar() {
           Главная
         </NavLink>
       </div>
-      <div className="col-md-1  align-items-center d-flex justify-content-center my-1" id="users">
+      <div className="col-md-1  align-items-center d-flex justify-content-center" id="users">
         {isLogged ? (
           <NavLink
             aria-current="page"
@@ -36,7 +37,7 @@ export default function NavBar() {
         ) : ''}
       </div>
       <div className="col-md-6" id="space" />
-      <div className="col-md-2 d-flex align-items-end justify-content-end mx-5" id="right-side">
+      <div className="col-md-2 d-flex align-items-end justify-content-end" id="right-side">
         {isLogged ? <NavProfile /> : (
           <NavLink
             aria-current="page"
