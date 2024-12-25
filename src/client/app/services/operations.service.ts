@@ -20,11 +20,9 @@ const operationsService = {
     return data;
   },
   async uploadCSV(payload: FormData, dataSource: string) {
-    showElement(dataSource, 'dataSource');
     let endpoint;
     if (dataSource === 'tinkoff') endpoint = 'upload/csv/tinkoff';
     if (!endpoint) return displayError('Не могу определить банк!');
-    showElement(endpoint, 'endpoint');
     const URL = operationEndpoint + endpoint;
     const { data } = await httpService.post(URL, payload);
     return data;

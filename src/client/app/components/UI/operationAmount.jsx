@@ -8,8 +8,6 @@ import showElement from '../../../../utils/console/showElement';
 
 export default function OperationAmount({ operation }) {
   const category = useSelector(getCategoryById(operation.category));
-  showElement(operation, 'operation');
-  showElement(category, 'category');
   const amountColor = category.isIncome ? greenColor : redColor;
   return <span style={{ color: amountColor }}>{operation.amount}</span>;
 };

@@ -150,7 +150,6 @@ async function remove(req: AuthedRequest, res: Response) {
 
     const result = await removingOperation.deleteOne();
     const filtered = hostUser.operations.filter((op) => op.toString() !== operationId);
-    showElement(filtered, 'filtered');
     const newBalance: number = hostUser.currentBalance - removingOperation.amount;
     await hostUser.updateOne({ currentBalance: newBalance, operations: filtered });
     // await User.findByIdAndUpdate(hostUser._id, { currentBalance: newBalance, operations: filtered });

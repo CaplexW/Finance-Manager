@@ -64,7 +64,6 @@ async function removeUser(req: AuthedRequest, res: Response) {
     cyanLog('permition check passed');
 
     const result = await removingUser.deleteOne();
-    showElement(result, 'result');
     if (result.deletedCount) {
       await tokenService.removeTokens(removingUser._id);
       await removeUserData(req.user._id);

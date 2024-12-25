@@ -9,7 +9,6 @@ import openModal from '../../../../utils/modals/openModal';
 export default function ModalWindow({
   headTitle, children, text, isOpen, onClose,
 }) {
-  showElement(isOpen, 'isOpen');
   // TODO придумать как перенести механизм откытия в сам компонент
 
   // const [isOpen, setOpen] = useState(false);
