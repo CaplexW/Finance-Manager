@@ -5,6 +5,7 @@ import { redLog } from "../../utils/console/coloredLogs.ts";
 import catchError from "../../utils/errors/catchError.ts";
 import Icon, { TIcon } from "../../db/models/Icon.ts";
 import defaultIcons from "../../db/initialData/defaultIcons.tsx";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from "../../utils/console/showElement.ts";
 import DefaultCategory, { TDefaultCategory } from "../../db/models/DefaultCategory.ts";
 import forEachAsync from "../../utils/iterators/forEachAsync.ts";
@@ -29,7 +30,7 @@ export default async function initDatabase() {
 async function createCollection<T>(Model: Mongoose["Model"], source: T[]) {
     await Model.collection.drop();
 
-    await forEachAsync<T>(source, async (item) => {
+    await forEachAsync(source, async (item) => {
             try {
                 const newItem: Document<unknown, object, T> = new Model(item);
                 await newItem.save();
@@ -93,11 +94,6 @@ async function giveIconsToDefaultCategories() {
         const categoryIcon = icons.find((i) => i.name === cat.iconName);
         cat.icon = categoryIcon?._id;
         cat.save();
-    });
-}
-async function waitForOneSecond(cycle: number): Promise<number> {
-    return new Promise((resolve) => {
-        setTimeout(() => { resolve(cycle + 1); }, 1000);
     });
 }
 

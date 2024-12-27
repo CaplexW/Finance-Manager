@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from "../../../utils/console/showElement";
 import operationsService from "../services/operations.service";
-import { createCrudFunctions, createCrudGetters, createCrudSlice } from "./crudReducers";
+import { createCrudFunctions, createCrudGetters, createCrudSlice } from "./crudReducers.ts.old";
 
 const storeName = 'operations';
 
