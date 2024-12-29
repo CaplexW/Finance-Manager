@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import config from '../../../config/config.ts';
-import { Credentials, RegisterPayload } from '../../../types/types.ts';
+import { Credentials, RegisterPayload } from '../../../types/types.old.ts';
 import handleError from '../../../utils/errors/onClient/handleError.ts';
 import { getRefreshToken } from './storage.service.ts';
 import showElement from '../../../utils/console/showElement.ts';

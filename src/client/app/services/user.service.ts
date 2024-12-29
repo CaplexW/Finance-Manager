@@ -1,4 +1,4 @@
-import { User } from "../../../types/types";
+import { User } from "../../../types/types.old";
 import { cyanLog } from "../../../utils/console/coloredLogs";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from "../../../utils/console/showElement";
