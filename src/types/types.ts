@@ -10,9 +10,62 @@ export type RemoveResult = {
   newBalance: number
 };
 
-export interface CRUDObject {
-  _id: string,
-}
+export type GlobalState = {
+  user: UserState,
+  operations: CRUDState<Operation>,
+  categories: CRUDState<Category>,
+  accounts: CRUDState<Account>,
+  goals: CRUDState<Goal>,
+  icons: CRUDState<Icon>,
+};
+export type CRUDGlobalState = Omit<GlobalState, 'user'>;
+
+export interface CommonState {
+  error: unknown | null;
+  isLoaded: boolean;
+};
+export interface UserState extends Omit<CommonState, 'isLoaded'> {
+  auth: string | null;
+  userData: User | null;
+  isLogged: boolean;
+  dataLoaded: boolean;
+};
+export interface CRUDState<CRUDEntity> extends CommonState {
+  entities: CRUDEntity[] | null;
+};
+
+export type CRUDStateMap = {
+  operations: Operation,
+  categories: Category,
+  accounts: Account,
+  goals: Goal,
+  icons: Icon,
+};
+
+export type CRUDActions<CRUDEntity> = {
+  loadRequested: ActionCreatorWithoutPayload<`${string}/loadRequested`>,
+  loadSucceed: ActionCreatorWithPayload<CRUDEntity[], `${string}/loadSucceed`>,
+  loadFailed: ActionCreatorWithNonInferrablePayload<`${string}/loadFailed`>,
+
+  updateRequested: ActionCreatorWithoutPayload<`${string}/updateRequested`>,
+  updateSucceed: ActionCreatorWithPayload<CRUDEntity, `${string}/updateSucceed`>,
+  updateFailed: ActionCreatorWithNonInferrablePayload<`${string}/updateFailed`>,
+
+  creationRequested: ActionCreatorWithoutPayload<`${string}/creationRequested`>,
+  creationSucceed: ActionCreatorWithPayload<CRUDEntity, `${string}/creationSucceed`>,
+  creationFailed: ActionCreatorWithNonInferrablePayload<`${string}/creationFailed`>,
+
+  deleteRequested: ActionCreatorWithoutPayload<`${string}/deleteRequested`>,
+  deleteSucceed: ActionCreatorWithPayload<string, `${string}/deleteSucceed`>,
+  deleteFailed: ActionCreatorWithNonInferrablePayload<`${string}/deleteFailed`>,
+};
+
+export interface CRUDService<CRUDEntity>  {
+  getList: () => Promise<CRUDEntity[]>,
+  update: (payload: CRUDEntity) => Promise<CRUDEntity>,
+  create: (payload: CRUDEntity) => Promise<CRUDEntity>,
+  delete: (id: string) => Promise<RemoveResult>,
+};
 
 export type User = {
   _id: string,
@@ -57,91 +110,8 @@ export interface Goal extends CRUDObject {
 export interface Icon extends CRUDObject {
   src: ReactElement;
 }
+export interface CRUDObject {
+  _id: string,
+}
 
-export type GlobalState = {
-  user: UserState,
-  operations: CRUDState<Operation>,
-  categories: CRUDState<Category>,
-  accounts: CRUDState<Account>,
-  goals: CRUDState<Goal>,
-  icons: CRUDState<Icon>,
-};
 export type GetStateFuncion = () => GlobalState;
-
-export type CrudActions<CRUDEntity> = {
-  loadRequested: ActionCreatorWithoutPayload<`${string}/loadRequested`>,
-  loadSucceed: ActionCreatorWithPayload<CRUDEntity[], `${string}/loadSucceed`>,
-  loadFailed: ActionCreatorWithNonInferrablePayload<`${string}/loadFailed`>,
-
-  updateRequested: ActionCreatorWithoutPayload<`${string}/updateRequested`>,
-  updateSucceed: ActionCreatorWithPayload<CRUDEntity, `${string}/updateSucceed`>,
-  updateFailed: ActionCreatorWithNonInferrablePayload<`${string}/updateFailed`>,
-
-  creationRequested: ActionCreatorWithoutPayload<`${string}/creationRequested`>,
-  creationSucceed: ActionCreatorWithPayload<CRUDEntity, `${string}/creationSucceed`>,
-  creationFailed: ActionCreatorWithNonInferrablePayload<`${string}/creationFailed`>,
-
-  deleteRequested: ActionCreatorWithoutPayload<`${string}/deleteRequested`>,
-  deleteSucceed: ActionCreatorWithPayload<string, `${string}/deleteSucceed`>,
-  deleteFailed: ActionCreatorWithNonInferrablePayload<`${string}/deleteFailed`>,
-};
-export interface CrudService<CRUDEntity>  {
-  getList: () => Promise<CRUDEntity[]>,
-  update: (payload: CRUDEntity) => Promise<CRUDEntity>,
-  create: (payload: CRUDEntity) => Promise<CRUDEntity>,
-  delete: (id: string) => Promise<RemoveResult>,
-};
-
-
-export type CrudStoreName = keyof Omit<GlobalState, 'user'>;
-export type CrudStoreObjects = Operation | Icon | Goal | Account | Category;
-
-export interface State {
-  error: unknown | null;
-  isLoaded: boolean;
-};
-export interface CRUDState<CRUDEntity> extends State {
-  entities: CRUDEntity[] | null;
-};
-export interface UserState extends Omit<State, 'isLoaded'> {
-  auth: string | null;
-  userData: User | null;
-  isLogged: boolean;
-  dataLoaded: boolean;
-};
-
-
-// export type UserState = {
-//   auth: string | null,
-//   userData: User | null,
-//   isLogged: boolean,
-//   dataLoaded: boolean,
-//   error: unknown | null,
-// };
-// export type OperationsState = {
-//   entities: Operation[] | null,
-//   isLoaded: boolean,
-//   error: unknown | null
-// };
-// export type CategoriesState = {
-//   entities: Category[] | null,
-//   isLoaded: boolean,
-//   error: unknown | null
-// };
-// export type AccountsState = {
-//   entities: Account[] | null,
-//   isLoaded: boolean,
-//   error: unknown | null
-// };
-// export type GoalsState = {
-//   entities: Goal[] | [] | null,
-//   isLoaded: boolean,
-//   error: unknown | null
-// };
-
-// export type CrudData = Operation | Category | Account | Goal | null;
-// export type CrudDataState =  {
-//   entities: CrudData[] | null,
-//   isLoaded: boolean,
-//   error: unknown | null
-// };

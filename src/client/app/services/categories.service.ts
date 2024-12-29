@@ -1,11 +1,11 @@
-import { Category, CrudService, RemoveResult } from "../../../types/types";
+import { Category, CRUDService, RemoveResult } from "../../../types/types";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from "../../../utils/console/showElement";
 import httpService from "./http.service";
 
 const categoryEndpoint = 'category/';
 
-const categoriesService: CrudService<Category> = {
+const categoriesService: CRUDService<Category> = {
   async getList(): Promise<Category[]> {
     const { data } = await httpService.get(categoryEndpoint);
     return data;

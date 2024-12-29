@@ -1,6 +1,6 @@
 import { Dispatch, PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { ErrorMessage, CRUDState, CrudActions, CrudService, GlobalState, CrudStoreName, CRUDObject, CrudStoreObjects } from "../../../types/types.ts";
-import { WritableDraft } from 'immer';
+import { ErrorMessage, CRUDState, CRUDActions, CRUDService, GlobalState, CRUDObject, CRUDStateMap } from "../../../types/types.ts";
+import { Draft, WritableDraft } from 'immer';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from "../../../utils/console/showElement.ts";
 
@@ -17,19 +17,19 @@ export function createCrudSlice<CRUDEntity extends CRUDObject>(sliceName: string
       loadRequested() { },
       loadSucceed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<CRUDEntity[]>) {
         if (state) {
-          state.entities = action.payload;
-          state.isLoaded = Boolean(action.payload);
+          state.entities = action.payload as Draft<CRUDEntity[]>;
+          state.isLoaded = Boolean(action.payload.length);
         }
       },
       loadFailed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<unknown>) {
         const { message } = action.payload as ErrorMessage;
-        state.error = message;
+        state.error = message || `Error occured in attempt of load ${action.type} but there is no error message to display`;
       },
       updateRequested() { },
       updateSucceed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<CRUDEntity>) {
         if (state?.entities) {
           const index = state.entities.findIndex((obj) => obj?._id === action.payload?._id);
-          state.entities[index] = action.payload;
+          state.entities[index] = action.payload as Draft<CRUDEntity>;
         }
       },
       updateFailed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<unknown>) {
@@ -37,11 +37,11 @@ export function createCrudSlice<CRUDEntity extends CRUDObject>(sliceName: string
       },
       creationRequested() { },
       creationSucceed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<CRUDEntity>) {
-        if(state?.entities) state?.entities?.push(action.payload);
+        if (state?.entities) state?.entities?.push(action.payload as Draft<CRUDEntity>);
       },
       creationFailed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<unknown>) {
-        const message = action.payload as { message: string };
-        state.error = message;
+        const { message } = action.payload as ErrorMessage;
+        state.error = message || `Error occured in attempt of create ${action.type} but there is no error message to display`;
       },
       deleteRequested() { },
       deleteSucceed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<string>) {
@@ -51,7 +51,7 @@ export function createCrudSlice<CRUDEntity extends CRUDObject>(sliceName: string
       },
       deleteFailed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<unknown>) {
         const message = action.payload as { message: string };
-        state.error = message;
+        state.error = message || `Error occured in attempt of delete ${action.type} but there is no error message to display`;
       }
     }
   };
@@ -59,7 +59,7 @@ export function createCrudSlice<CRUDEntity extends CRUDObject>(sliceName: string
   return crudSlice;
 }
 
-export function createCrudFunctions<CRUDEntity>(actions: CrudActions<CRUDEntity>, service: CrudService<CRUDEntity>) {
+export function createCrudFunctions<CRUDEntity>(actions: CRUDActions<CRUDEntity>, service: CRUDService<CRUDEntity>) {
   const loadData = createLoadFunction(actions, service);
   const createData = createCreationFunction(actions, service);
   const updateData = createUpdateFunction(actions, service);
@@ -67,15 +67,15 @@ export function createCrudFunctions<CRUDEntity>(actions: CrudActions<CRUDEntity>
 
   return { loadData, createData, updateData, deleteData };
 }
-export function createCrudGetters<CRUDEntity>(storeName: CrudStoreName) {
-  const getList = createGetListFunction<CRUDEntity>(storeName);
-  const getLoadStatus = createGetLoadStatusFunction<CRUDEntity>(storeName);
-  const getElementById = createGetElementById<CRUDEntity>(storeName);
+export function createCrudGetters<StoreName extends keyof CRUDStateMap>(storeName: StoreName) {
+  const getList = createGetListFunction<StoreName>(storeName);
+  const getLoadStatus = createGetLoadStatusFunction<StoreName>(storeName);
+  const getElementById = createGetElementById<StoreName>(storeName);
 
   return { getList, getLoadStatus, getElementById };
 }
 
-function createLoadFunction<CRUDEntity>(actions: CrudActions<CRUDEntity>, service: CrudService<CRUDEntity>) {
+function createLoadFunction<CRUDEntity>(actions: CRUDActions<CRUDEntity>, service: CRUDService<CRUDEntity>) {
   return function loadData() {
     return async function dispatchRequest(dispatch: Dispatch) {
       const { loadRequested, loadSucceed, loadFailed } = actions;
@@ -90,7 +90,7 @@ function createLoadFunction<CRUDEntity>(actions: CrudActions<CRUDEntity>, servic
     };
   };
 }
-function createCreationFunction<CRUDEntity>(actions: CrudActions<CRUDEntity>, service: CrudService<CRUDEntity>) {
+function createCreationFunction<CRUDEntity>(actions: CRUDActions<CRUDEntity>, service: CRUDService<CRUDEntity>) {
   return function createData(payload: CRUDEntity) {
     return async function dispatchCreation(dispatch: Dispatch): Promise<CRUDEntity | null> {
       const { creationRequested, creationSucceed, creationFailed } = actions;
@@ -107,7 +107,7 @@ function createCreationFunction<CRUDEntity>(actions: CrudActions<CRUDEntity>, se
     };
   };
 }
-function createUpdateFunction<CRUDEntity>(actions: CrudActions<CRUDEntity>, service: CrudService<CRUDEntity>) {
+function createUpdateFunction<CRUDEntity>(actions: CRUDActions<CRUDEntity>, service: CRUDService<CRUDEntity>) {
   return function updateData(payload: CRUDEntity) {
     return async function dispatchUpdate(dispatch: Dispatch): Promise<CRUDEntity | null> {
       const { updateRequested, updateSucceed, updateFailed } = actions;
@@ -124,7 +124,7 @@ function createUpdateFunction<CRUDEntity>(actions: CrudActions<CRUDEntity>, serv
     };
   };
 }
-function createDeleteFunction<CRUDEntity>(actions: CrudActions<CRUDEntity>, service: CrudService<CRUDEntity>) {
+function createDeleteFunction<CRUDEntity>(actions: CRUDActions<CRUDEntity>, service: CRUDService<CRUDEntity>) {
   return function deleteOperation(operationId: string) {
     return async function findAndremoveUser(dispatch: Dispatch): Promise<boolean | null> {
       const { deleteRequested, deleteSucceed, deleteFailed } = actions;
@@ -142,21 +142,24 @@ function createDeleteFunction<CRUDEntity>(actions: CrudActions<CRUDEntity>, serv
   };
 }
 
-function createGetListFunction<CRUDEntity>(storeName: CrudStoreName) {
+function createGetListFunction<StoreName extends keyof CRUDStateMap>(storeName: StoreName) {
   return function getList() {
-    return function findList(state: GlobalState): CRUDEntity[] | null {
-      const crudState = state[storeName];
+    return function findList(state: GlobalState): CRUDStateMap[StoreName][] | null {
+      const crudState = state[storeName] as CRUDState<CRUDStateMap[StoreName]>;
       return crudState.entities;
     };
   };
 }
-function createGetLoadStatusFunction(storeName: CrudStoreName) {
+function createGetLoadStatusFunction<StoreName extends keyof CRUDStateMap>(storeName: StoreName) {
   return function getLoadStaus() {
     return (s: GlobalState): boolean => s[storeName].isLoaded;
   };
 };
-function createGetElementById(storeName: CrudStoreName) {
+function createGetElementById<StoreName extends keyof CRUDStateMap>(storeName: StoreName) {
   return function getElementById(id: string) {
-    return (s: GlobalState) => s[storeName].entities?.find((elem) => elem?._id === id);
+    return (s: GlobalState): CRUDStateMap[StoreName] | undefined => {
+      const crudState = s[storeName] as CRUDState<CRUDStateMap[StoreName]>;
+      return crudState.entities?.find((elem) => elem?._id === id);
+    };
   };
 }

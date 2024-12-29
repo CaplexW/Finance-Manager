@@ -12,11 +12,11 @@ export const {
   createData: createCategories,
   updateData: updateCategories,
   deleteData: deleteCategories
-} = createCrudFunctions<Category>(actions, categoriesService); //TODO Устранить ошибку когда разберусь с дженериками.
+} = createCrudFunctions<Category>(actions, categoriesService);
 export const {
   getList: getCategoriesList,
   getLoadStatus: getCategoriesLoadStatus,
   getElementById: getCategoryById,
-} = createCrudGetters<Category>(storeName);
+} = createCrudGetters(storeName);
 
 export default categoriesReducer;

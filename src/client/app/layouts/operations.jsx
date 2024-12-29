@@ -36,15 +36,11 @@ export default function Operations() {
 
   const isLoaded = (operationsIsLoaded && categoriesIsLoaded && userIsLoaded);
 
-  const filteredOperations = operations;
+  const filteredOperations = operations || [];
   const sortedOperations = orderBy(filteredOperations, [sort.path], [sort.order]);
   const displayedOperations = sortedOperations;
 
   useEffect(loadData, [isLoaded]);
-  // useEffect(() => {
-  //   console.log('render');
-  //   showElement(isLoaded, 'all data is loaded');
-  // });
 
   function loadData() {
     if (!operationsIsLoaded) dispatch(loadOperations());
