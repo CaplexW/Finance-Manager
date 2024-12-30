@@ -21,16 +21,17 @@ const router = express.Router({ mergeParams: true });
 const upload = multer({ dest: './src/server/uploads' });
 
 router.get('/', checkAuth, sendList);
-router.post('/create', checkAuth, create);
-router.post('/upload/csv/tinkoff', checkAuth, upload.single('file'), importCSVTinkoff);
+router.post('/', checkAuth, create);
 router.patch('/', checkAuth, update);
 router.delete('/:operationId', checkAuth, remove);
+router.post('/upload/csv/tinkoff', checkAuth, upload.single('file'), importCSVTinkoff);
 
 async function sendList(req: AuthedRequest, res: Response) {
   const thisPlace = 'operation/sendList';
   try {
     if (!req.user) return sendAuthError(res, thisPlace);
     const list = await Operation.find({ user: req.user._id });
+    
     res.status(200).send(list);
   } catch (err) {
     showError(err);

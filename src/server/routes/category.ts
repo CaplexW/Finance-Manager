@@ -69,7 +69,6 @@ async function create(req: AuthedRequest, res: Response) {
   }
 }
 async function update(req: AuthedRequest, res: Response) {
-
   // requestBody: {
   //  _id: string,
   //  user: string,
@@ -79,11 +78,11 @@ async function update(req: AuthedRequest, res: Response) {
   //  icon?: ReactElement,
   // }
   const thisPlace = 'category/update';
-  const request = ['_id', 'user'];
-  const requestIsOk = checkRequest(req, request);
+  const body = ['_id', 'user'];
+  const requestIsOk = checkRequest(req, body);
   try {
-    if (!req.user) return sendAuthError(res, thisPlace);
     if (!requestIsOk) return sendBadRequest(res, thisPlace);
+    if (!req.user) return sendAuthError(res, thisPlace);
     const isPermitted: boolean = req.user._id === req.body.user;
     if (!isPermitted) return sendAuthError(res, thisPlace, req.user._id);
     const categoryExists = await Category.findById(req.body._id);
