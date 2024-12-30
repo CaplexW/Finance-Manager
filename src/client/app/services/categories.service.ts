@@ -1,27 +1,22 @@
-import { Category, CRUDService, RemoveResult } from "../../../types/types";
+import { Category, CRUDService } from "../../../types/types";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from "../../../utils/console/showElement";
-import httpService from "./http.service";
+import { createCRUDServiceFunctions } from "./crud.service";
 
 const categoryEndpoint = 'category/';
 
+const { 
+  create,
+  getList,
+  update,
+  remove,
+} = createCRUDServiceFunctions<Category>(categoryEndpoint);
+
 const categoriesService: CRUDService<Category> = {
-  async getList(): Promise<Category[]> {
-    const { data } = await httpService.get(categoryEndpoint);
-    return data;
-  },
-  async update(payload: Category): Promise<Category> {
-    const { data } = await httpService.patch(categoryEndpoint, payload);
-    return data;
-  },
-  async create(payload: Category): Promise<Category> {
-    const { data } = await httpService.post(categoryEndpoint, payload);
-    return data;
-  },
-  async delete(id: string): Promise<RemoveResult> {
-    const { data } = await httpService.delete(categoryEndpoint + id);
-    return data;
-  }
+  create,
+  getList,
+  update,
+  delete: remove,
 };
 
 export default categoriesService;
