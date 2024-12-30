@@ -2,11 +2,11 @@
 import { Operation } from "../../../types/types.ts";
 import showElement from "../../../utils/console/showElement";
 import operationsService from "../services/operations.service";
-import { createCrudFunctions, createCrudGetters, createCrudSlice } from "./crudReducers.ts";
+import { createCRUDFunctions, createCRUDGetters, createCRUDSlice } from "./crudReducers.ts";
 
 const storeName = 'operations';
 
-const operationsSlice = createCrudSlice<Operation>(storeName);
+const operationsSlice = createCRUDSlice<Operation>(storeName);
 const { reducer: operationsReducer, actions } = operationsSlice;
 
 export const {
@@ -14,10 +14,10 @@ export const {
   createData: createOperation,
   updateData: updateOperation,
   deleteData: deleteOperation
-} = createCrudFunctions(actions, operationsService);
+} = createCRUDFunctions(actions, operationsService);
 export const {
   getList: getOperationsList,
   getLoadStatus: getOperationsLoadStatus,
-} = createCrudGetters(storeName);
+} = createCRUDGetters(storeName);
 
 export default operationsReducer;

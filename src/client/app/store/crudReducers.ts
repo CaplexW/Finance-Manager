@@ -4,7 +4,7 @@ import { Draft, WritableDraft } from 'immer';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from "../../../utils/console/showElement.ts";
 
-export function createCrudSlice<CRUDEntity extends CRUDObject>(sliceName: string) {
+export function createCRUDSlice<CRUDEntity extends CRUDObject>(sliceName: string) {
   const initialState: CRUDState<CRUDEntity> = {
     entities: [],
     isLoaded: false,
@@ -17,7 +17,8 @@ export function createCrudSlice<CRUDEntity extends CRUDObject>(sliceName: string
       loadRequested() { },
       loadSucceed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<CRUDEntity[]>) {
         if (state) {
-          state.entities = action.payload as Draft<CRUDEntity[]>;
+          const payloadData = Array.isArray(action.payload) ? action.payload as Draft<CRUDEntity[]> : [];
+          state.entities = payloadData;
           state.isLoaded = Boolean(action.payload.length);
         }
       },
@@ -59,7 +60,7 @@ export function createCrudSlice<CRUDEntity extends CRUDObject>(sliceName: string
   return crudSlice;
 }
 
-export function createCrudFunctions<CRUDEntity>(actions: CRUDActions<CRUDEntity>, service: CRUDService<CRUDEntity>) {
+export function createCRUDFunctions<CRUDEntity>(actions: CRUDActions<CRUDEntity>, service: CRUDService<CRUDEntity>) {
   const loadData = createLoadFunction(actions, service);
   const createData = createCreationFunction(actions, service);
   const updateData = createUpdateFunction(actions, service);
@@ -67,7 +68,7 @@ export function createCrudFunctions<CRUDEntity>(actions: CRUDActions<CRUDEntity>
 
   return { loadData, createData, updateData, deleteData };
 }
-export function createCrudGetters<StoreName extends keyof CRUDStateMap>(storeName: StoreName) {
+export function createCRUDGetters<StoreName extends keyof CRUDStateMap>(storeName: StoreName) {
   const getList = createGetListFunction<StoreName>(storeName);
   const getLoadStatus = createGetLoadStatusFunction<StoreName>(storeName);
   const getElementById = createGetElementById<StoreName>(storeName);

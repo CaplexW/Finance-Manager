@@ -1,10 +1,10 @@
 import { Category } from "../../../types/types";
 import categoriesService from "../services/categories.service";
-import { createCrudFunctions, createCrudGetters, createCrudSlice } from "./crudReducers.ts";
+import { createCRUDFunctions, createCRUDGetters, createCRUDSlice } from "./crudReducers.ts";
 
 const storeName = 'categories';
 
-const operationsSlice = createCrudSlice<Category>(storeName);
+const operationsSlice = createCRUDSlice<Category>(storeName);
 const { reducer: categoriesReducer, actions } = operationsSlice;
 
 export const {
@@ -12,11 +12,11 @@ export const {
   createData: createCategories,
   updateData: updateCategories,
   deleteData: deleteCategories
-} = createCrudFunctions<Category>(actions, categoriesService);
+} = createCRUDFunctions<Category>(actions, categoriesService);
 export const {
   getList: getCategoriesList,
   getLoadStatus: getCategoriesLoadStatus,
   getElementById: getCategoryById,
-} = createCrudGetters(storeName);
+} = createCRUDGetters(storeName);
 
 export default categoriesReducer;
