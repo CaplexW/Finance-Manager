@@ -1,6 +1,6 @@
 import { Dispatch, PayloadAction, createSlice } from "@reduxjs/toolkit";
 import showError from "../../../utils/console/showError";
-import { Credentials, GlobalState, RegisterPayload, User, UserState } from "../../../types/types.old";
+import { Credentials, GlobalState, RegisterPayload, User, UserState } from "../../../types/types";
 import authService from "../services/auth.service";
 import { getAccessToken, getUserId, removeAuthData, setTokens } from "../services/storage.service";
 import userService from "../services/user.service";

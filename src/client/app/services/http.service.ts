@@ -17,7 +17,7 @@ const httpService = {
   put: http.put,
   post: http.post,
   patch: http.patch,
-  remove: http.remove,
+  delete: http.delete,
 };
 
 async function modifyRequest(request: InternalAxiosRequestConfig) {

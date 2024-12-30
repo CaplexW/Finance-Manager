@@ -1,4 +1,4 @@
-import { User } from "../../../types/types.old";
+import { User } from "../../../types/types";
 import { cyanLog } from "../../../utils/console/coloredLogs";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from "../../../utils/console/showElement";
@@ -13,9 +13,9 @@ const userService = {
     return data;
   },
   async deleteUser(userId: string, userPassword: string): Promise<number> {
-    cyanLog('user remove requested');
+    cyanLog('user delete requested');
     const headers = { Authorization: `Bearer ${userPassword}` };
-    const response = await httpService.remove(userEndpoint + userId, { headers });
+    const response = await httpService.delete(userEndpoint + userId, { headers });
 
     return response.data.deletedCount;
   }
