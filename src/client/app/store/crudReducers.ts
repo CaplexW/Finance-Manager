@@ -52,7 +52,7 @@ export function createCRUDSlice<CRUDEntity extends CRUDObject>(sliceName: string
       },
       deleteFailed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<unknown>) {
         const message = action.payload as { message: string };
-        state.error = message || `Error occured in attempt of delete ${action.type} but there is no error message to display`;
+        state.error = message || `Error occured in attempt of remove ${action.type} but there is no error message to display`;
       }
     }
   };
@@ -131,7 +131,7 @@ function createDeleteFunction<CRUDEntity>(actions: CRUDActions<CRUDEntity>, serv
       const { deleteRequested, deleteSucceed, deleteFailed } = actions;
       dispatch(deleteRequested());
       try {
-        const result = await service.delete(operationId);
+        const result = await service.remove(operationId);
         dispatch(deleteSucceed(operationId));
         return Boolean(result.result);
       } catch (err) {

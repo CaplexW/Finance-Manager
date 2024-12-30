@@ -64,7 +64,7 @@ export interface CRUDService<CRUDEntity>  {
   getList: () => Promise<CRUDEntity[]>,
   update: (payload: CRUDEntity) => Promise<CRUDEntity>,
   create: (payload: CRUDEntity) => Promise<CRUDEntity>,
-  delete: (id: string) => Promise<RemoveResult>,
+  remove: (id: string) => Promise<RemoveResult>,
 };
 
 export type User = {
