@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUser, getUserDataStatus, loadUserData } from '../store/user';
 import { deleteOperation, getOperationsList, getOperationsLoadStatus, loadOperations, updateOperation } from '../store/operations';
 import { getCategoriesList, getCategoriesLoadStatus, loadCategories } from '../store/categories';
+import { getIconsLoadStatus, loadIcons } from '../store/icons';
 import showElement from '../../../utils/console/showElement';
 import CategoriesList from '../components/UI/categoriesList';
 import Chart from '../components/UI/chart';
@@ -27,6 +28,7 @@ export default function Operations() {
 
   const operationsIsLoaded = useSelector(getOperationsLoadStatus());
   const categoriesIsLoaded = useSelector(getCategoriesLoadStatus());
+  const iconsIsLoaded = useSelector(getIconsLoadStatus())
   const userIsLoaded = useSelector(getUserDataStatus());
   const operations = useSelector(getOperationsList());
   const categories = useSelector(getCategoriesList());
@@ -34,7 +36,12 @@ export default function Operations() {
 
   const dispatch = useDispatch();
 
-  const isLoaded = (operationsIsLoaded && categoriesIsLoaded && userIsLoaded);
+  const isLoaded = (
+    operationsIsLoaded
+    && categoriesIsLoaded
+    // && iconsIsLoaded
+    && userIsLoaded
+  );
 
   const filteredOperations = operations || [];
   const sortedOperations = orderBy(filteredOperations, [sort.path], [sort.order]);
@@ -43,8 +50,12 @@ export default function Operations() {
   useEffect(loadData, [isLoaded]);
 
   function loadData() {
+    if (isLoaded) return;
+    
     if (!operationsIsLoaded) dispatch(loadOperations());
     if (!categoriesIsLoaded) dispatch(loadCategories());
+    // if (!iconsIsLoaded) dispatch(loadIcons());
+    if (!userIsLoaded) dispatch(loadUserData());
   }
 
   async function handleCreate(payload) {
