@@ -14,9 +14,9 @@ import sendBadRequest from '../../utils/errors/fromServerToClient/sendBadRequest
 const router = express.Router({ mergeParams: true });
 
 router.get('/', checkAuth, sendList);
-router.post('/create', checkAuth, create);
-router.patch('/update', checkAuth, update);
-router.delete('/remove', checkAuth, remove);
+router.post('/', checkAuth, create);
+router.patch('/', checkAuth, update);
+router.delete('/', checkAuth, remove);
 
 async function sendList(req: AuthedRequest, res: Response) {
   const thisPlace = 'goal/sendList';

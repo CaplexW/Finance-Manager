@@ -14,6 +14,7 @@ import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
 import cryptService from '../services/crypt.service.ts';
 import sendCredentialsError from '../../utils/errors/fromServerToClient/sendCredentialsError.ts';
 import { cyanLog } from '../../utils/console/coloredLogs.ts';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../utils/console/showElement.ts';
 
 const router = express.Router({ mergeParams: true });
@@ -58,7 +59,7 @@ async function removeUser(req: AuthedRequest, res: Response) {
     const password = req.headers.authorization.split(' ')[1];
     const passwordIsOk = cryptService.compare(password, removingUser.password);
     if (!passwordIsOk) sendCredentialsError(res);
-    cyanLog('password check passed')
+    cyanLog('password check passed');
     const isPermitted = (id === req.user._id);
     if (!isPermitted) return sendForbidden(res, thisPlace);
     cyanLog('permition check passed');
