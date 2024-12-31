@@ -4,7 +4,7 @@ import { Draft, WritableDraft } from 'immer';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from "../../../utils/console/showElement.ts";
 
-export function createCRUDSlice<CRUDEntity extends CRUDObject>(sliceName: string) {
+export function createCRUDSlice<CRUDEntity extends CRUDObject>(sliceName: string, config = { emptyEntityIsValid: true }) {
   const initialState: CRUDState<CRUDEntity> = {
     entities: [],
     isLoaded: false,
@@ -17,9 +17,15 @@ export function createCRUDSlice<CRUDEntity extends CRUDObject>(sliceName: string
       loadRequested() { },
       loadSucceed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<CRUDEntity[]>) {
         if (state) {
-          const payloadData = Array.isArray(action.payload) ? action.payload as Draft<CRUDEntity[]> : [];
+          const { emptyEntityIsValid } = config;
+          const payloadData = Array.isArray(action.payload) ? action.payload as Draft<CRUDEntity[]> : null;
           state.entities = payloadData;
-          state.isLoaded = Boolean(action.payload.length);
+          if (emptyEntityIsValid) {
+            state.isLoaded = Boolean(action.payload);  
+          }
+          else {
+            state.isLoaded = Boolean(action.payload?.length);
+          }
         }
       },
       loadFailed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<unknown>) {

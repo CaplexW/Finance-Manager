@@ -4,7 +4,7 @@ import { createCRUDFunctions, createCRUDGetters, createCRUDSlice } from "./crudR
 
 const storeName = 'icons';
 
-const operationsSlice = createCRUDSlice<Icon>(storeName);
+const operationsSlice = createCRUDSlice<Icon>(storeName, { emptyEntityIsValid: false });
 const { reducer: iconsReducer, actions } = operationsSlice;
 
 export const {
