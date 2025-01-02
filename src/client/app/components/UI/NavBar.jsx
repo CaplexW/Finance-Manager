@@ -13,6 +13,8 @@ import showElement from '../../../../utils/console/showElement';
 
 export default function NavBar() {
   const isLogged = useSelector(getLoginStatus());
+
+  const lastColClass = `col-md-2 d-flex ${isLogged ? '' : 'justify-content-end'}`;
   // style={{ backgroundColor: mainColor }}
   return (
     <nav className="navbar row gutter-md py-1 px-4 d-flex justify-content-between">
@@ -37,16 +39,18 @@ export default function NavBar() {
         ) : ''}
       </div>
       <div className="col-md-6" id="space" />
-      <div className="col-md-2 d-flex align-items-end justify-content-end" id="right-side">
-        {isLogged ? <NavProfile /> : (
-          <NavLink
-            aria-current="page"
-            className={({ isActive }) => (isActive ? 'nav-link navbar-brand' : 'nav-link')}
-            to="/login"
-          >
-            Войти
-          </NavLink>
-        )}
+      <div className={lastColClass} id="right-side">
+        {isLogged ?
+          <NavProfile />
+          : (
+            <NavLink
+              aria-current="page"
+              className={({ isActive }) => (isActive ? 'nav-link navbar-brand' : 'nav-link')}
+              to="/login"
+            >
+              Войти
+            </NavLink>
+          )}
       </div>
     </nav>
   );

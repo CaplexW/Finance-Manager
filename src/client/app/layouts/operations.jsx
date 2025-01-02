@@ -39,8 +39,8 @@ export default function Operations() {
   const isLoaded = (
     operationsIsLoaded
     && categoriesIsLoaded
-    // && iconsIsLoaded
     && userIsLoaded
+    // && iconsIsLoaded
   );
 
   const filteredOperations = operations || [];

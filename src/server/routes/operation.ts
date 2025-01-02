@@ -16,6 +16,7 @@ import sendAuthError from '../../utils/errors/fromServerToClient/sendAuthError.t
 import showElement from '../../utils/console/showElement.ts';
 import extractDataFromCSV from '../../utils/import/extractDataFromCSV.ts';
 import createOperationFromTinkoffData from '../../utils/import/createOperationFromTinkoffData.ts';
+import DefaultCategory from '../../db/models/DefaultCategory.ts';
 
 const router = express.Router({ mergeParams: true });
 const upload = multer({ dest: './src/server/uploads' });
@@ -52,13 +53,13 @@ async function create(req: AuthedRequest, res: Response) {
     if (!requestIsOk) return sendBadRequest(res, thisPlace);
     const categoryId: string = req.body.category;
     const authedownerId: string = req.user?._id;
-    const operationCategory = await Category.findById(categoryId);
+    const operationCategory = await findCategoryById(req.body.category);
     if (!operationCategory) return sendNotFound(res, 'category', categoryId);
 
     const operationData = {
       ...req.body,
       user: authedownerId,
-      amount: await calculateAmount(req.body),
+      amount: await calculateAmount(req.body, operationCategory.isIncome),
       date: req.body.date ? req.body.date : getDisplayDate(new Date),
     };
     const newOperation = await Operation.create(operationData);
@@ -121,12 +122,14 @@ async function update(req: AuthedRequest, res: Response) {
     if (!currentOperation) return sendNotFound(res, 'operation', req.body._id);
     const hostUser = await User.findById(authedUser);
     if (!hostUser) return sendNotFound(res, 'user', authedUser);
+    const operationCategory = await findCategoryById(req.body.category);
+    if (!operationCategory) return sendNotFound(res, 'category', req.body.category);
 
     const balanceDifference = Number(req.body.amount) - currentOperation.amount;
-    const newData = { ...req.body, amount: await calculateAmount(req.body) };
+    const newData = { ...req.body, amount: await calculateAmount(req.body, operationCategory.isIncome) };
     const updatedOperation = await Operation.findByIdAndUpdate(req.body._id, newData, { new: true });
     await hostUser.updateOne({ currentBalance: hostUser.currentBalance + balanceDifference });
-    // await hostUser.save();
+    await hostUser.save(); //TODO Проверить надобность строчки.
 
     res.status(203).send(updatedOperation);
   } catch (err) {
@@ -153,7 +156,6 @@ async function remove(req: AuthedRequest, res: Response) {
     const filtered = hostUser.operations.filter((op) => op.toString() !== operationId);
     const newBalance: number = hostUser.currentBalance - removingOperation.amount;
     await hostUser.updateOne({ currentBalance: newBalance, operations: filtered });
-    // await User.findByIdAndUpdate(hostUser._id, { currentBalance: newBalance, operations: filtered });
 
     res.status(200).send({ result: result.deletedCount, newBalance });
   } catch (err) {
@@ -165,6 +167,16 @@ async function remove(req: AuthedRequest, res: Response) {
 function sendNotFound(response: Response, object: string, id: string = '') {
   const message: string = id ? `${object} with id ${id} not found` : `${object} not found`;
   response.status(404).send({ message });
+}
+
+async function findCategoryById(categoryId: string) {
+  const defaultCategory = await DefaultCategory.findById(categoryId);
+  if (defaultCategory) return defaultCategory;
+  
+  const customCategory = await Category.findById(categoryId);
+  if (customCategory) return customCategory;
+
+  return null;
 }
 
 export default router;

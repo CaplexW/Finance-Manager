@@ -11,6 +11,7 @@ import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound
 import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
 import sendBadRequest from '../../utils/errors/fromServerToClient/sendBadRequest.ts';
 import { sendAlreadyExists } from '../../utils/errors/fromServerToClient/sendAlreadyExists.ts';
+import showElement from '../../utils/console/showElement.ts';
 
 const router = express.Router({ mergeParams: true });
 
@@ -23,9 +24,9 @@ async function sendList(req: AuthedRequest, res: Response) {
   const thisPlace = 'category/sendList';
   try {
     if (!req.user) return sendAuthError(res, thisPlace);
-    const list = await getCategoriesForUser(req.user._id);
-    if (!list) return sendNotFound(res, 'user', req.user._id);
+    const list = await getCategoriesForUser(req.user._id); 
 
+    if (!list) return sendNotFound(res, 'user', req.user._id);
     res.status(200).send(list);
   } catch (err) {
     showError(err);
@@ -60,9 +61,9 @@ async function create(req: AuthedRequest, res: Response) {
     };
     const newCategory = await Category.create(newCategoryData);
     userCategories.push(newCategory);
-    const updatedCategory = await User.findByIdAndUpdate(authedUser, { categories: userCategories }, { new: true });
+    User.findByIdAndUpdate(authedUser, { categories: userCategories }, { new: true });
 
-    res.status(201).send(updatedCategory);
+    res.status(201).send(newCategory);
   } catch (err) {
     showError(err);
     serverError(res, thisPlace);

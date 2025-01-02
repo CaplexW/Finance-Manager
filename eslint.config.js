@@ -79,6 +79,7 @@ const rulesConfig = {
     'react/jsx-indent': 'off',
     'react/jsx-indent-props': 'off',
     'react/prop-types': 'warn',
+    'react/require-default-props': 'off',
     'react/jsx-no-bind': 'off',
     'react/jsx-props-no-spreading': 'warn',
     'react/jsx-no-literals': "off",

@@ -3,14 +3,15 @@ import User, { IUser } from '../../db/models/User.ts';
 import cryptService from '../services/crypt.service.ts';
 import tokenService from '../services/token.service.ts';
 import { redLog } from '../../utils/console/coloredLogs.ts';
-import Category, { ICategory } from '../../db/models/Category.ts';
 import validatorService from '../services/validator.service.ts';
 import { JwtPayload } from 'jsonwebtoken';
 import sendCredentialsError from '../../utils/errors/fromServerToClient/sendCredentialsError.ts';
 import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
 import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound.ts';
 import { IToken } from '../../db/models/Token.ts';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../utils/console/showElement.ts';
+import DefaultCategory, { TDefaultCategory } from '../../db/models/DefaultCategory.ts';
 
 const router = Router({ mergeParams: true });
 const { getResult, getValidation } = validatorService;
@@ -26,7 +27,7 @@ const signInWithPasswordValidations = [
 router.post('/signUp', [...singUpValidations, signUp]);
 router.post('/signInWithPassword', [...signInWithPasswordValidations, signInWithPassword]);
 router.post('/updateToken', updateToken);
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjlmZDE5MDQzMTY4OWU3N2RiYTlmYWIiLCJpYXQiOjE3MzMwNTAwNDR9.an0c52zdOQqR3EjsUJsNMNYsrrfMrVKMXzDlqZLOlco
+
 async function signUp(req: Request, res: Response) {
     const thisPlace = 'auth/signUp';
     try {
@@ -37,7 +38,7 @@ async function signUp(req: Request, res: Response) {
         if (userExists) return sendEmailExistsError(res);
 
         const hashedPassword: string = await cryptService.hash(password, 12);
-        const defaultCategoriesList: ICategory[] = await Category.find({ user: undefined });
+        const defaultCategoriesList: TDefaultCategory[] = await DefaultCategory.find();
         const newUserData: IUser = {
             image: createUserAvatar(email),
             categories: defaultCategoriesList,

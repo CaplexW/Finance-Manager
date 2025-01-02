@@ -2,17 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FieldInput from '../common/form/fieldInput';
 import Form, { Checkbox } from '../common/form';
-import closeModalWindow from '../../../../utils/modals/closeModalWindow';
-import categoriesService from '../../services/categories.service';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../utils/console/showElement';
-import openModalById from '../../../../utils/modals/openModalById';
 import IconPicker from '../common/form/iconPicker';
-import { useSelector } from 'react-redux';
-import { getCategoriesList } from '../../store/categories';
+import { useDispatch, useSelector } from 'react-redux';
+import { getIconsList } from '../../store/icons';
+import { createCategory } from '../../store/categories';
 
 export default function CreateCategoryForm({ enteredName, onClose }) {
-  const categories = useSelector(getCategoriesList());
-  const icons = categories.map((cat) => cat.icon);
+  const dispatch = useDispatch();
+
+  const icons = useSelector(getIconsList());
   const existingData = { name: enteredName || '', color: "#fff", income: false, icon: '' };
   const validatorConfig = {};
 
@@ -22,9 +22,9 @@ export default function CreateCategoryForm({ enteredName, onClose }) {
       name: data.name,
       color: data.color,
       isIncome: data.income,
-      icon: data.icon,
+      icon: data.icon._id,
     };
-    await categoriesService.create(categoryData);
+    dispatch(createCategory(categoryData));
     handleClose();
   }
   
