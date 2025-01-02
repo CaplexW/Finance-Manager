@@ -3,10 +3,28 @@ import PropTypes from 'prop-types';
 import lod from 'lodash';
 import { alfaIcon, uploadIcon } from '../../../assets/icons';
 import T_BANK_ICON from '../../../assets/static_icons/tBankIcon.png';
+import showElement from '../../../../utils/console/showElement';
 
-export default function Table({ columns, data, title, sortConfig, onSort, onSearch, onFile, onAdd }) {
+const dummySort = { path: '', order: '' };
+const dummyFunc = () => { };
+
+export default function Table({
+  columns,
+  data,
+  title = 'Таблица',
+  sortConfig = dummySort,
+  onSort = dummyFunc,
+  onSearch = dummyFunc,
+  onFile = dummyFunc,
+  onAdd = dummyFunc
+}) {
   const tinkoffIcon = <img alt="T-BANK" src={T_BANK_ICON} style={{ width: 30, height: 30, borderRadius: '20%'}} />;
 
+  function noRequiredDataError() {
+    console.error('no column config or data to display was given to this table');
+    showElement(data, 'data');
+    showElement(columns, 'columns');
+  }
   function renderContent(item, column) {
     if (columns[column].component) {
       const { component } = columns[column];
@@ -24,6 +42,9 @@ export default function Table({ columns, data, title, sortConfig, onSort, onSear
       onSort({ path: item, order: 'asc', caret: 'up' });
     }
   }
+
+  if(!data || !columns) return noRequiredDataError();
+  
   return (
     <main className='table_layout'>
       <div className="table_container">
@@ -109,11 +130,6 @@ Table.propTypes = {
     path: PropTypes.string.isRequired,
     order: PropTypes.string.isRequired,
   }),
-};
-Table.defaultProps = {
-  onAdd: undefined,
-  onFile: undefined,
-  onSearch: undefined,
-  onSort: undefined,
-  sortConfig: undefined,
+  title: PropTypes.string,
+  
 };

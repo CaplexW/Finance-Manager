@@ -21,7 +21,7 @@ import closeModalWindow from '../../../../utils/modals/closeModalWindow';
 
 // TODO 1. Реализовать условный рендеринг модальных окон
 
-export default function OperationTable({ displayedOperations, onSort, sortConfig }) {
+export default function OperationTable({ displayedOperations, onSort = null, sortConfig = null }) {
   const [editingData, setEditingData] = useState({});
   const [newCategoryName, setNewCategoryName] = useState(null);
 
@@ -143,8 +143,4 @@ OperationTable.propTypes = {
     path: PropTypes.string.isRequired,
     order: PropTypes.string.isRequired,
   })
-};
-OperationTable.defaultProps = {
-  onSort: undefined,
-  sortConfig: undefined,
 };

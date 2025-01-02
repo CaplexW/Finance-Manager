@@ -10,7 +10,9 @@ import showElement from '../../../../utils/console/showElement';
 import { updateOperation } from '../../store/operations';
 import { formatDisplayDateFromInput, formatInputDateFromDisplay } from '../../../../utils/formatDate';
 
-export default function EditOperationForm({ existingData, onClose }) {
+const emptyObject = {};
+
+export default function EditOperationForm({ onClose, existingData = emptyObject, }) {
   if(!existingData.date) return;
 
   const dispatch = useDispatch();
@@ -84,8 +86,5 @@ EditOperationForm.propTypes = {
     date: PropTypes.string.isRequired,
   }),
   onClose: PropTypes.func.isRequired,
-};
-EditOperationForm.defaultProps = {
-  existingData: undefined,
 };
 

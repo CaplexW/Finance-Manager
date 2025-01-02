@@ -1,20 +1,21 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { eyeOpenIcon, eyeShutIcon } from '../../../../assets/icons';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../../utils/console/showElement';
 import flashInvalidInputs from '../../../../../utils/flashInvalidInputs';
 import flashOffInvalidInputs from '../../../../../utils/flashOffInvalidInputs';
 
 function FieldInput({
-  value,
+  value = undefined,
   onChange,
-  name,
-  type,
-  label,
-  error,
-  placeholder,
-  autoFocus,
-  minimumValue
+  name = `textInput-${Date.now()}`,
+  type = 'text',
+  label = undefined,
+  error = undefined,
+  placeholder = undefined,
+  autoFocus = false,
+  minimumValue = undefined,
 }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const input = useRef();
@@ -81,17 +82,6 @@ FieldInput.propTypes = {
   placeholder: PropTypes.string,
   type: PropTypes.string,
   value: PropTypes.string,
-};
-
-FieldInput.defaultProps = {
-  autoFocus: false,
-  error: undefined,
-  label: undefined,
-  minimumValue: undefined,
-  name: `textInput-${Date.now()}`,
-  placeholder: undefined,
-  type: 'text',
-  value: '',
 };
 
 export default memo(FieldInput);

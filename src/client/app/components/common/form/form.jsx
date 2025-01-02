@@ -7,12 +7,18 @@ import validator from '../../../../../utils/validator';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../../utils/console/showElement';
 
+const emptyObject = {};
+
 export default function Form({
-  children, validatorConfig, onSubmit, defaultData, dataScheme,
+  children,
+  validatorConfig = undefined,
+  onSubmit = noSubmitWarning,
+  defaultData = emptyObject,
+  dataScheme = emptyObject,
 }) {
   // Документация:
   // defaultData и dataScheme - оба представляют из себя оьбъект ключ:значение.
-  // Ключ - это название поля, он должен соответствовать параметру name элемента input.
+  // Ключ - это название поля инпута, он должен соответствовать параметру name элемента input.
   // Пример { email: "value", password: "value" }
   // defaultData и dataScheme - взаимоисключающие параметры.
   // defaultData следует использовать когда нужно передать в поля формы
@@ -117,9 +123,8 @@ Form.propTypes = forbidExtraProps({
   // eslint-disable-next-line react/forbid-prop-types
   validatorConfig: PropTypes.object,
 });
-Form.defaultProps = {
-  dataScheme: {},
-  defaultData: {},
-  onSubmit: () => console.error('You trying to submit a form, but no function handling submit event were added to this form'),
-  validatorConfig: undefined,
-};
+
+
+function noSubmitWarning() {
+  console.error('You trying to submit a form, but no function handling submit event were added to this form');
+}

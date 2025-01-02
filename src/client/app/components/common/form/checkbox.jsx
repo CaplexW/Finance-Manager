@@ -2,7 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export default function Checkbox({
-  label, name, value, onChange, error,
+  label = undefined,
+  name,
+  value = false,
+  onChange = undefined,
 }) {
   const inputClass = `form-check-input me-3`;
 
@@ -27,16 +30,8 @@ export default function Checkbox({
   );
 }
 Checkbox.propTypes = {
-  error: PropTypes.string,
-  // children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
   label: PropTypes.string,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func,
   value: PropTypes.bool,
-};
-Checkbox.defaultProps = {
-  error: undefined,
-  label: undefined,
-  onChange: undefined,
-  value: false,
 };

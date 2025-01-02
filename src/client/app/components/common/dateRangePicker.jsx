@@ -50,9 +50,9 @@ export default function DateRangeInput({ pick, onPick }) {
   );
 }
 DateRangeInput.propTypes = {
-  dateRange: PropTypes.shape({
+  onPick: PropTypes.func.isRequired,
+  pick: PropTypes.shape({
     startDate: PropTypes.string.isRequired,
     endDate: PropTypes.string.isRequired,
   }).isRequired,
-  onPick: PropTypes.func.isRequired,
 };

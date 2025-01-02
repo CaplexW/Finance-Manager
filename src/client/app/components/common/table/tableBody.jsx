@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import lod from 'lodash';
 import PropTypes from 'prop-types';
@@ -37,8 +38,6 @@ export default function TableBody({ data, columns }) {
   );
 }
 TableBody.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  data: PropTypes.array.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
   columns: PropTypes.object.isRequired,
+  data: PropTypes.array.isRequired,
 };
