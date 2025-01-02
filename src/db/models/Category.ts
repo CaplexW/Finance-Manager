@@ -24,7 +24,7 @@ export interface ICategory {
 export type TCategory = {
   name: string,
   color: string,
-  IsIncome: boolean,
+  isIncome: boolean,
   icon: Types.ObjectId,
   user: Types.ObjectId,
 };

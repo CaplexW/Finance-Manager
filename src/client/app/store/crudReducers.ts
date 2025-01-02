@@ -44,6 +44,7 @@ export function createCRUDSlice<CRUDEntity extends CRUDObject>(sliceName: string
       },
       creationRequested() { },
       creationSucceed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<CRUDEntity>) {
+        showElement(state.entities, 'state');
         if (state?.entities) state?.entities?.push(action.payload as Draft<CRUDEntity>);
       },
       creationFailed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<unknown>) {
@@ -103,9 +104,9 @@ function createCreationFunction<CRUDEntity>(actions: CRUDActions<CRUDEntity>, se
       const { creationRequested, creationSucceed, creationFailed } = actions;
       dispatch(creationRequested());
       try {
-        const createdOperation = await service.create(payload);
-        dispatch(creationSucceed(createdOperation));
-        return createdOperation;
+        const createdItem = await service.create(payload);
+        dispatch(creationSucceed(createdItem));
+        return createdItem;
       } catch (err) {
         const { message } = err as ErrorMessage;
         dispatch(creationFailed(message));

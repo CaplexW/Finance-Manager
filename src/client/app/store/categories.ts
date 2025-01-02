@@ -9,9 +9,9 @@ const { reducer: categoriesReducer, actions } = operationsSlice;
 
 export const {
   loadData: loadCategories,
-  createData: createCategories,
-  updateData: updateCategories,
-  deleteData: deleteCategories
+  createData: createCategory,
+  updateData: updateCategory,
+  deleteData: deleteCategory
 } = createCRUDFunctions<Category>(actions, categoriesService);
 export const {
   getList: getCategoriesList,

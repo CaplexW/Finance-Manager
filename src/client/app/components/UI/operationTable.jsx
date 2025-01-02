@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { deleteOperation } from '../../store/operations';
 import DeleteButton from '../common/deleteButton';
 import EditButton from '../common/editButton';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../utils/console/showElement';
 import EditOperationForm from './editOperationForm';
 import CategoryLabel from './categoryLabel';

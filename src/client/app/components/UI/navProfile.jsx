@@ -34,7 +34,7 @@ export default function NavProfile() {
   }
 
   if (isLoaded) return (
-    <div className="dropdown w-100" onClick={toggleMenu} role="button" tabIndex={0}>
+    <div className="dropdown" onClick={toggleMenu} role="button" tabIndex={0}>
       <div className="btn dropdown-toggle d-flex align-items-center">
         <div className="me-2">{user.name}</div>
         <UserAvatar size={26} source={user.image} />

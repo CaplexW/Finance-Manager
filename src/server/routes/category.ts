@@ -61,9 +61,9 @@ async function create(req: AuthedRequest, res: Response) {
     };
     const newCategory = await Category.create(newCategoryData);
     userCategories.push(newCategory);
-    const updatedCategory = await User.findByIdAndUpdate(authedUser, { categories: userCategories }, { new: true });
+    User.findByIdAndUpdate(authedUser, { categories: userCategories }, { new: true });
 
-    res.status(201).send(updatedCategory);
+    res.status(201).send(newCategory);
   } catch (err) {
     showError(err);
     serverError(res, thisPlace);

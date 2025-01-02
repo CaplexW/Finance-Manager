@@ -1,9 +1,22 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import showElement from '../../../../utils/console/showElement';
+import { useSelector } from 'react-redux';
+import { getIconById } from '../../store/icons';
+import { iconPropTye } from '../../../../types/propTypes';
 
-export default function SVGIcon({ source, classes, size = 24, color }) {
+export default function SVGIcon({
+  source,
+  classes = '',
+  size = 24,
+  color = 'black'
+}) {
+  const iconObject = source?.src;
+
+  if (!iconObject) return <img alt="" src="" />;
+
   const iconConfig = {
-    ...source.props,
+    ...iconObject.props,
     width: size,
     height: size,
     color: color || '#fff',
@@ -50,7 +63,14 @@ export default function SVGIcon({ source, classes, size = 24, color }) {
     return icon;
   }
 
-  const icon = createSVGFromObject(source, color);
+  const icon = createSVGFromObject(iconObject, color);
 
   return <span className={classes}>{icon}</span>;
+};
+
+SVGIcon.propTypes = {
+  classes: PropTypes.string,
+  color: PropTypes.string,
+  size: PropTypes.number,
+  source: PropTypes.shape(iconPropTye).isRequired,
 };

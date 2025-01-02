@@ -1,14 +1,8 @@
-import Category from "../db/models/Category.ts";
+import Category, { TCategory } from "../db/models/Category.ts";
 import showError from "./console/showError.ts";
 
-export default async function calculateAmount(request: OperationCreateRequest) {
-  const operationCategory = await Category.findById(request.category);
-  if (operationCategory) {
-    return operationCategory.isIncome ? Number(request.amount) : Number(-request.amount);
-  } else {
-    showError('Category not found!');
-    throw new Error("Category not found!");
-  }
+export default async function calculateAmount(operation: OperationCreateRequest, categoryIsIncome: boolean) {
+    return categoryIsIncome ? Number(operation.amount) : Number(-operation.amount);
 }
 
 type OperationCreateRequest = {

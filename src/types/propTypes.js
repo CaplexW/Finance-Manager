@@ -42,6 +42,11 @@ export const goalPropType = {
   status: PropTypes.string.isRequired,
   account: PropTypes.string,
 };
+export const iconPropTye = {
+  _id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  src: PropTypes.object.isRequired,
+};
 export const nodesPropType = PropTypes.oneOfType([
   PropTypes.arrayOf(PropTypes.node),
   PropTypes.node,
