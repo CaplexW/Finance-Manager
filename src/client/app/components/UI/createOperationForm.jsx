@@ -1,15 +1,16 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Form from '../common/form';
 import FieldInput from '../common/form/fieldInput';
 import SelectInputWithCreate from '../common/form/selectInputWithCreate';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCategoriesList } from '../../store/categories';
-import closeModalWindow from '../../../../utils/modals/closeModalWindow';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../utils/console/showElement';
 import { createOperation } from '../../store/operations';
 import { formatDisplayDateFromInput } from '../../../../utils/formatDate';
 
-export default function CreateOperationForm({ onCreateCategory, parent, onClose }) {
+export default function CreateOperationForm({ onCreateCategory, onClose }) {
   const dispatch = useDispatch();
   const categories = useSelector(getCategoriesList());
   const emptyFields = { operationName: '', category: '', amount: '', date: '' };
@@ -66,4 +67,9 @@ export default function CreateOperationForm({ onCreateCategory, parent, onClose 
       </div>
     </Form>
   );
+};
+
+CreateOperationForm.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  onCreateCategory: PropTypes.func.isRequired,
 };

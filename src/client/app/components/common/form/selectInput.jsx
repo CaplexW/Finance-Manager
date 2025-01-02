@@ -5,11 +5,11 @@ import PropTypes from 'prop-types';
 function SelectInput({
   options,
   name,
-  value,
+  value = null,
   onChange,
-  error,
+  error = null,
   label,
-  defaultOption,
+  defaultOption = 'Выберите вариант',
 }) {
   const selectClass = `form-select mt-1 w-100 ${error ? 'is-invalid' : ' '}`;
   const isGuest = defaultOption === 'Бродяга';
@@ -85,10 +85,6 @@ SelectInput.propTypes = {
   ]).isRequired,
   value: PropTypes.string,
 };
-SelectInput.defaultProps = {
-  defaultOption: 'Выберите вариант',
-  error: undefined,
-  value: '',
-};
+
 
 export default memo(SelectInput);

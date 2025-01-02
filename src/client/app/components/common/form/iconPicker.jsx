@@ -1,17 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import ButtonWithIcon from '../buttonWithIcon';
 import showError from '../../../../../utils/console/showError';
 import displayError from '../../../../../utils/errors/onClient/displayError';
 import { arrowLeftIcon, arrowRightIcon } from '../../../../assets/icons';
 import showElement from '../../../../../utils/console/showElement';
+import { iconPropType } from '../../../../../types/propTypes';
 
 export default function IconPicker({
-  value,
+  value = undefined,
   onChange,
   name,
-  label,
+  label = undefined,
   options,
-  pageSize,
+  pageSize = 10,
 }) {
   showElement(value, 'value');
   const [selectedOption, setSelectedOption] = useState(value);
@@ -108,4 +110,13 @@ export default function IconPicker({
       </div>
     </div >
   );
+};
+
+IconPicker.propTypes = {
+  label: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(PropTypes.shape(iconPropType)).isRequired,
+  pageSize: PropTypes.number,
+  value: PropTypes.shape(iconPropType).isRequired
 };

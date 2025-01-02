@@ -7,7 +7,15 @@ import flashInvalidInputs from '../../../../../utils/flashInvalidInputs';
 import showElement from '../../../../../utils/console/showElement';
 import flashOffInvalidInputs from '../../../../../utils/flashOffInvalidInputs';
 
-export default function SelectInputWithCreate({ data, label, onCreate, name, value, onChange, error }) {
+export default function SelectInputWithCreate({
+  data,
+  label = null,
+  onCreate = noCreateWarning,
+  name,
+  value = null,
+  onChange,
+  error = null,
+}) {
   // Документация:
     // В value следует передавать объект формата
     // { label: [отображаемое название], value: [передоваемое значение] }
@@ -40,13 +48,9 @@ export default function SelectInputWithCreate({ data, label, onCreate, name, val
     onChange(result);
   }
   async function handleCreate(inputValue) {
-    // setIsLoading(true);
-    const result = await onCreate(inputValue);
-    // if (result) {
-    //   setIsLoading(false);
-    //   setOptions((prev) => [...prev, result]);
-    // };
+    await onCreate(inputValue);
   };
+  
   return (
     <div>
       <label className="label-control" htmlFor={name}>
@@ -60,16 +64,17 @@ export default function SelectInputWithCreate({ data, label, onCreate, name, val
           isDisabled={isLoading}
           isLoading={isLoading}
           name={name}
-          placeholder="Выберите категорию"
           onChange={handleChange}
           onCreateOption={handleCreate}
           options={options}
-          value={value || null}
+          placeholder="Выберите категорию"
+          value={value}
         />
       </div>
     </div>
   );
 };
+
 SelectInputWithCreate.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.array.isRequired,
@@ -78,5 +83,7 @@ SelectInputWithCreate.propTypes = {
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   onCreate: PropTypes.func,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
 };
+
+function noCreateWarning() { console.error('no onCreate function was given to this input'); };

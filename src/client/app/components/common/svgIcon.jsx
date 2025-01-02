@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import showElement from '../../../../utils/console/showElement';
 import { useSelector } from 'react-redux';
 import { getIconById } from '../../store/icons';
-import { iconPropTye } from '../../../../types/propTypes';
+import { iconPropType } from '../../../../types/propTypes';
 
 export default function SVGIcon({
   source,
@@ -72,5 +72,5 @@ SVGIcon.propTypes = {
   classes: PropTypes.string,
   color: PropTypes.string,
   size: PropTypes.number,
-  source: PropTypes.shape(iconPropTye).isRequired,
+  source: PropTypes.shape(iconPropType).isRequired,
 };

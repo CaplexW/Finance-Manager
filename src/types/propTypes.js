@@ -42,7 +42,7 @@ export const goalPropType = {
   status: PropTypes.string.isRequired,
   account: PropTypes.string,
 };
-export const iconPropTye = {
+export const iconPropType = {
   _id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   src: PropTypes.object.isRequired,

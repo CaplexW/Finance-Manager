@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export default function DatePickerInput({ name, label, error, onChange, value }) {
+export default function DatePickerInput({ name, label, onChange, value = undefined, }) {
   function handleChange({ target }) {
     const result = {
       name: target.name,
@@ -22,4 +23,11 @@ export default function DatePickerInput({ name, label, error, onChange, value })
       />
     </div>
   );
+};
+
+DatePickerInput.propTypes = {
+  label: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string,
 };

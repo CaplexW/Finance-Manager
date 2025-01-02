@@ -1,16 +1,15 @@
-/* eslint-disable jsx-a11y/no-autofocus */
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 
 function TextAreaInput({
-  value,
+  value = null,
   onChange,
-  name,
-  label,
-  error,
-  placeholder,
-  rows,
-  autoFocus,
+  name = `textInput-${Date.now()}`,
+  label = null,
+  error = null,
+  placeholder = null,
+  rows = 2,
+  autoFocus = false,
 }) {
   function handleChange({ target }) {
     const result = {
@@ -24,45 +23,35 @@ function TextAreaInput({
 
   return (
     <div>
-      <label htmlFor={name} className="label-control">
+      <label className="label-control" htmlFor={name}>
         {label}
       </label>
       <div className="input-group has-validation">
         <textarea
+          autoFocus={autoFocus}
+          className={inputClass}
           key={name}
           name={name}
-          value={value}
           onChange={handleChange}
-          className={inputClass}
           placeholder={placeholder}
           rows={rows}
-          autoFocus={autoFocus}
+          value={value}
         />
-        {error && <div className="invalid-feedback">{error}</div>}
+        {error ? <div className="invalid-feedback">{error}</div> : null}
       </div>
     </div>
   );
 }
 
 TextAreaInput.propTypes = {
+  autoFocus: PropTypes.bool,
+  error: PropTypes.string,
   label: PropTypes.string,
   name: PropTypes.string,
-  value: PropTypes.string,
-  error: PropTypes.string,
-  rows: PropTypes.number,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
-  autoFocus: PropTypes.bool,
-};
-
-TextAreaInput.defaultProps = {
-  label: undefined,
-  name: `textInput-${Date.now()}`,
-  value: '',
-  error: undefined,
-  rows: 2,
-  placeholder: undefined,
-  autoFocus: false,
+  rows: PropTypes.number,
+  value: PropTypes.string,
 };
 
 export default memo(TextAreaInput);

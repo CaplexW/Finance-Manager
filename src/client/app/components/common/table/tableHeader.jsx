@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// Утилиты
 
-export default function TableHeader({ onSort, selectedSort, columns }) {
+const dummySort = { path: '', order: '' };
+const dummyOnSort = () => { };
+
+export default function TableHeader({ onSort = dummyOnSort, selectedSort = dummySort, columns }) {
   const caretUp = <i className="bi bi-caret-up-fill" />;
   const caretDown = <i className="bi bi-caret-down-fill" />;
   function renderCaret(sort, path) {
@@ -42,7 +44,11 @@ export default function TableHeader({ onSort, selectedSort, columns }) {
   );
 }
 TableHeader.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
   columns: PropTypes.object.isRequired,
   onSort: PropTypes.func.isRequired,
-  selectedSort: PropTypes.object.isRequired,
+  selectedSort: PropTypes.shape({
+    path: PropTypes.string,
+    order: PropTypes.string,
+  }),
 };
