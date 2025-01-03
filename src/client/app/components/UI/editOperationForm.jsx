@@ -9,6 +9,7 @@ import closeModalWindow from '../../../../utils/modals/closeModalWindow';
 import showElement from '../../../../utils/console/showElement';
 import { updateOperation } from '../../store/operations';
 import { formatDisplayDateFromInput, formatInputDateFromDisplay } from '../../../../utils/formatDate';
+import { updateUserBalance } from '../../store/user';
 
 const emptyObject = {};
 
@@ -17,8 +18,8 @@ export default function EditOperationForm({ onClose = null, existingData = empty
 
   const dispatch = useDispatch();
   const categories = useSelector(getCategoriesList());
-  const categoryName = categories.filter((c) => c._id === existingData.category)[0].name;
-
+  const oldCategory = categories.filter((c) => c._id === existingData.category)[0];
+  const categoryName = oldCategory.name;
   const validatorConfig = {
     name: {
       isRequired: {
@@ -60,7 +61,15 @@ export default function EditOperationForm({ onClose = null, existingData = empty
       amount: Math.abs(parseFloat(inputValue.amount)),
     };
     const result = dispatch(updateOperation(normolizedData));
-    if (result) handleClose();
+    if (result) {
+      const oldAmount = existingData.amount;
+      const newCategory = categories.find((cat) => cat._id === normolizedData.category);
+      const newAmount = newCategory.isIncome ? normolizedData.amount : -normolizedData.amount;
+      const difference = newAmount - oldAmount;
+
+      dispatch(updateUserBalance(difference));
+      handleClose();
+    };
   }
   function handleClose() { onClose(); }
 
@@ -88,3 +97,6 @@ EditOperationForm.propTypes = {
   onClose: PropTypes.func,
 };
 
+function findDifference(oldAmount, newAmount) {
+  if (oldAmount === newAmount) return 0;
+}

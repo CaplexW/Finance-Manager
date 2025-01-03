@@ -4,11 +4,12 @@ import Form from '../common/form';
 import FieldInput from '../common/form/fieldInput';
 import SelectInputWithCreate from '../common/form/selectInputWithCreate';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCategoriesList } from '../../store/categories';
+import { getCategoriesList, getCategoryById } from '../../store/categories';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../utils/console/showElement';
 import { createOperation } from '../../store/operations';
 import { formatDisplayDateFromInput } from '../../../../utils/formatDate';
+import { updateUserBalance } from '../../store/user';
 
 export default function CreateOperationForm({ onCreateCategory = null, onClose = null }) {
   const dispatch = useDispatch();
@@ -48,7 +49,12 @@ export default function CreateOperationForm({ onCreateCategory = null, onClose =
       amount: parseFloat(rawData.amount),
     };
     const result = await dispatch(createOperation(normolizedData));
-    if (result) handleClose();
+    if (result) {
+      const category = categories.find((cat) => cat._id === normolizedData.category);
+      const amount = category.isIncome ? normolizedData.amount : -normolizedData.amount;
+      dispatch(updateUserBalance(amount));
+      handleClose();
+    }
   }
   function handleCreateCategory(enteredName) {
     onCreateCategory(enteredName, parent);

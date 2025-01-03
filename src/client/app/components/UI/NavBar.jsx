@@ -10,12 +10,13 @@ import { useSelector } from 'react-redux';
 import { getLoginStatus } from '../../store/user';
 import NavProfile from './navProfile';
 import showElement from '../../../../utils/console/showElement';
+import UserBalance from './userBalance';
 
 export default function NavBar() {
   const isLogged = useSelector(getLoginStatus());
-
   const lastColClass = `col-md-2 d-flex ${isLogged ? '' : 'justify-content-end'}`;
-  // style={{ backgroundColor: mainColor }}
+  const loginLinkClasses = ({ isActive }) => (isActive ? 'nav-link navbar-brand' : 'nav-link');
+
   return (
     <nav className="navbar row gutter-md py-1 px-4 d-flex justify-content-between">
       <div className="col-md-1 align-items-center d-flex justify-content-center" id="main">
@@ -39,18 +40,13 @@ export default function NavBar() {
         ) : ''}
       </div>
       <div className="col-md-6" id="space" />
-      <div className={lastColClass} id="right-side">
+      <div className="col-md-2 d-flex justify-content-end" id="user-balance">
+        <UserBalance />
+      </div>
+      <div className={lastColClass} id="login-or-profile">
         {isLogged ?
-          <NavProfile />
-          : (
-            <NavLink
-              aria-current="page"
-              className={({ isActive }) => (isActive ? 'nav-link navbar-brand' : 'nav-link')}
-              to="/login"
-            >
-              Войти
-            </NavLink>
-          )}
+          <NavProfile /> :
+          <NavLink className={loginLinkClasses} to="/login">Войти</NavLink>}
       </div>
     </nav>
   );

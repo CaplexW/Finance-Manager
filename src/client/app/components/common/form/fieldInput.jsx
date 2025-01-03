@@ -7,7 +7,7 @@ import flashInvalidInputs from '../../../../../utils/flashInvalidInputs';
 import flashOffInvalidInputs from '../../../../../utils/flashOffInvalidInputs';
 
 function FieldInput({
-  value = undefined,
+  value = '',
   onChange,
   name = `textInput-${Date.now()}`,
   type = 'text',
