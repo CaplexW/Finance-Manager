@@ -10,7 +10,7 @@ import showElement from '../../../../utils/console/showElement';
 import { createOperation } from '../../store/operations';
 import { formatDisplayDateFromInput } from '../../../../utils/formatDate';
 
-export default function CreateOperationForm({ onCreateCategory, onClose }) {
+export default function CreateOperationForm({ onCreateCategory = null, onClose = null }) {
   const dispatch = useDispatch();
   const categories = useSelector(getCategoriesList());
   const emptyFields = { operationName: '', category: '', amount: '', date: '' };
@@ -70,6 +70,6 @@ export default function CreateOperationForm({ onCreateCategory, onClose }) {
 };
 
 CreateOperationForm.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  onCreateCategory: PropTypes.func.isRequired,
+  onClose: PropTypes.func,
+  onCreateCategory: PropTypes.func,
 };

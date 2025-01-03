@@ -97,7 +97,7 @@ export default function Operations() {
         <OperationTable displayedOperations={displayedOperations} onSort={handleSort} sortConfig={sort} />
       </section>
       <section id="modals">
-        <ModalWindow onClose={closeModal} />
+        {/* <ModalWindow onClose={closeModal} /> */}
       </section>
     <input hidden type="color" />
     </div>

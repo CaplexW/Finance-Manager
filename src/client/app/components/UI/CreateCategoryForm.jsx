@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getIconsList } from '../../store/icons';
 import { createCategory } from '../../store/categories';
 
-export default function CreateCategoryForm({ enteredName, onClose }) {
+export default function CreateCategoryForm({ enteredName = null, onClose = null }) {
   const dispatch = useDispatch();
 
   const icons = useSelector(getIconsList());
@@ -43,7 +43,6 @@ export default function CreateCategoryForm({ enteredName, onClose }) {
 };
 
 CreateCategoryForm.propTypes = {
-  enteredName: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
+  enteredName: PropTypes.string,
+  onClose: PropTypes.func,
 };
-

@@ -137,7 +137,7 @@ export default function OperationTable({ displayedOperations, onSort = null, sor
   );
 };
 OperationTable.propTypes = {
-  displayedOperations: PropTypes.shape(operationPropType).isRequired,
+  displayedOperations: PropTypes.arrayOf(PropTypes.shape(operationPropType).isRequired),
   onSort: PropTypes.func,
   sortConfig: PropTypes.shape({
     path: PropTypes.string.isRequired,

@@ -12,7 +12,7 @@ import { formatDisplayDateFromInput, formatInputDateFromDisplay } from '../../..
 
 const emptyObject = {};
 
-export default function EditOperationForm({ onClose, existingData = emptyObject, }) {
+export default function EditOperationForm({ onClose = null, existingData = emptyObject, }) {
   if(!existingData.date) return;
 
   const dispatch = useDispatch();
@@ -80,11 +80,11 @@ export default function EditOperationForm({ onClose, existingData = emptyObject,
 
 EditOperationForm.propTypes = {
   existingData: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    category: PropTypes.string.isRequired,
-    amount: PropTypes.number.isRequired,
-    date: PropTypes.string.isRequired,
+    name: PropTypes.string,
+    category: PropTypes.string,
+    amount: PropTypes.number,
+    date: PropTypes.string,
   }),
-  onClose: PropTypes.func.isRequired,
+  onClose: PropTypes.func,
 };
 
