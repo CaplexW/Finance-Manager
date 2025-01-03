@@ -13,7 +13,7 @@ export default function SelectInputWithCreate({
   onCreate = noCreateWarning,
   name,
   value = null,
-  onChange,
+  onChange = null,
   error = null,
 }) {
   // Документация:
@@ -81,9 +81,12 @@ SelectInputWithCreate.propTypes = {
   error: PropTypes.string,
   label: PropTypes.string,
   name: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   onCreate: PropTypes.func,
-  value: PropTypes.string,
+  value: PropTypes.shape({
+    value: PropTypes.string,
+    lable: PropTypes.string,
+  }),
 };
 
 function noCreateWarning() { console.error('no onCreate function was given to this input'); };

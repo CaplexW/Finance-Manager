@@ -18,6 +18,7 @@ import operationsService from '../../services/operations.service';
 import displayError from '../../../../utils/errors/onClient/displayError';
 import CreateCategoryForm from './CreateCategoryForm';
 import closeModalWindow from '../../../../utils/modals/closeModalWindow';
+import { updateUserBalance } from '../../store/user';
 
 // TODO 1. Реализовать условный рендеринг модальных окон
 
@@ -57,6 +58,11 @@ export default function OperationTable({ displayedOperations, onSort = null, sor
     const isConfirmed = confirm('Вы хотите удалить опирацию?');
     if (isConfirmed) {
       const result = await dispatch(deleteOperation(id));
+      showElement(result, 'result');
+      if(result) {
+        const operation = displayedOperations.find((op) => op._id === id);
+        dispatch(updateUserBalance(-operation.amount));
+      }
       // if (result.deleteCount) {
       //   onDelete((prevState) => prevState.filter((op) => op._id !== id)); //TODO Проверить нужно ли иди будет обновлятся с сервера и приходить в компонент обновленным?
       // }

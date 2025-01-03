@@ -125,8 +125,9 @@ async function update(req: AuthedRequest, res: Response) {
     const operationCategory = await findCategoryById(req.body.category);
     if (!operationCategory) return sendNotFound(res, 'category', req.body.category);
 
-    const balanceDifference = Number(req.body.amount) - currentOperation.amount;
-    const newData = { ...req.body, amount: await calculateAmount(req.body, operationCategory.isIncome) };
+    const newAmount = calculateAmount(req.body, operationCategory.isIncome);
+    const balanceDifference = newAmount - currentOperation.amount;
+    const newData = { ...req.body, amount: newAmount };
     const updatedOperation = await Operation.findByIdAndUpdate(req.body._id, newData, { new: true });
     await hostUser.updateOne({ currentBalance: hostUser.currentBalance + balanceDifference });
     await hostUser.save(); //TODO Проверить надобность строчки.
