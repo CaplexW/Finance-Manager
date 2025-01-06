@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../utils/console/showElement';
-import { useSelector } from 'react-redux';
-import { getIconById } from '../../store/icons';
 import { iconPropType } from '../../../../types/propTypes';
 
 export default function SVGIcon({
   source,
   classes = '',
-  size = 24,
+  size = 16,
   color = 'currentColor'
 }) {
   const iconObject = source?.src;

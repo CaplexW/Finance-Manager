@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { getCategoriesList } from '../../store/categories';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../utils/console/showElement';
 import { operationPropType } from '../../../../types/propTypes';
 import { getIconsList } from '../../store/icons';
@@ -9,7 +10,6 @@ import SVGIcon from '../common/svgIcon';
 
 export default function CategoriesList({ onClick, operations }) {
   const [filteredList, setFilteredList] = useState([]);
-  showElement(filteredList, 'filteredList');
 
   const categories = useSelector(getCategoriesList());
   const icons = useSelector(getIconsList());
@@ -30,7 +30,6 @@ export default function CategoriesList({ onClick, operations }) {
       filtered: filteredList.includes(category._id),
     };
   });
-  showElement(coloredIcons, 'coloredIcons');
 
   const defaultLimit = 15;
 
@@ -46,7 +45,7 @@ export default function CategoriesList({ onClick, operations }) {
       color: category.color,
       opacity: filtered ? '.3' : '1',
       borderRadius: '8px',
-      boxShadow: `${filtered ? 'inset' : ''} 1px 1px .2em black`,
+      boxShadow: `${filtered ? 'inset' : ''} 1px 1px .2em rgba(0, 0, 0, 0.5)`,
       margin: '.3rem',
       display: 'flex',
       padding: '0 .1rem',
@@ -86,7 +85,6 @@ export default function CategoriesList({ onClick, operations }) {
             style={setSpanStyles(i)}
           >
             <SVGIcon
-              size={16}
               source={i.icon}
             />
           </span>
