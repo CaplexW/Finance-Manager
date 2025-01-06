@@ -43,19 +43,42 @@ export default function Operations() {
     // && iconsIsLoaded
   );
 
-  const filteredOperations = operations || [];
-  const sortedOperations = orderBy(filteredOperations, [sort.path], [sort.order]);
+  const filteredByDateOperations = filterOperationsByDate(operations) || [];
+  const filteredByTypeOperations = filterOperationsByType(filteredByDateOperations);
+  const filteredByCategoryOperations = filterOperationsByCategory(filteredByTypeOperations);
+
+  const sortedOperations = orderBy(filteredByCategoryOperations, [sort.path], [sort.order]);
+
   const displayedOperations = sortedOperations;
 
   useEffect(loadData, [isLoaded]);
 
   function loadData() {
     if (isLoaded) return;
-    
+
     if (!operationsIsLoaded) dispatch(loadOperations());
     if (!categoriesIsLoaded) dispatch(loadCategories());
     // if (!iconsIsLoaded) dispatch(loadIcons());
     if (!userIsLoaded) dispatch(loadUserData());
+  }
+
+  function filterOperationsByDate(operations) {
+    let result = operations.filter(o => o);
+
+    return result;
+  }
+  function filterOperationsByType(operations) {
+    let result = operations.map(o => o);
+
+    return result;
+  }
+  function filterOperationsByCategory(operations) {
+    let result = operations.map(_ => _);
+    if (filter.category) result = result.filter((op) => (
+      !(filter.category.includes(op.category)))
+    );
+
+    return result;
   }
 
   async function handleCreate(payload) {
@@ -71,8 +94,13 @@ export default function Operations() {
     if (isDeleted) 'Удаляем на фронте';
   }
 
-  function handleFilter(config) {
-    setFilter(config);
+  function handleCategoryFilter(list) {
+    setFilter((prevState) => {
+      const newState = { ...prevState };
+      newState.category = list;
+
+      return newState;
+    });
   }
   function handlePick(date) {
     setFilter((prevState) => ({ ...prevState, date }));
@@ -84,13 +112,13 @@ export default function Operations() {
   // function handleOpenModal(command) { }
   function closeModal() { }
 
-  if(isLoaded) return (
-    <div className='container' id="operation-layout">
-      <section id="side">
-        {/* <CategoriesList onFilter={handleFilter} source={filteredOperations} />
-        <Chart onSwitch={handleFilter} source={filteredOperations} /> */}
+  if (isLoaded) return (
+    <div className='container row' id="operation-layout">
+      <section className='col-md-4' id="side">
+        <CategoriesList onClick={handleCategoryFilter} operations={filteredByTypeOperations} />
+        {/*<Chart onSwitch={handleFilter} source={filteredOperations} /> */}
       </section>
-      <section className='mt-4' id="main">
+      <section className='mt-4 col-md-8' id="main">
         {/* <Currency />
         <DateRangePicker onPick={handlePick} pick={dateRange} />
         <BalanceCounter source={user.currentBalance} /> */}
@@ -99,7 +127,7 @@ export default function Operations() {
       <section id="modals">
         {/* <ModalWindow onClose={closeModal} /> */}
       </section>
-    <input hidden type="color" />
+      <input hidden type="color" />
     </div>
     // Значки категорий
     // Чарт
