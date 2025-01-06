@@ -9,7 +9,7 @@ export default function SVGIcon({
   source,
   classes = '',
   size = 24,
-  color = 'black'
+  color = 'currentColor'
 }) {
   const iconObject = source?.src;
 
