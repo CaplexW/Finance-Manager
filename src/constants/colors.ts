@@ -21,3 +21,9 @@ export const outcomeColor = '#ff0000';
 export const incomeColor = '#04eb00';
 export const errorColor = 'red';
 export const succesColor = 'green';
+
+export const clrTransWhite900 = 'rgba(255, 255, 255, 0.9)';
+export const clrTransWhite700 = 'rgba(255, 255, 255, 0.7)';
+export const clrTransWhite600 = 'rgba(255, 255, 255, 0.6)';
+export const clrTransWhite500 = 'rgba(255, 255, 255, 0.5)';
+export const clrTransWhite300 = 'rgba(255, 255, 255, 0.3)';

@@ -7,6 +7,7 @@ import showElement from '../../../../utils/console/showElement';
 import { operationPropType } from '../../../../types/propTypes';
 import { getIconsList } from '../../store/icons';
 import SVGIcon from '../common/svgIcon';
+import { clrTransWhite600 } from '../../../../constants/colors';
 
 export default function CategoriesList({ onClick, operations }) {
   const [filteredList, setFilteredList] = useState([]);
@@ -34,9 +35,9 @@ export default function CategoriesList({ onClick, operations }) {
   const defaultLimit = 15;
 
   const containerSyles = {
-    background: 'rgba(255, 255, 255, 0.7)',
+    background: clrTransWhite600,
     borderRadius: '8px',
-    maxWidth: '210px',
+    width: '90%',
     padding: '1rem .5rem 1rem .8rem'
   };
 
@@ -76,7 +77,7 @@ export default function CategoriesList({ onClick, operations }) {
   }
 
   return (
-    <div className='container mt-5' style={containerSyles}>
+    <div className='container mt-5 d-flex justify-contetn-center' style={containerSyles}>
       <div className="d-flex flex-wrap">
         {coloredIcons.map((i) => (
           <span

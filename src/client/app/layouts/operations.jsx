@@ -4,15 +4,13 @@ import { getUser, getUserDataStatus, loadUserData } from '../store/user';
 import { deleteOperation, getOperationsList, getOperationsLoadStatus, loadOperations, updateOperation } from '../store/operations';
 import { getCategoriesList, getCategoriesLoadStatus, loadCategories } from '../store/categories';
 import { getIconsLoadStatus, loadIcons } from '../store/icons';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../utils/console/showElement';
 import CategoriesList from '../components/UI/categoriesList';
-import Chart from '../components/UI/chart';
-import UserBalance from '../components/UI/userBalance';
 import DateRangePicker from '../components/common/dateRangePicker';
-import BalanceCounter from '../components/UI/userBalance';
 import OperationTable from '../components/UI/operationTable';
-import ModalWindow from '../components/common/modalWindow';
 import { orderBy } from 'lodash';
+import OperationsChart from '../components/UI/operationsChart';
 
 // TODO 1. Реализовать создание и редактирование категорий.
 // TODO 2. Реализовать диаграммы.
@@ -28,7 +26,7 @@ export default function Operations() {
 
   const operationsIsLoaded = useSelector(getOperationsLoadStatus());
   const categoriesIsLoaded = useSelector(getCategoriesLoadStatus());
-  const iconsIsLoaded = useSelector(getIconsLoadStatus())
+  const iconsIsLoaded = useSelector(getIconsLoadStatus());
   const userIsLoaded = useSelector(getUserDataStatus());
   const operations = useSelector(getOperationsList());
   const categories = useSelector(getCategoriesList());
@@ -114,11 +112,12 @@ export default function Operations() {
 
   if (isLoaded) return (
     <div className='container row' id="operation-layout">
-      <section className='col-md-4' id="side">
+      <section className='col-md-4 d-grid justify-content-space-between' id="side">
         <CategoriesList onClick={handleCategoryFilter} operations={filteredByTypeOperations} />
-        {/*<Chart onSwitch={handleFilter} source={filteredOperations} /> */}
+        <OperationsChart operations={filteredByCategoryOperations} />
       </section>
-      <section className='mt-4 col-md-8' id="main">
+      <section className='col-md-1' name='space' />
+      <section className='mt-4 col-md-7' id="main">
         {/* <Currency />
         <DateRangePicker onPick={handlePick} pick={dateRange} />
         <BalanceCounter source={user.currentBalance} /> */}

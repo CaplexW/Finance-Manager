@@ -11,6 +11,7 @@ import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound
 import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
 import sendBadRequest from '../../utils/errors/fromServerToClient/sendBadRequest.ts';
 import { sendAlreadyExists } from '../../utils/errors/fromServerToClient/sendAlreadyExists.ts';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../utils/console/showElement.ts';
 
 const router = express.Router({ mergeParams: true });
@@ -61,7 +62,7 @@ async function create(req: AuthedRequest, res: Response) {
     };
     const newCategory = await Category.create(newCategoryData);
     userCategories.push(newCategory);
-    User.findByIdAndUpdate(authedUser, { categories: userCategories }, { new: true });
+    await User.findByIdAndUpdate(authedUser, { categories: userCategories }, { new: true });
 
     res.status(201).send(newCategory);
   } catch (err) {
