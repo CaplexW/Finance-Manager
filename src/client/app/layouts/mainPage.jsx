@@ -1,6 +1,7 @@
 import React from 'react';
 import showElement from '../../../utils/console/showElement';
 import operationsService from '../services/operations.service';
+import ActivityBoard from '../components/UI/activityBoard';
 
 export default function MainPage() {
   function showInfo() {
@@ -17,10 +18,8 @@ export default function MainPage() {
   }
 
   return (
-    <div className="main">
-      <input id="inputFilie" onClick={showInfo} type="file" />
-      <button onClick={showInfo} type='button'>Показать инпут</button>
-      <button onClick={prepareData} type='button'>Сформировать</button>
+    <div className="main p-4">
+      <ActivityBoard />
     </div>
   );
 };

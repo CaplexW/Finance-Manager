@@ -11,6 +11,7 @@ import DateRangePicker from '../components/common/dateRangePicker';
 import OperationTable from '../components/UI/operationTable';
 import { orderBy } from 'lodash';
 import OperationsChart from '../components/UI/operationsChart';
+import ContentBoard from '../components/common/contentBoard';
 
 // TODO 1. Реализовать создание и редактирование категорий.
 // TODO 2. Реализовать диаграммы.
@@ -111,16 +112,16 @@ export default function Operations() {
   function closeModal() { }
 
   if (isLoaded) return (
-    <div className='container row' id="operation-layout">
-      <section className='col-md-4 d-grid justify-content-space-between' id="side">
-        <CategoriesList onClick={handleCategoryFilter} operations={filteredByTypeOperations} />
-        <OperationsChart operations={filteredByCategoryOperations} />
+    <div className='container row mt-3' id="operation-layout">
+      <section className='col-md-4' id="side">
+        <ContentBoard header={<h4>Соотношение категорий</h4>}>
+          <CategoriesList onClick={handleCategoryFilter} operations={filteredByTypeOperations} />
+          <OperationsChart operations={filteredByCategoryOperations} />
+        </ContentBoard>
       </section>
       <section className='col-md-1' name='space' />
-      <section className='mt-4 col-md-7' id="main">
-        {/* <Currency />
-        <DateRangePicker onPick={handlePick} pick={dateRange} />
-        <BalanceCounter source={user.currentBalance} /> */}
+      <section className='col-md-7' id="main">
+        {/*<DateRangePicker onPick={handlePick} pick={dateRange} /> */}
         <OperationTable displayedOperations={displayedOperations} onSort={handleSort} sortConfig={sort} />
       </section>
       <section id="modals">

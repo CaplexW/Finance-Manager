@@ -16,8 +16,6 @@ export default function AppLoader({ children }) {
 
   useEffect(loadData, [isLogged]);
   function loadData() {
-    // dispatch(loadProfessions());
-    // dispatch(loadQualities());
     // if (isLogged) dispatch(loadUsers());
   }
 
