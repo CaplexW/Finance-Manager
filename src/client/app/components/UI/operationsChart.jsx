@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { getCategoriesList } from '../../store/categories';
 import PropTypes from 'prop-types';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../utils/console/showElement';
 import { operationPropType } from '../../../../types/propTypes';
 import { clrTransWhite600, greenColor, redColor } from '../../../../constants/colors';
@@ -65,18 +66,21 @@ export default function OperationsChart({ operations, switchPosition = null, typ
   const containerSyles = {
     backgroundColor: clrTransWhite600,
     borderRadius: '8px',
-    margin: '1rem',
-    padding: '2rem',
-    width: '90%',
+    marginTop: '1rem',
+    maxWidth: '90%',
+  };
+  const subStyles = {
+    padding: '1rem 2.3rem',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   };
-  showElement(data, 'data');
 
   return (
     <div className="container" style={containerSyles}>
-      <Chart data={data} options={options} type={type} />
+      <div className="sub-container" style={subStyles}>
+        <Chart data={data} options={options} type={type} />
+      </div>
     </div>
   );
 };

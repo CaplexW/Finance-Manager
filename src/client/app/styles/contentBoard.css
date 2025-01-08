@@ -1,11 +1,11 @@
-.table_layout {
+.content-board_layout {
   display: flex;
   justify-content: center;
   align-items: center;
   /* padding: 1rem; */
 }
-.table_container {
-  min-width: 60vw;
+.content-board_container {
+  /* min-width: 60vw; */
   height: 80vh;
 
   border-radius: .8rem;
@@ -14,26 +14,26 @@
 
   overflow: hidden;
 }
-.table_content{
+.content-board_content{
   width: 100%;
 }
-.table_content, td, th{
+.content-board_content, td, th{
   border-collapse: collapse;
   padding: .6rem;
 }
-.table_content tbody tr:nth-child(even) {
+.content-board_content tbody tr:nth-child(even) {
   background-color: #0000000b;
 }
-.table_content tbody tr:hover {
+.content-board_content tbody tr:hover {
   background-color: rgba(203, 203, 203, 0.4);
 }
-.table_columns th {
+.content-board_columns th {
   position: sticky;
   left: 0;
   top: 0;
   background-color: #d1d9defe;
 }
-.table_header {
+.content-board_header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -42,18 +42,18 @@
   background-color: #FFF4;
   padding: 1.5rem 1rem;
 }
-.table_header .button-group {
+.content-board_header .button-group {
   display: flex;
   justify-content: space-between;
 }
-.button-group > .table_button {
+.button-group > .content-board_button {
   margin-inline-end: 1rem;
 }
-.table_header .button-group .file-button {
+.content-board_header .button-group .file-button {
   display: flex;
   align-items: center;
 }
-.table_header button {
+.content-board_header button {
   border: none;
   border-radius: .9rem;
   padding: 0 .6rem;
@@ -61,17 +61,17 @@
   margin-left: 1rem;
   transition: .8s;
 }
-.table_header button:hover {
+.content-board_header button:hover {
   border-radius: .5rem;
   background-color: #93bbca7d;
   box-shadow: .2rem .3rem rgba(101, 224, 255, 0.083);
   transition: .8s;
 }
-.table_header .import_export-file {
+.content-board_header .import_export-file {
   display: flex;
   align-items: center;
 }
-.table_header .file-button {
+.content-board_header .file-button {
   display: inline-block;
   justify-content: center;
   width: 2rem;
@@ -81,7 +81,7 @@
   transition: .8s ease-in-out;
   cursor: pointer;
 }
-.table_header .file-section input {
+.content-board_header .file-section input {
   display: none;
 }
 .file-button:hover {
@@ -90,14 +90,13 @@
   box-shadow: .2rem .3rem rgba(101, 224, 255, 0.083);
   transition: .8s;
 }
-/* .table_header .import_export-file-button:hover {
+/* .content-board_header .import_export-file-button:hover {
   border-radius: 45%;
   background-color: #93bbca7d;
   transform: scale(1.02);
 } */
-.table_header .file-options {
+.content-board_header .file-options {
   position: absolute;
-  right: -11rem;
   margin-top: .5rem;
   margin-right: 17rem;
   width: 11rem;
@@ -133,20 +132,24 @@
   transform: scale(1.05);
   background-color: #efefefef;
 }
-.table_body {
-  width: 95%;
+.content-board_body {
+  /* width: 98%; */
+  padding: 1rem;
   max-height: calc(89% - 1.2rem);
-  background-color: #fffb;
-  margin: .6rem auto;
-  border-radius: .6rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  /* background-color: #fffb; */
+  margin: 0 auto;
+  /* border-radius: .6rem; */
   overflow: auto;
 }
-.table_body::-webkit-scrollbar {
+.content-board_body::-webkit-scrollbar {
   width: .5rem;
   height: .5rem;
   visibility: hidden;
 }
-.table_body:hover::-webkit-scrollbar-thumb {
+.content-board_body:hover::-webkit-scrollbar-thumb {
   border-radius: .15rem;
   background-color: #d1d9defe;
   visibility: visible;
