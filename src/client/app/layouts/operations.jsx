@@ -50,16 +50,16 @@ export default function Operations() {
 
   const displayedOperations = sortedOperations;
 
-  useEffect(loadData, [isLoaded]);
+  // useEffect(loadData, [isLoaded]);
 
-  function loadData() {
-    if (isLoaded) return;
+  // function loadData() {
+  //   if (isLoaded) return;
 
-    if (!operationsIsLoaded) dispatch(loadOperations());
-    if (!categoriesIsLoaded) dispatch(loadCategories());
-    // if (!iconsIsLoaded) dispatch(loadIcons());
-    if (!userIsLoaded) dispatch(loadUserData());
-  }
+  //   if (!operationsIsLoaded) dispatch(loadOperations());
+  //   if (!categoriesIsLoaded) dispatch(loadCategories());
+  //   if (!iconsIsLoaded) dispatch(loadIcons());
+  //   if (!userIsLoaded) dispatch(loadUserData());
+  // }
 
   function filterOperationsByDate(operations) {
     let result = operations.filter(o => o);

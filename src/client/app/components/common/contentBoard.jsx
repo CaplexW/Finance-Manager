@@ -5,7 +5,7 @@ export default function ContentBoard({ children, header }) {
 
   showElement(children, 'children');
   const contentStyles = {
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
   };
   return (
     <main className='content-board_layout'>

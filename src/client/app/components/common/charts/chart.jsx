@@ -5,9 +5,15 @@ import { Doughnut, Pie } from "react-chartjs-2";
 
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-const emptyObject = {};
+const optionsWithNoLegend = {
+  plugins: {
+    legend: {
+      display: false,
+    },
+  },
+};;
 
-export default function Chart({ data, type = 'pie', options = emptyObject }) {
+export default function Chart({ data, type = 'pie', options = optionsWithNoLegend }) {
   if (!data) return;
 
   if (type === 'doughnut') return <Doughnut data={data} options={options} />;
