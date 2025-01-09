@@ -27,7 +27,7 @@ export default function IconPicker({
     } else {
       // if(value._id !== selectedOption._id) setSelectedOption(value);
     };
-   }, [selectedOption]);
+  }, [selectedOption]);
 
   //TODO value нету пока не ткунть по иконке. Задать initialValue при рендере компонента.
 
@@ -81,7 +81,7 @@ export default function IconPicker({
     }
   }
   function closeIconPage() {
-    if(openedPicker.current) openedPicker.current.setAttribute('hidden', true);
+    if (openedPicker.current) openedPicker.current.setAttribute('hidden', true);
   }
   function turnPrevPage() {
     if (selectedPage > 1) setSelectedPage((prevState) => prevState - 1);
@@ -94,17 +94,19 @@ export default function IconPicker({
     <div>
       <label htmlFor="icon-picker">{label}</label>
       <div className="picker-container" style={containerSyles} >
-        <div className="picker--closed button" style={{ ...pickerStyles, ...closedPickerStyles }} ><ButtonWithIcon icon={selectedOption} onClick={toggleIconPage} /></div>
+        <div className="picker--closed button" style={{ ...pickerStyles, ...closedPickerStyles }} >
+          <ButtonWithIcon color='black' icon={selectedOption} onClick={toggleIconPage} size={24} />
+        </div>
         <div className="picker--open" hidden ref={openedPicker} style={{ ...pickerStyles, ...openPickerStyles }}>
           <div className="picker__page" style={pickerPageStyles} >
             {displayedIcons.map((option) => <ButtonWithIcon icon={option} key={option._id} onClick={handleChoice} size={24} />)}
           </div>
           <div className="picker__paginator" style={paginatorStyles}>
             {onlyPage ||
-            <>
-              <button disabled={firstPage} onClick={turnPrevPage} type='button'>{leftCurret}</button>
-              <button disabled={lastPage} onClick={turnNextPage} type='button'>{rightCurret}</button>
-            </>}
+              <>
+                <button disabled={firstPage} onClick={turnPrevPage} type='button'>{leftCurret}</button>
+                <button disabled={lastPage} onClick={turnNextPage} type='button'>{rightCurret}</button>
+              </>}
           </div>
         </div>
       </div>

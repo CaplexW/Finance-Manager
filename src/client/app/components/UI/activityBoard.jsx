@@ -18,6 +18,7 @@ export default function ActivityBoard() {
     borderRadius: '8px',
     appearance: 'none',
     padding: '.5rem',
+    fontWeight: '600',
   };
   const header = (
     <h4 className="">
