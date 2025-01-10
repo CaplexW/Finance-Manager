@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import SelectInput from '../common/form/selectInput';
 import showElement from '../../../../utils/console/showElement';
 import ContentBoard from '../common/contentBoard';
-import Widget from '../common/widget';
+import DummyWidget from '../common/dummyWidget';
+import WidgetIncomeOutcome from './widgetIncomeOutcome';
+import { useSelector } from 'react-redux';
+import { getOperationsList } from '../../store/operations';
 
 export default function ActivityBoard() {
   const [activityRange, setActivityRange] = useState(30);
+
+  const operations = useSelector(getOperationsList());
 
   function handleChange({ target }) {
     showElement(target.value, 'value');
@@ -38,14 +42,14 @@ export default function ActivityBoard() {
   return (
     <div className="container d-flex justify-content-center">
       <ContentBoard header={header}>
-        <Widget />
-        <Widget />
-        <Widget />
-        <Widget />
-        <Widget />
-        <Widget />
-        <Widget />
-        <Widget />
+        <WidgetIncomeOutcome operations={operations} />
+        <DummyWidget />
+        <DummyWidget />
+        <DummyWidget />
+        <DummyWidget />
+        <DummyWidget />
+        <DummyWidget />
+        <DummyWidget />
       </ContentBoard>
     </div>
   );
