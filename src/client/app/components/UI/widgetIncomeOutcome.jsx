@@ -32,8 +32,8 @@ export default function WidgetIncomeOutcome({ operations }) {
 
   return (
     <div className="widget">
-      <header className='content-board_header' style={styles}><h6>Доход/Расход</h6></header>
-      <Widget>
+      
+      <Widget name='Доход/Расход'>
         <div className="income d-grid justify-content-between">
           <span style={{ color: greenColor }}>{data.datasets[0].data[1]}</span>
           <span style={{ color: incomeChange > 0 ? greenColor : redColor, alignSelf: 'end' }}>{incomeChange}%</span>
