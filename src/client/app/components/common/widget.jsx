@@ -34,5 +34,5 @@ export default function Widget({ children, name }) {
 };
 
 Widget.propTypes = {
-  children: PropTypes.shape(nodesPropType).isRequired
+  children: nodesPropType.isRequired
 };

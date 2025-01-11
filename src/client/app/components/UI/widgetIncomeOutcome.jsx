@@ -52,5 +52,5 @@ export default function WidgetIncomeOutcome({ operations }) {
 };
 
 WidgetIncomeOutcome.propTypes = {
-  operations: PropTypes.arrayOf(operationPropType).isRequired
+  operations: PropTypes.arrayOf(PropTypes.shape(operationPropType)).isRequired
 };

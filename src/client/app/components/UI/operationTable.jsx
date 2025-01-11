@@ -22,7 +22,13 @@ import { updateUserBalance } from '../../store/user';
 
 // TODO 1. Реализовать условный рендеринг модальных окон
 
-export default function OperationTable({ displayedOperations, onSort = null, sortConfig = null }) {
+export default function OperationTable({
+  displayedOperations,
+  onDateFilter,
+  dateRange,
+  onSort = null,
+  sortConfig = null,
+}) {
   const [editingData, setEditingData] = useState({});
   const [newCategoryName, setNewCategoryName] = useState(null);
 
@@ -122,7 +128,9 @@ export default function OperationTable({ displayedOperations, onSort = null, sor
       <Table
         columns={columns}
         data={displayedOperations}
+        dateRange={dateRange}
         onAdd={handleOpenCreateModal}
+        onDateFilter={onDateFilter}
         onDelete={handleDelete}
         onFile={handleImport}
         onSort={onSort}
@@ -143,7 +151,12 @@ export default function OperationTable({ displayedOperations, onSort = null, sor
   );
 };
 OperationTable.propTypes = {
+  dateRange: PropTypes.shape({
+    start: PropTypes.string,
+    end: PropTypes.string,
+  }),
   displayedOperations: PropTypes.arrayOf(PropTypes.shape(operationPropType).isRequired),
+  onDateFilter: PropTypes.func,
   onSort: PropTypes.func,
   sortConfig: PropTypes.shape({
     path: PropTypes.string.isRequired,

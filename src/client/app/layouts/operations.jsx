@@ -12,16 +12,16 @@ import OperationTable from '../components/UI/operationTable';
 import { orderBy } from 'lodash';
 import OperationsChart from '../components/UI/operationsChart';
 import ContentBoard from '../components/common/contentBoard';
+import { todayInput } from '../../../utils/formatDate';
 
 // TODO 1. Реализовать создание и редактирование категорий.
 // TODO 2. Реализовать диаграммы.
 // TODO 4. Реализовать фильтрацию и сортировку.
 // TODO 5. Реализовать модальные окна и формы.
-// TODO 7. Протестить CRUD-функционал на интерфейсе.
 
 export default function Operations() {
   const [switchPosition, setSwitchPosition] = useState('both');
-  const [dateRange, setDateRange] = useState({ start: '', end: '' });
+  const [dateRange, setDateRange] = useState({ start: '1993-03-24', end: todayInput() });
   const [filter, setFilter] = useState({ category: null, type: null, date: null });
   const [sort, setSort] = useState({ path: 'date', order: 'desc' });
 
@@ -122,7 +122,13 @@ export default function Operations() {
       <section className='col-md-1' name='space' />
       <section className='col-md-7' id="main">
         {/*<DateRangePicker onPick={handlePick} pick={dateRange} /> */}
-        <OperationTable displayedOperations={displayedOperations} onSort={handleSort} sortConfig={sort} />
+        <OperationTable
+          dateRange={dateRange}
+          displayedOperations={displayedOperations}
+          onDateFilter={setDateRange}
+          onSort={handleSort}
+          sortConfig={sort}
+        />
       </section>
       <section id="modals">
         {/* <ModalWindow onClose={closeModal} /> */}
