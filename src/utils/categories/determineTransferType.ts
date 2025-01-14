@@ -8,5 +8,5 @@ export default async function determineTransferType(amount: string): Promise <Ty
   const categoryId = await getCategoryIdByName(transferType);
 
   if (categoryId) return categoryId;
-  throw new Error(`Category with named ${transferType}`);
+  throw new Error(`Category named ${transferType} was not found`);
 }

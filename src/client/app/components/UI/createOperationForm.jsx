@@ -4,11 +4,11 @@ import Form from '../common/form';
 import FieldInput from '../common/form/fieldInput';
 import SelectInputWithCreate from '../common/form/selectInputWithCreate';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCategoriesList, getCategoryById } from '../../store/categories';
+import { getCategoriesList } from '../../store/categories';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../utils/console/showElement';
+import capitalize from '../../../../utils/capitalize';
 import { createOperation } from '../../store/operations';
-import { formatDisplayDateFromInput } from '../../../../utils/formatDate';
 import { updateUserBalance } from '../../store/user';
 
 export default function CreateOperationForm({ onCreateCategory = null, onClose = null }) {
@@ -43,8 +43,8 @@ export default function CreateOperationForm({ onCreateCategory = null, onClose =
   
   async function handleCreate(rawData) {
     const normolizedData = {
-      name: rawData.operationName.trim(),
-      date: formatDisplayDateFromInput(rawData.date),
+      name: capitalize(rawData.operationName.trim()),
+      date: rawData.date,
       category: rawData.category.value,
       amount: parseFloat(rawData.amount),
     };

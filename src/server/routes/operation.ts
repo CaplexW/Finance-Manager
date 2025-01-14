@@ -17,6 +17,7 @@ import showElement from '../../utils/console/showElement.ts';
 import extractDataFromCSV from '../../utils/import/extractDataFromCSV.ts';
 import createOperationFromTinkoffData from '../../utils/import/createOperationFromTinkoffData.ts';
 import DefaultCategory from '../../db/models/DefaultCategory.ts';
+import forEachAsync from '../../utils/iterators/forEachAsync.ts';
 
 const router = express.Router({ mergeParams: true });
 const upload = multer({ dest: './src/server/uploads' });
@@ -32,7 +33,7 @@ async function sendList(req: AuthedRequest, res: Response) {
   try {
     if (!req.user) return sendAuthError(res, thisPlace);
     const list = await Operation.find({ user: req.user._id });
-    
+
     res.status(200).send(list);
   } catch (err) {
     showError(err);
@@ -94,6 +95,16 @@ async function importCSVTinkoff(req: AuthedRequest, res: Response) {
       const operation = await Operation.create(operationData);
       return operation;
     }));
+    if (result) {
+      const hostUser = await User.findById(req.user);
+      if (hostUser) {
+        await forEachAsync(result, async (newOperation) => {
+          await hostUser.operations.push(newOperation._id);
+          await hostUser.updateOne({ currentBalance: hostUser.currentBalance + newOperation.amount });
+        });
+        await hostUser.save();
+      }
+    }
 
     res.status(200).send(result);
     fs.rm(req.file.path, showElement);
@@ -173,7 +184,7 @@ function sendNotFound(response: Response, object: string, id: string = '') {
 async function findCategoryById(categoryId: string) {
   const defaultCategory = await DefaultCategory.findById(categoryId);
   if (defaultCategory) return defaultCategory;
-  
+
   const customCategory = await Category.findById(categoryId);
   if (customCategory) return customCategory;
 

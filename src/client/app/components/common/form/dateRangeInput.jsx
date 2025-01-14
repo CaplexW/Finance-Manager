@@ -1,6 +1,9 @@
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { formatDisplayDateFromInput, tomorrowInput } from '../../../../../utils/formatDate';
+import { formatDisplayDateFromInput, getInputDate, todayInput, tomorrowInput } from '../../../../../utils/formatDate';
+import getWeekBorders from '../../../../../utils/date/getWeekBorders';
+import getMonthBorders from '../../../../../utils/date/getMonthBorders';
+import getLastMonthsBorders from '../../../../../utils/date/getLastMonthsBorders';
 import { clrTransWhite600, clrTransWhite900 } from '../../../../../constants/colors';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../../utils/console/showElement';
@@ -21,21 +24,83 @@ export default function DateRangeInput({ pickValue, onPick }) {
     'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
   ];
 
-  function handlePick() {
-    if (startInput.current.value > endInput.current.value) {
-      endInput.current.value = startInput.current.value;
+  function handlePick({ target }) {
+    const selectedDay = target.textContent;
+
+    if (!selectedDay) return;
+
+    if (!firstSelectedDay) {
+      const firstSelectedDate = new Date(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        selectedDay
+      );
+      setFirstSelectedDay(firstSelectedDate);
     }
-    onPick({ startDate: startInput.current.value, endDate: endInput.current.value });
+
+    if (firstSelectedDay && !secondSelectedDay) {
+      const secondSelectedDate = new Date(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        selectedDay
+      );
+
+      if (firstSelectedDay > secondSelectedDate) {
+        onPick({ start: secondSelectedDate, end: firstSelectedDay });
+      }
+      else {
+        onPick({ start: firstSelectedDay, end: secondSelectedDate });
+      }
+
+      setFirstSelectedDay(null);
+      setSecondSelectedDay(null);
+      handleOpen();
+    }
   }
   function pickAllTime() {
     startInput.current.value = '1993-03-24';
     endInput.current.value = tomorrowInput();
-    onPick({ start: startInput.current.value, end: endInput.current.value });
+    onPick({ start: new Date('1993-03-24'), end: new Date(tomorrowInput()) });
+  }
+  function pickToday() {
+    startInput.current.value = todayInput();
+    endInput.current.value = todayInput();
+    onPick({ start: new Date(), end: new Date() });
+  }
+  function pickOneWeek() {
+    const { firstDay, lastDay } = getWeekBorders();
+
+    startInput.current.value = getInputDate(firstDay);
+    endInput.current.value = getInputDate(lastDay);
+
+    onPick({ start: firstDay, end: lastDay });
+  }
+  function pickOneMonth() {
+    const { firstDay, lastDay } = getMonthBorders();
+
+    startInput.current.value = getInputDate(firstDay);
+    endInput.current.value = getInputDate(lastDay);
+
+    onPick({ start: firstDay, end: lastDay });
+  }
+  function pickLastThreeMonths() {
+    const { firstDay, lastDay } = getLastMonthsBorders(3);
+
+    startInput.current.value = getInputDate(firstDay);
+    endInput.current.value = getInputDate(lastDay);
+
+    onPick({ start: firstDay, end: lastDay });
+  }
+  function pickLastSixMonths() {
+    const { firstDay, lastDay } = getLastMonthsBorders(6);
+
+    startInput.current.value = getInputDate(firstDay);
+    endInput.current.value = getInputDate(lastDay);
+
+    onPick({ start: firstDay, end: lastDay });
   }
   function handleOpen() {
-    showElement(openedInput.current, 'openedInput.current');
     const isClosed = openedInput.current.hasAttribute('hidden');
-    showElement(isClosed, 'isClosed');
     if (isClosed) {
       openedInput.current.removeAttribute('hidden');
     } else {
@@ -83,7 +148,7 @@ export default function DateRangeInput({ pickValue, onPick }) {
       const rowStart = rowIndex * 7;
       const rowEnd = rowStart + 7;
       const rowDays = calendarSlots.slice(rowStart, rowEnd);
-  
+
       return (
         <tr key={`week-${rowIndex}`}>
           {rowDays.map((day, colIndex) => createDay(day, colIndex))}
@@ -91,7 +156,7 @@ export default function DateRangeInput({ pickValue, onPick }) {
       );
     }
     function createDay(day, index) {
-      return <td key={`day-${index}`}><button style={inputButtonStyles} type='button'>{day !== null ? day : ''}</button></td>;
+      return <td key={`day-${index}`}><button onClick={handlePick} style={inputButtonStyles} type='button'>{day !== null ? day : ''}</button></td>;
     }
 
     return (
@@ -102,7 +167,7 @@ export default function DateRangeInput({ pickValue, onPick }) {
           </tr>
         </thead>
         <tbody>
-        {new Array(numberOfWeeks).fill(null).map((_, weekIndex) => createRow(weekIndex))}
+          {new Array(numberOfWeeks).fill(null).map((_, weekIndex) => createRow(weekIndex))}
         </tbody>
       </table>
     );
@@ -151,12 +216,12 @@ export default function DateRangeInput({ pickValue, onPick }) {
         </div>
         <div className="days pe-3 ps-3">{formMonthPage()}</div>
         <div className="buttons" style={buttonsBlockStyles}>
-          <button style={inputButtonStyles} type='button' >Сегодня</button>
-          <button style={inputButtonStyles} type='button' >1н</button>
-          <button style={inputButtonStyles} type='button' >1м</button>
-          <button style={inputButtonStyles} type='button' >3м</button>
-          <button style={inputButtonStyles} type='button' >6м</button>
-          <button style={inputButtonStyles} type='button' >&#8734;</button>
+          <button onClick={pickToday} style={inputButtonStyles} type='button' >Сегодня</button>
+          <button onClick={pickOneWeek} style={inputButtonStyles} type='button' >1н</button>
+          <button onClick={pickOneMonth} style={inputButtonStyles} type='button' >1м</button>
+          <button onClick={pickLastThreeMonths} style={inputButtonStyles} type='button' >3м</button>
+          <button onClick={pickLastSixMonths} style={inputButtonStyles} type='button' >6м</button>
+          <button onClick={pickAllTime} style={inputButtonStyles} type='button' >&#8734;</button>
         </div>
       </div>
       <input hidden id="start-date" name="start" ref={startInput} type="date" />

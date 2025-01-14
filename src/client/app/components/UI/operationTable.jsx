@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import Table from '../common/table';
 import { operationPropType } from '../../../../types/propTypes';
@@ -19,6 +19,7 @@ import displayError from '../../../../utils/errors/onClient/displayError';
 import CreateCategoryForm from './CreateCategoryForm';
 import closeModalWindow from '../../../../utils/modals/closeModalWindow';
 import { updateUserBalance } from '../../store/user';
+import { formatDisplayDateFromInput } from '../../../../utils/formatDate';
 
 // TODO 1. Реализовать условный рендеринг модальных окон
 
@@ -46,16 +47,18 @@ export default function OperationTable({
     amount: {
       name: 'Сумма',
       path: 'amount',
-      // eslint-disable-next-line react/no-unstable-nested-components
-      component: (operation) => <OperationAmount operation={operation} />
+      component: renderOperationAmount,
     },
     category: {
       name: 'Категория',
       path: 'category',
-      // eslint-disable-next-line react/no-unstable-nested-components
-      component: (operation) => <CategoryLabel categoryId={operation.category} />,
+      component: renderCategoryLabel,
     },
-    date: { path: 'date', name: 'Дата' },
+    date: {
+      path: 'date',
+      name: 'Дата',
+      component: renderDisplayDate,
+    },
     editButton: { component: renderEditButton },
     deleteButton: { component: renderDeleteButton },
   };
@@ -65,7 +68,7 @@ export default function OperationTable({
     if (isConfirmed) {
       const result = await dispatch(deleteOperation(id));
       showElement(result, 'result');
-      if(result) {
+      if (result) {
         const operation = displayedOperations.find((op) => op._id === id);
         dispatch(updateUserBalance(-operation.amount));
       }
@@ -111,16 +114,23 @@ export default function OperationTable({
   function renderEditButton(operation) {
     return <EditButton onClick={() => OpenEditModal(operation)} />;
   }
+  function renderDisplayDate(operation) {
+    return <span>{formatDisplayDateFromInput(operation.date)}</span>;
+  }
+  function renderOperationAmount(operation) {
+    return <OperationAmount operation={operation} />;
+  }
+  function renderCategoryLabel(operation) {
+    return <CategoryLabel categoryId={operation.category} />;
+  }
 
   function switchModals(prevModal, nextModal) {
     closeModalWindow(prevModal);
     openModalById(nextModal.id);
   }
-  function handleCreateCategory(enteredName, prevModal) {
-    setOpenCategoryModal(p => !p);
-    // const createCategoryModal = document.querySelector('#create-category-modal');
+  function handleCreateCategory(enteredName) {
+    handleOpenCategoryModal();
     setNewCategoryName(enteredName);
-    // switchModals(prevModal, createCategoryModal);
   }
 
   return (
@@ -138,15 +148,15 @@ export default function OperationTable({
         sortConfig={sortConfig}
         title="Операции"
       />
-        <ModalWindow headTitle="Добавьте операцию" isOpen={openCreateModal} onClose={handleCloseCreateModal} >
-          <CreateOperationForm onCreateCategory={handleCreateCategory} />
-        </ModalWindow>
-        <ModalWindow headTitle="Измените операцию" isOpen={openEditModal} onClose={handleCloseEditModal} >
-          <EditOperationForm existingData={editingData} onCreateCategory={handleCreateCategory} />
-        </ModalWindow>
-        <ModalWindow headTitle="Создайте категорию" isOpen={openCategoryModal} onClose={handleCloseCategoryModal} >
-          <CreateCategoryForm enteredName={newCategoryName} />
-        </ModalWindow>
+      <ModalWindow headTitle="Добавьте операцию" isOpen={openCreateModal} onClose={handleCloseCreateModal} >
+        <CreateOperationForm onCreateCategory={handleCreateCategory} />
+      </ModalWindow>
+      <ModalWindow headTitle="Измените операцию" isOpen={openEditModal} onClose={handleCloseEditModal} >
+        <EditOperationForm existingData={editingData} onCreateCategory={handleCreateCategory} />
+      </ModalWindow>
+      <ModalWindow headTitle="Создайте категорию" isOpen={openCategoryModal} onClose={handleCloseCategoryModal} >
+        <CreateCategoryForm enteredName={newCategoryName} />
+      </ModalWindow>
     </div>
   );
 };

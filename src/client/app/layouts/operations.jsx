@@ -12,7 +12,7 @@ import OperationTable from '../components/UI/operationTable';
 import { orderBy } from 'lodash';
 import OperationsChart from '../components/UI/operationsChart';
 import ContentBoard from '../components/common/contentBoard';
-import { todayInput } from '../../../utils/formatDate';
+import { getInputDate, todayInput } from '../../../utils/formatDate';
 
 // TODO 1. Реализовать создание и редактирование категорий.
 // TODO 2. Реализовать диаграммы.
@@ -62,7 +62,10 @@ export default function Operations() {
   // }
 
   function filterOperationsByDate(operations) {
-    let result = operations.filter(o => o);
+    let result = operations.filter((o) => (
+      o.date >= dateRange.start && o.date <= dateRange.end
+    ));
+    showElement(result, 'result');
 
     return result;
   }
@@ -80,19 +83,6 @@ export default function Operations() {
     return result;
   }
 
-  async function handleCreate(payload) {
-    const createdOperation = await dispatch(updateOperation(payload));
-    if (createdOperation) 'Создаем на фронту';
-  }
-  async function handleEdit(payload) {
-    const updatedOperation = await dispatch(updateOperation(payload));
-    if (updatedOperation) 'Обновляем на фронте';
-  }
-  async function handleDelete(id) {
-    const isDeleted = await dispatch(deleteOperation(id));
-    if (isDeleted) 'Удаляем на фронте';
-  }
-
   function handleCategoryFilter(list) {
     setFilter((prevState) => {
       const newState = { ...prevState };
@@ -101,15 +91,15 @@ export default function Operations() {
       return newState;
     });
   }
-  function handlePick(date) {
-    setFilter((prevState) => ({ ...prevState, date }));
+  function handleDateFilter({ start, end }) {
+    const startDate = getInputDate(start);
+    const endDate = getInputDate(end);
+
+    setDateRange({ start: startDate, end: endDate });
   }
   function handleSort(config) {
     setSort(config);
   }
-
-  // function handleOpenModal(command) { }
-  function closeModal() { }
 
   if (isLoaded) return (
     <div className='container row mt-3' id="operation-layout">
@@ -125,7 +115,7 @@ export default function Operations() {
         <OperationTable
           dateRange={dateRange}
           displayedOperations={displayedOperations}
-          onDateFilter={setDateRange}
+          onDateFilter={handleDateFilter}
           onSort={handleSort}
           sortConfig={sort}
         />
@@ -135,10 +125,7 @@ export default function Operations() {
       </section>
       <input hidden type="color" />
     </div>
-    // Значки категорий
-    // Чарт
-    //  Свитч
-    // Баланс
+
     // Кнопка "Показать больше"
   );
 };
