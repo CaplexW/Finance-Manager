@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser, getUserDataStatus, loadUserData } from '../store/user';
-import { deleteOperation, getOperationsList, getOperationsLoadStatus, loadOperations, updateOperation } from '../store/operations';
-import { getCategoriesList, getCategoriesLoadStatus, loadCategories } from '../store/categories';
-import { getIconsLoadStatus, loadIcons } from '../store/icons';
+import { getOperationsList, getOperationsLoadStatus } from '../store/operations';
+import { getCategoriesList, getCategoriesLoadStatus } from '../store/categories';
+import { getIconsLoadStatus } from '../store/icons';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../utils/console/showElement';
 import CategoriesList from '../components/UI/categoriesList';
-import DateRangePicker from '../components/common/dateRangePicker';
 import OperationTable from '../components/UI/operationTable';
 import { orderBy } from 'lodash';
 import OperationsChart from '../components/UI/operationsChart';

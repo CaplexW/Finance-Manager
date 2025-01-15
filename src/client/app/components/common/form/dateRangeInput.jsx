@@ -4,7 +4,7 @@ import { formatDisplayDateFromInput, getInputDate, todayInput, tomorrowInput } f
 import getWeekBorders from '../../../../../utils/date/getWeekBorders';
 import getMonthBorders from '../../../../../utils/date/getMonthBorders';
 import getLastMonthsBorders from '../../../../../utils/date/getLastMonthsBorders';
-import { clrTransWhite600, clrTransWhite900 } from '../../../../../constants/colors';
+import { mainColor } from '../../../../../constants/colors';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../../utils/console/showElement';
 import { arrowLeftIcon, arrowRightIcon } from '../../../../assets/icons';
@@ -51,12 +51,12 @@ export default function DateRangeInput({ pickValue, onPick }) {
       else {
         onPick({ start: firstSelectedDay, end: secondSelectedDate });
       }
-
       setFirstSelectedDay(null);
       setSecondSelectedDay(null);
-      handleOpen();
+
     }
   }
+
   function pickAllTime() {
     startInput.current.value = '1993-03-24';
     endInput.current.value = tomorrowInput();
@@ -99,7 +99,8 @@ export default function DateRangeInput({ pickValue, onPick }) {
 
     onPick({ start: firstDay, end: lastDay });
   }
-  function handleOpen() {
+
+  function toggleOpen() {
     const isClosed = openedInput.current.hasAttribute('hidden');
     if (isClosed) {
       openedInput.current.removeAttribute('hidden');
@@ -107,7 +108,6 @@ export default function DateRangeInput({ pickValue, onPick }) {
       openedInput.current.setAttribute('hidden', true);
     }
   }
-
   function selectNexMonth() {
     setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1));
   }
@@ -127,8 +127,6 @@ export default function DateRangeInput({ pickValue, onPick }) {
   function getDaysInMonth(year, month) {
     return new Date(year, month + 1, 0).getDate();
   }
-
-
   function formMonthPage() {
     const getAdjustedDay = (day) => (day === 0 ? 6 : day - 1);
     const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
@@ -156,7 +154,7 @@ export default function DateRangeInput({ pickValue, onPick }) {
       );
     }
     function createDay(day, index) {
-      return <td key={`day-${index}`}><button onClick={handlePick} style={inputButtonStyles} type='button'>{day !== null ? day : ''}</button></td>;
+      return <td className='button-conatiner' key={`day-${index}`} >{day !== null ? <button onClick={handlePick} type='button'>{day}</button> : ''}</td>;
     }
 
     return (
@@ -173,55 +171,35 @@ export default function DateRangeInput({ pickValue, onPick }) {
     );
   }
 
-  const closedDisplayStyles = {
-    background: clrTransWhite600,
-    borderRadius: '14px',
-    cursor: 'pointer',
-    marginLeft: '5.2rem',
-    padding: '.3em 1em',
-  };
-  const openedDisplayStyles = {
-    marginTop: '.5rem',
-    // marginRight: '100px',
-    background: clrTransWhite900,
-    borderRadius: '8px',
-    position: 'absolute',
-    zIndex: '100',
-  };
-  const inputButtonStyles = {
-    margin: '0',
-  };
-  const selectedMonthNameStyles = {
-    margin: '.5rem 1.5rem',
-  };
-  const buttonsBlockStyles = {
-    padding: '.5em 1em',
-  };
 
   return (
-    <div className="input">
+    <div className="date-range-input">
       <div
         className="closed-display"
-        onClick={handleOpen}
+        onClick={toggleOpen}
         ref={closedInput}
-        style={closedDisplayStyles}
       >
         {formatDisplayRange()}
       </div>
-      <div className="opend-display" hidden ref={openedInput} style={openedDisplayStyles}>
+      <div className="opened-display" hidden ref={openedInput}>
         <div className="selected-month d-flex justify-content-around">
-          <button onClick={selectPrevMonth} style={inputButtonStyles} type='button' >{arrowLeftIcon}</button>
-          <span style={selectedMonthNameStyles}>{months[selectedDate.getMonth()]} {selectedDate.getFullYear().toString()[2] + selectedDate.getFullYear().toString()[3]}</span>
-          <button onClick={selectNexMonth} style={inputButtonStyles} type='button'>{arrowRightIcon}</button>
+          <button onClick={selectPrevMonth} type='button' >{arrowLeftIcon}</button>
+          <span className='month-name'>{months[selectedDate.getMonth()]} {selectedDate.getFullYear().toString()[2] + selectedDate.getFullYear().toString()[3]}</span>
+          <button onClick={selectNexMonth} type='button'>{arrowRightIcon}</button>
         </div>
-        <div className="days pe-3 ps-3">{formMonthPage()}</div>
-        <div className="buttons" style={buttonsBlockStyles}>
-          <button onClick={pickToday} style={inputButtonStyles} type='button' >Сегодня</button>
-          <button onClick={pickOneWeek} style={inputButtonStyles} type='button' >1н</button>
-          <button onClick={pickOneMonth} style={inputButtonStyles} type='button' >1м</button>
-          <button onClick={pickLastThreeMonths} style={inputButtonStyles} type='button' >3м</button>
-          <button onClick={pickLastSixMonths} style={inputButtonStyles} type='button' >6м</button>
-          <button onClick={pickAllTime} style={inputButtonStyles} type='button' >&#8734;</button>
+        <div className="days-page pe-3 ps-3">{formMonthPage()}</div>
+        <div className="buttons-page d-flex justify-content-between mb-2">
+          <div className="pickButtons">
+            <button onClick={pickToday} type='button'>Сегодня</button>
+            <button onClick={pickOneWeek} type='button'>1н</button>
+            <button onClick={pickOneMonth} type='button'>1м</button>
+            <button onClick={pickLastThreeMonths} type='button'>3м</button>
+            <button onClick={pickLastSixMonths} type='button'>6м</button>
+            <button onClick={pickAllTime} type='button'>&#8734;</button>
+          </div>
+          <div className="end-buttons">
+            <button onClick={toggleOpen} type='button'>Готово</button>
+          </div>
         </div>
       </div>
       <input hidden id="start-date" name="start" ref={startInput} type="date" />
