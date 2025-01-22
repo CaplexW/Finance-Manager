@@ -9,7 +9,7 @@ import LogOut from "./layouts/logOut";
 import Operations from "./layouts/operations";
 import { useDispatch, useSelector } from "react-redux";
 import { getIconsLoadStatus, loadIcons } from "./store/icons";
-import { getUserDataStatus, loadUserData } from "./store/user";
+import { getLoginStatus, getUserDataStatus, loadUserData } from "./store/user";
 import { getOperationsLoadStatus, loadOperations } from "./store/operations";
 import { getCategoriesLoadStatus, loadCategories } from "./store/categories";
 
@@ -20,6 +20,7 @@ export default function App() {
   const operationsIsLoaded = useSelector(getOperationsLoadStatus());
   const categoriesIsLoaded = useSelector(getCategoriesLoadStatus());
   const iconsIsLoaded = useSelector(getIconsLoadStatus());
+  const isLoggedIn = useSelector(getLoginStatus());
 
   const dataIsLoaded = (
     userDataIsLoaded
@@ -28,7 +29,7 @@ export default function App() {
     && iconsIsLoaded
   );
 
-  useEffect(loadData, [dataIsLoaded]);
+  useEffect(loadData, [dataIsLoaded, isLoggedIn]);
 
   function loadData() {
     if (dataIsLoaded) return;

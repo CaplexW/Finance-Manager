@@ -4,6 +4,7 @@ import lod from 'lodash';
 import { alfaIcon, uploadIcon } from '../../../assets/icons';
 import T_BANK_ICON from '../../../assets/static_icons/tBankIcon.png';
 import showElement from '../../../../utils/console/showElement';
+import DateRangeInput from './form/dateRangeInput';
 
 const dummySort = { path: '', order: '' };
 const dummyFunc = () => { };
@@ -11,6 +12,8 @@ const dummyFunc = () => { };
 export default function Table({
   columns,
   data,
+  dateRange,
+  onDateFilter,
   title = 'Таблица',
   sortConfig = dummySort,
   onSort = dummyFunc,
@@ -50,6 +53,7 @@ export default function Table({
       <div className="table_container">
         <section className='table_header'>
           <h3 className='table_title'>{title}</h3>
+          <DateRangeInput onPick={onDateFilter} pickValue={dateRange} />
           <div className='button-group'>
             {onAdd ?
               <button className="table_button" onClick={onAdd} type="button">Добавить</button>

@@ -5,16 +5,19 @@ import FieldInput from '../common/form/fieldInput';
 import SelectInputWithCreate from '../common/form/selectInputWithCreate';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCategoriesList } from '../../store/categories';
-import closeModalWindow from '../../../../utils/modals/closeModalWindow';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../utils/console/showElement';
 import { updateOperation } from '../../store/operations';
-import { formatDisplayDateFromInput, formatInputDateFromDisplay } from '../../../../utils/formatDate';
+import { formatInputDateFromDisplay } from '../../../../utils/formatDate';
 import { updateUserBalance } from '../../store/user';
+import capitalize from '../../../../utils/capitalize';
 
 const emptyObject = {};
 
 export default function EditOperationForm({ onClose = null, existingData = emptyObject, }) {
-  if(!existingData.date) return;
+  if (!existingData.date) return;
+
+  showElement(existingData, 'existingData');
 
   const dispatch = useDispatch();
   const categories = useSelector(getCategoriesList());
@@ -48,15 +51,15 @@ export default function EditOperationForm({ onClose = null, existingData = empty
   const displayedData = {
     ...existingData,
     category: { label: categoryName, value: existingData.category },
-    date: formatInputDateFromDisplay(existingData.date),
+    date: existingData.date,
     amount: Math.abs(parseFloat(existingData.amount)),
   };
 
   async function handleUpdate(inputValue) {
     const normolizedData = {
       ...existingData,
-      name: inputValue.name.trim(),
-      date: formatDisplayDateFromInput(inputValue.date),
+      name: capitalize(inputValue.name.trim()),
+      date: inputValue.date || existingData.date,
       category: inputValue.category.value,
       amount: Math.abs(parseFloat(inputValue.amount)),
     };
@@ -96,7 +99,3 @@ EditOperationForm.propTypes = {
   }),
   onClose: PropTypes.func,
 };
-
-function findDifference(oldAmount, newAmount) {
-  if (oldAmount === newAmount) return 0;
-}

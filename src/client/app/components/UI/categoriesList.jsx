@@ -15,7 +15,7 @@ export default function CategoriesList({ onClick, operations }) {
   const categories = useSelector(getCategoriesList());
   const icons = useSelector(getIconsList());
 
-  if (!operations) return;
+  if (!operations || !categories || !icons) return;
 
   const includedCategoriesIds = operations.map((s) => s.category);
   const includedCategories = categories.filter((cat) => includedCategoriesIds.includes(cat._id));
@@ -25,6 +25,20 @@ export default function CategoriesList({ onClick, operations }) {
 
   const coloredIcons = includedCategories.map((category) => {
     const icon = includedIcons.find((i) => category.icon === i._id);
+    if (!icon?._id) {
+      const report = {
+        operations,
+        icons,
+        includedIconsIds,
+        includedIcons,
+        icon,
+        categories,
+        includedCategoriesIds,
+        includedCategories,
+        category,
+      };
+      showElement(report, 'report');
+    }
     return {
       icon,
       category,

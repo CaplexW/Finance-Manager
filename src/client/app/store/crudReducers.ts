@@ -44,7 +44,6 @@ export function createCRUDSlice<CRUDEntity extends CRUDObject>(sliceName: string
       },
       creationRequested() { },
       creationSucceed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<CRUDEntity>) {
-        showElement(state.entities, 'state');
         if (state?.entities) state?.entities?.push(action.payload as Draft<CRUDEntity>);
       },
       creationFailed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<unknown>) {

@@ -1,0 +1,66 @@
+.closed-display {
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 14px;
+  cursor: pointer;
+  padding: .3em 1em;
+
+  margin-left: 5.2rem; /* Для отладки. Убрать в проде */
+}
+
+.opened-display {
+  margin-top: .5rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  position: absolute;
+  z-index: 1;
+}
+
+.selected-month {
+  display: flex;
+  justify-content: space-around;
+}
+
+.month-name {
+  margin: .5rem 1.5rem;
+}
+
+.days-page {
+  padding-inline: 1.5rem;
+}
+
+.buttons-page {
+  margin-block-end: 1rem;
+  padding: .5em 1em;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.shortcut-btn,
+.close-btn {
+  margin: 0 !important; 
+  padding: .25em .5em !important;
+}
+
+.date-range-input .highlighted {
+  background: #93bbca5a;
+}
+
+.date-range-input .selected {
+  background: #93bbca;
+}
+
+.date-range-input .date-cell {
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  text-align: center;
+
+  padding: .5em 1em;
+
+  transition: background .25s;
+}
+.date-range-input .date-cell:hover {
+  background: #93bbca;
+}

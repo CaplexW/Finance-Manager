@@ -1,15 +1,18 @@
+import showElement from "./console/showElement.ts";
+
 export function getDisplayDate(date: Date): string {
   return Intl.DateTimeFormat('ru').format(date);
 }
 export function getInputDate(date: Date): string {
-  const displayedDate = getDisplayDate(date);
-  const splitedDate = displayedDate.split('.');
-  const valueDate = `${splitedDate[2]}-${splitedDate[1]}-${splitedDate[0]}`;
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+  const valueDate = `${year}-${month > 8 ? month + 1 : '0' + (month + 1)}-${day > 9 ? day : '0' + day}`;
   return valueDate;
 }
 export function formatDisplayDateFromInput(date: string): string {
   const splitedDate = date.split('-');
-  const formatedDate = `${splitedDate[2]}.${splitedDate[1]}.${splitedDate[0]}`;
+  const formatedDate = `${splitedDate[2]}.${splitedDate[1]}.${splitedDate[0][2] + splitedDate[0][3]}`;
   return formatedDate;
 }
 export function formatInputDateFromDisplay(date: string): string {
@@ -23,27 +26,12 @@ export function todayDisplay() {
 export function todayInput() {
   return getInputDate(new Date());
 }
-// export function tomorrowDisplay() {
-//   return formatDisplayDate(new Date().setDate(new Date().getDate() + 1));
-// }
 export function tomorrowInput(): string {
-  return getInputDate(new Date().setDate(new Date().getDate() + 1));
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  return getInputDate(tomorrow);
 }
-// export function yesterdayDisplay() {
-//   return formatDisplayDate(new Date().setDate(new Date().getDate() - 1));
-// }
-// export function yesterdayInput() {
-//   return getInputDate(new Date().setDate(new Date().getDate() - 1));
-// }
-// export function weekAgoDisplay() {
-//   return formatDisplayDate(new Date().setDate(new Date().getDate() - 7));
-// }
-// export function weekAgoInput() {
-//   return getInputDate(new Date().setDate(new Date().getDate() - 7));
-// }
-// export function lastMonthInput() {
-//   return getInputDate(new Date().setDate(new Date().getDate() - 30));
-// }
 export function firstDayOfMonthInput() {
   const displayedDate = getDisplayDate(new Date());
   const splitedDate = displayedDate.split('.');

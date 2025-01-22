@@ -3,6 +3,7 @@
 @import './app/styles/modal.css';
 @import './app/styles/common.css';
 @import './app/styles/input.css';
+@import './app/styles/dateRangeInput.css';
 /* --mainColor #93bbca */
 * {
   margin: 0;

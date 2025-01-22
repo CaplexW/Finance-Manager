@@ -1,27 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser, getUserDataStatus, loadUserData } from '../store/user';
-import { deleteOperation, getOperationsList, getOperationsLoadStatus, loadOperations, updateOperation } from '../store/operations';
-import { getCategoriesList, getCategoriesLoadStatus, loadCategories } from '../store/categories';
-import { getIconsLoadStatus, loadIcons } from '../store/icons';
+import { getOperationsList, getOperationsLoadStatus } from '../store/operations';
+import { getCategoriesList, getCategoriesLoadStatus } from '../store/categories';
+import { getIconsLoadStatus } from '../store/icons';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../utils/console/showElement';
 import CategoriesList from '../components/UI/categoriesList';
-import DateRangePicker from '../components/common/dateRangePicker';
 import OperationTable from '../components/UI/operationTable';
 import { orderBy } from 'lodash';
 import OperationsChart from '../components/UI/operationsChart';
 import ContentBoard from '../components/common/contentBoard';
+import { getInputDate, todayInput } from '../../../utils/formatDate';
 
 // TODO 1. Реализовать создание и редактирование категорий.
 // TODO 2. Реализовать диаграммы.
 // TODO 4. Реализовать фильтрацию и сортировку.
 // TODO 5. Реализовать модальные окна и формы.
-// TODO 7. Протестить CRUD-функционал на интерфейсе.
 
 export default function Operations() {
   const [switchPosition, setSwitchPosition] = useState('both');
-  const [dateRange, setDateRange] = useState({ start: '', end: '' });
+  const [dateRange, setDateRange] = useState({ start: '1993-03-24', end: todayInput() });
   const [filter, setFilter] = useState({ category: null, type: null, date: null });
   const [sort, setSort] = useState({ path: 'date', order: 'desc' });
 
@@ -62,7 +61,9 @@ export default function Operations() {
   // }
 
   function filterOperationsByDate(operations) {
-    let result = operations.filter(o => o);
+    let result = operations.filter((o) => (
+      o.date >= dateRange.start && o.date <= dateRange.end
+    ));
 
     return result;
   }
@@ -80,19 +81,6 @@ export default function Operations() {
     return result;
   }
 
-  async function handleCreate(payload) {
-    const createdOperation = await dispatch(updateOperation(payload));
-    if (createdOperation) 'Создаем на фронту';
-  }
-  async function handleEdit(payload) {
-    const updatedOperation = await dispatch(updateOperation(payload));
-    if (updatedOperation) 'Обновляем на фронте';
-  }
-  async function handleDelete(id) {
-    const isDeleted = await dispatch(deleteOperation(id));
-    if (isDeleted) 'Удаляем на фронте';
-  }
-
   function handleCategoryFilter(list) {
     setFilter((prevState) => {
       const newState = { ...prevState };
@@ -101,15 +89,15 @@ export default function Operations() {
       return newState;
     });
   }
-  function handlePick(date) {
-    setFilter((prevState) => ({ ...prevState, date }));
+  function handleDateFilter({ start, end }) {
+    const startDate = getInputDate(start);
+    const endDate = getInputDate(end);
+
+    setDateRange({ start: startDate, end: endDate });
   }
   function handleSort(config) {
     setSort(config);
   }
-
-  // function handleOpenModal(command) { }
-  function closeModal() { }
 
   if (isLoaded) return (
     <div className='container row mt-3' id="operation-layout">
@@ -122,17 +110,20 @@ export default function Operations() {
       <section className='col-md-1' name='space' />
       <section className='col-md-7' id="main">
         {/*<DateRangePicker onPick={handlePick} pick={dateRange} /> */}
-        <OperationTable displayedOperations={displayedOperations} onSort={handleSort} sortConfig={sort} />
+        <OperationTable
+          dateRange={dateRange}
+          displayedOperations={displayedOperations}
+          onDateFilter={handleDateFilter}
+          onSort={handleSort}
+          sortConfig={sort}
+        />
       </section>
       <section id="modals">
         {/* <ModalWindow onClose={closeModal} /> */}
       </section>
       <input hidden type="color" />
     </div>
-    // Значки категорий
-    // Чарт
-    //  Свитч
-    // Баланс
+
     // Кнопка "Показать больше"
   );
 };

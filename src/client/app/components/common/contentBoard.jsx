@@ -1,9 +1,9 @@
 import React from 'react';
-import showElement from '../../../../utils/console/showElement';
+import PropTypes from 'prop-types';
+import { nodesPropType } from '../../../../types/propTypes';
 
-export default function ContentBoard({ children, header }) {
+export default function ContentBoard({ children = '', header = 'Заголовок' }) {
 
-  showElement(children, 'children');
   const contentStyles = {
     justifyContent: 'space-between',
   };
@@ -19,4 +19,9 @@ export default function ContentBoard({ children, header }) {
       </div>
     </main>
   );
+};
+
+ContentBoard.propTypes = {
+  children: nodesPropType,
+  header: PropTypes.oneOfType([PropTypes.string, nodesPropType]),
 };
