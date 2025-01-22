@@ -67,7 +67,6 @@ export default function OperationTable({
     const isConfirmed = confirm('Вы хотите удалить опирацию?');
     if (isConfirmed) {
       const result = await dispatch(deleteOperation(id));
-      showElement(result, 'result');
       if (result) {
         const operation = displayedOperations.find((op) => op._id === id);
         dispatch(updateUserBalance(-operation.amount));

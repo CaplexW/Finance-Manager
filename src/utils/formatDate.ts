@@ -4,7 +4,6 @@ export function getDisplayDate(date: Date): string {
   return Intl.DateTimeFormat('ru').format(date);
 }
 export function getInputDate(date: Date): string {
-  showElement(date, 'date');
   const year = date.getFullYear();
   const month = date.getMonth();
   const day = date.getDate();

@@ -1,119 +1,157 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
-import { formatDisplayDateFromInput, getInputDate, todayInput, tomorrowInput } from '../../../../../utils/formatDate';
+import { formatDisplayDateFromInput } from '../../../../../utils/formatDate';
 import getWeekBorders from '../../../../../utils/date/getWeekBorders';
-import getMonthBorders from '../../../../../utils/date/getMonthBorders';
 import getLastMonthsBorders from '../../../../../utils/date/getLastMonthsBorders';
-import { mainColor } from '../../../../../constants/colors';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../../utils/console/showElement';
 import { arrowLeftIcon, arrowRightIcon } from '../../../../assets/icons';
+import getTodayDate from '../../../../../utils/date/getTodayDate';
+
+const months = [
+  'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+  'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+];
 
 export default function DateRangeInput({ pickValue, onPick }) {
-  const startInput = useRef();
-  const endInput = useRef();
-  const closedInput = useRef();
-  const openedInput = useRef();
+  const initialState = {
+    startDate: null,
+    endDate: null,
+    isShortcut: true,
+    isBordersClosed: null,
+    isOpen: false,
+    displayedMonth: {
+      month: getTodayDate().getMonth(),
+      year: getTodayDate().getFullYear(),
+    },
 
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [firstSelectedDay, setFirstSelectedDay] = useState(null);
-  const [secondSelectedDay, setSecondSelectedDay] = useState(null);
+  };
+  const [inputState, dispatch] = useReducer(inputStateReducer, initialState);
 
-  const months = [
-    'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
-    'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
-  ];
+  useEffect(handleChange, [inputState.endDate]);
 
+  function inputStateReducer(state, { type, payload }) {
+    const { value, isShortcut, isBordersClosed } = payload;
+
+    switch (type) {
+      case 'SET_START_DATE':
+        return { ...state, startDate: value, endDate: null, isShortcut, isBordersClosed };
+      case 'SET_END_DATE':
+        if (state.startDate > value) {
+          return { ...state, startDate: value, endDate: state.startDate, isShortcut, isBordersClosed };
+        }
+        return { ...state, endDate: value, isShortcut, isBordersClosed };
+      case 'RESET_DATE_RANGE':
+        return { startDate: '', endDate: '', isShortcut: false, isBordersClosed: null };
+      case 'SET_DISPLAYED_MONTH':
+        return { ...state, displayedMonth: payload };
+      case 'SET_OPEN_STATE':
+        return { ...state, isOpen: payload };
+      default:
+        throw new Error(`Unhandled action type: ${type}`);
+    }
+  }
+
+  function handleStartDateChange(value, isShortcut) {
+    dispatch({
+      type: 'SET_START_DATE',
+      payload: {
+        isShortcut,
+        value: value,
+        isBordersClosed: isShortcut ? null : false,
+      },
+    });
+  }
+  function handleEndDateChange(value, isShortcut) {
+    dispatch({
+      type: 'SET_END_DATE',
+      payload: {
+        value: value,
+        isShortcut,
+        isBordersClosed: isShortcut ? null : true,
+      },
+    });
+  }
+  function handleDisplayedMonthChange(newYear, newMonth) {
+    dispatch({
+      type: 'SET_DISPLAYED_MONTH',
+      payload: {
+        month: newMonth,
+        year: newYear,
+      }
+    });
+  }
+  function handleOpenInputPage(state) {
+    dispatch({
+      type: 'SET_OPEN_STATE',
+      payload: state
+    });
+  }
+
+  function handleChange() {
+    if (inputState.endDate) onPick({ start: inputState.startDate, end: inputState.endDate });
+  }
   function handlePick({ target }) {
-    const selectedDay = target.textContent;
+    const selectedDate = new Date(target.dataset.date);
+    const firstSelection = inputState.isBordersClosed === null || inputState.isBordersClosed === true;
 
-    if (!selectedDay) return;
+    if (firstSelection) handleStartDateChange(selectedDate, false);
+    if (!firstSelection) handleEndDateChange(selectedDate, false);
+  }
+  function handleShortcut({ target }) {
+    const { name } = target;
+    const nameIsNumber = !isNaN(parseInt(name));
 
-    if (!firstSelectedDay) {
-      const firstSelectedDate = new Date(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        selectedDay
-      );
-      setFirstSelectedDay(firstSelectedDate);
+    if (nameIsNumber) {
+      handleStartDateChange(getLastMonthsBorders(name - 1).firstDay, true);
+      handleEndDateChange(getLastMonthsBorders(name - 1).lastDay, true);
     }
 
-    if (firstSelectedDay && !secondSelectedDay) {
-      const secondSelectedDate = new Date(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        selectedDay
-      );
-
-      if (firstSelectedDay > secondSelectedDate) {
-        onPick({ start: secondSelectedDate, end: firstSelectedDay });
-      }
-      else {
-        onPick({ start: firstSelectedDay, end: secondSelectedDate });
-      }
-      setFirstSelectedDay(null);
-      setSecondSelectedDay(null);
-
+    switch (name) {
+      case 'today':
+        handleStartDateChange(getTodayDate(), true);
+        handleEndDateChange(getTodayDate(), true);
+        break;
+      case 'week':
+        handleStartDateChange(getWeekBorders().firstDay, true);
+        handleEndDateChange(getWeekBorders().lastDay, true);
+        break;
+      case 'infinity':
+        handleStartDateChange(new Date('1993', '02', '24'), true);
+        handleEndDateChange(getTodayDate(), true);
+        break;
+      default:
+        break;
     }
   }
 
-  function pickAllTime() {
-    startInput.current.value = '1993-03-24';
-    endInput.current.value = tomorrowInput();
-    onPick({ start: new Date('1993-03-24'), end: new Date(tomorrowInput()) });
-  }
-  function pickToday() {
-    startInput.current.value = todayInput();
-    endInput.current.value = todayInput();
-    onPick({ start: new Date(), end: new Date() });
-  }
-  function pickOneWeek() {
-    const { firstDay, lastDay } = getWeekBorders();
+  function handleHighlight({ target }) {
+    if (inputState.isBordersClosed !== false) return;
 
-    startInput.current.value = getInputDate(firstDay);
-    endInput.current.value = getInputDate(lastDay);
+    const [startBorder, endBorder] = getSelectedBorders(target.dataset.date);
 
-    onPick({ start: firstDay, end: lastDay });
-  }
-  function pickOneMonth() {
-    const { firstDay, lastDay } = getMonthBorders();
+    const allCells = [...document.querySelectorAll('.date-cell')];
 
-    startInput.current.value = getInputDate(firstDay);
-    endInput.current.value = getInputDate(lastDay);
+    highlightItems(allCells, startBorder, endBorder);
 
-    onPick({ start: firstDay, end: lastDay });
-  }
-  function pickLastThreeMonths() {
-    const { firstDay, lastDay } = getLastMonthsBorders(3);
+    function highlightItems(items, startBorder, endBorder) {
+      items.forEach((cell) => {
+        const cellDate = new Date(cell.dataset.date);
 
-    startInput.current.value = getInputDate(firstDay);
-    endInput.current.value = getInputDate(lastDay);
-
-    onPick({ start: firstDay, end: lastDay });
-  }
-  function pickLastSixMonths() {
-    const { firstDay, lastDay } = getLastMonthsBorders(6);
-
-    startInput.current.value = getInputDate(firstDay);
-    endInput.current.value = getInputDate(lastDay);
-
-    onPick({ start: firstDay, end: lastDay });
-  }
-
-  function toggleOpen() {
-    const isClosed = openedInput.current.hasAttribute('hidden');
-    if (isClosed) {
-      openedInput.current.removeAttribute('hidden');
-    } else {
-      openedInput.current.setAttribute('hidden', true);
+        if (cellDate > startBorder && cellDate < endBorder) {
+          cell.classList.add('highlighted');
+        }
+        else {
+          cell.classList.remove('highlighted');
+        }
+      });
     }
   }
-  function selectNexMonth() {
-    setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1));
+  function selectNextMonth(number) {
+    const nextDate = new Date(inputState.displayedMonth.year, inputState.displayedMonth.month + number);
+    handleDisplayedMonthChange(nextDate.getFullYear(), nextDate.getMonth());
   }
-  function selectPrevMonth() {
-    setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1));
-  }
+  function toggleOpen() { handleOpenInputPage(!inputState.isOpen); };
 
   function formatDisplayRange() {
     const [startYear, startMonth, startDay] = pickValue.start.split('-');
@@ -124,6 +162,7 @@ export default function DateRangeInput({ pickValue, onPick }) {
 
     return `${formatDisplayDateFromInput(pickValue.start)} - ${formatDisplayDateFromInput(pickValue.end)}`;
   }
+
   function getDaysInMonth(year, month) {
     return new Date(year, month + 1, 0).getDate();
   }
@@ -131,9 +170,9 @@ export default function DateRangeInput({ pickValue, onPick }) {
     const getAdjustedDay = (day) => (day === 0 ? 6 : day - 1);
     const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
-    const numberOfDays = getDaysInMonth(selectedDate.getFullYear(), selectedDate.getMonth());
-    const firstDayOfMonth = getAdjustedDay(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1).getDay());
-    const lastDayOfMonth = getAdjustedDay(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), numberOfDays).getDay());
+    const numberOfDays = getDaysInMonth(inputState.displayedMonth.year, inputState.displayedMonth.month);
+    const firstDayOfMonth = getAdjustedDay(new Date(inputState.displayedMonth.year, inputState.displayedMonth.month, 1).getDay());
+    const lastDayOfMonth = getAdjustedDay(new Date(inputState.displayedMonth.year, inputState.displayedMonth.month, numberOfDays).getDay());
     const totalSlots = firstDayOfMonth + numberOfDays + (6 - lastDayOfMonth);
     const numberOfWeeks = Math.ceil(totalSlots / 7);
 
@@ -154,7 +193,34 @@ export default function DateRangeInput({ pickValue, onPick }) {
       );
     }
     function createDay(day, index) {
-      return <td className='button-conatiner' key={`day-${index}`} >{day !== null ? <button onClick={handlePick} type='button'>{day}</button> : ''}</td>;
+      if (!day) return <td key={`empty-day-${index}`} />;
+
+      const cellDate = getDateOfDisplayedMonth(day);
+      const ISODate = cellDate.toISOString();
+
+      const isSelected = (
+        !inputState.isShortcut
+        && (cellDate.getTime() === inputState.startDate?.getTime() || cellDate.getTime() === inputState.endDate?.getTime())
+      );
+      const isHighlighted = (
+        !inputState.isShortcut
+        && Boolean(inputState.endDate)
+        && (cellDate.getTime() > inputState.startDate.getTime() && cellDate.getTime() < inputState.endDate.getTime())
+      );
+      const transitionStyle = { transition: `background ${0.25 + (index * 0.1)}s` };
+
+      if (day) return (
+        <td
+          className={`date-cell${isSelected ? ' selected' : ''}${isHighlighted ? ' highlighted' : ''}`}
+          data-date={ISODate}
+          key={`day-${index}`}
+          onClick={handlePick}
+          onMouseOver={handleHighlight}
+          style={transitionStyle}
+        >
+          {day}
+        </td>
+      );
     }
 
     return (
@@ -170,40 +236,49 @@ export default function DateRangeInput({ pickValue, onPick }) {
       </table>
     );
   }
+  function getSelectedBorders(lastBorder) {
+    const startDate = inputState.startDate;
+    const endDate = new Date(lastBorder);
 
+    if (startDate > endDate) return [endDate, startDate];
+    return [startDate, endDate];
+  }
+  function getDateOfDisplayedMonth(day) {
+    return new Date(inputState.displayedMonth.year, inputState.displayedMonth.month, day);
+  }
 
   return (
     <div className="date-range-input">
       <div
         className="closed-display"
         onClick={toggleOpen}
-        ref={closedInput}
       >
         {formatDisplayRange()}
       </div>
-      <div className="opened-display" hidden ref={openedInput}>
-        <div className="selected-month d-flex justify-content-around">
-          <button onClick={selectPrevMonth} type='button' >{arrowLeftIcon}</button>
-          <span className='month-name'>{months[selectedDate.getMonth()]} {selectedDate.getFullYear().toString()[2] + selectedDate.getFullYear().toString()[3]}</span>
-          <button onClick={selectNexMonth} type='button'>{arrowRightIcon}</button>
-        </div>
-        <div className="days-page pe-3 ps-3">{formMonthPage()}</div>
-        <div className="buttons-page d-flex justify-content-between mb-2">
-          <div className="pickButtons">
-            <button onClick={pickToday} type='button'>Сегодня</button>
-            <button onClick={pickOneWeek} type='button'>1н</button>
-            <button onClick={pickOneMonth} type='button'>1м</button>
-            <button onClick={pickLastThreeMonths} type='button'>3м</button>
-            <button onClick={pickLastSixMonths} type='button'>6м</button>
-            <button onClick={pickAllTime} type='button'>&#8734;</button>
+      {!!inputState.isOpen &&
+        <div className="opened-display">
+          <div className="selected-month d-flex justify-content-around">
+            <button onClick={() => { selectNextMonth(-1); }} type='button' >{arrowLeftIcon}</button>
+            <span className='month-name'>{months[inputState.displayedMonth.month]} {inputState.displayedMonth.year.toString()[2] + inputState.displayedMonth.year.toString()[3]}</span>
+            <button onClick={() => { selectNextMonth(1); }} type='button'>{arrowRightIcon}</button>
           </div>
-          <div className="end-buttons">
-            <button onClick={toggleOpen} type='button'>Готово</button>
+          <div className="days-page pe-3 ps-3">{formMonthPage()}</div>
+          <div className="buttons-page d-flex justify-content-between mb-2">
+            <div className="pickButtons">
+              <button className='shortcut-btn' name='today' onClick={handleShortcut} type='button'>Сегодня</button>
+              <button className='shortcut-btn' name='week' onClick={handleShortcut} type='button'>1н</button>
+              <button className='shortcut-btn' name={1} onClick={handleShortcut} type='button'>1м</button>
+              <button className='shortcut-btn' name={3} onClick={handleShortcut} type='button'>3м</button>
+              <button className='shortcut-btn' name={6} onClick={handleShortcut} type='button'>6м</button>
+              <button className='shortcut-btn' name='infinity' onClick={handleShortcut} type='button'>&#8734;</button>
+            </div>
+            <div className="end-buttons">
+              <button className='close-btn' onClick={toggleOpen} type='button'>Готово</button>
+            </div>
           </div>
-        </div>
-      </div>
-      <input hidden id="start-date" name="start" ref={startInput} type="date" />
-      <input hidden id="end-date" name="end" ref={endInput} type="date" />
+        </div>}
+      <input hidden id="start-date" name="start" type="date" />
+      <input hidden id="end-date" name="end" type="date" />
     </div>
   );
 };

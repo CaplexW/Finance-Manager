@@ -64,7 +64,6 @@ export default function Operations() {
     let result = operations.filter((o) => (
       o.date >= dateRange.start && o.date <= dateRange.end
     ));
-    showElement(result, 'result');
 
     return result;
   }
