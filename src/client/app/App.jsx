@@ -39,7 +39,7 @@ export default function App() {
     if (!iconsIsLoaded) dispatch(loadIcons());
     if (!userDataIsLoaded) dispatch(loadUserData());
   }
-  return (
+  if (dataIsLoaded) return (
     <div className="App" style={{ height: '100vh', width: '99vw' }}>
       <ToastContainer />
       <NavBar />

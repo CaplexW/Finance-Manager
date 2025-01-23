@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import showElement from '../../../../utils/console/showElement';
 import ContentBoard from '../common/contentBoard';
 import DummyWidget from '../common/dummyWidget';
-import WidgetIncomeOutcome from './widgetIncomeOutcome';
+import WidgetIncomeOutcome from './widgets/widgetIncomeOutcome';
 import { useSelector } from 'react-redux';
 import { getOperationsList } from '../../store/operations';
+import WidgetBiggestOperations from './widgets/widgetBiggestOperations';
 
 export default function ActivityBoard() {
   const [activityRange, setActivityRange] = useState(30);
@@ -43,7 +44,7 @@ export default function ActivityBoard() {
     <div className="container d-flex justify-content-center">
       <ContentBoard header={header}>
         <WidgetIncomeOutcome operations={operations} />
-        <DummyWidget />
+        <WidgetBiggestOperations operations={operations} />
         <DummyWidget />
         <DummyWidget />
         <DummyWidget />

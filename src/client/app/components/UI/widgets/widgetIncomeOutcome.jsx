@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Widget from '../common/widget';
-import Chart from '../common/charts/chart';
-import { greenColor, redColor } from '../../../../constants/colors';
-import { operationPropType } from '../../../../types/propTypes';
-import showElement from '../../../../utils/console/showElement';
-import ContentBoard from '../common/contentBoard';
+import Widget from '../../common/widget';
+import Chart from '../../common/charts/chart';
+import { greenColor, redColor } from '../../../../../constants/colors';
+import { operationPropType } from '../../../../../types/propTypes';
+import showElement from '../../../../../utils/console/showElement';
+import ContentBoard from '../../common/contentBoard';
 
 export default function WidgetIncomeOutcome({ operations }) {
   const data = {
