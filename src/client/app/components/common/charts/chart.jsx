@@ -1,10 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Doughnut, Pie } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+} from "chart.js";
+import { Doughnut, Line, Pie } from "react-chartjs-2";
 
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(
+  ArcElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Legend,
+  Title,
+);
 const optionsWithNoLegend = {
   plugins: {
     legend: {
@@ -18,6 +37,7 @@ export default function Chart({ data, type = 'pie', options = optionsWithNoLegen
 
   if (type === 'doughnut') return <Doughnut data={data} options={options} />;
   if (type === 'pie') return <Pie data={data} options={options} />;
+  if (type === 'line') return <Line data={data} options={options} />;
 };
 
 Chart.propTypes = {

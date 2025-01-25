@@ -17,10 +17,10 @@ export default function Widget({ children, name }) {
     minWidth: '18%',
     borderRadius: '0 0 9px 9px',
     background: clrTransWhite500,
-    margin: '',
-    padding: '.7em',
-    display: 'flex',
-    justifyContent: 'center',
+    // margin: '',
+    // padding: '.7em',
+    // display: 'flex',
+    // justifyContent: 'center',
   };
 
   return (
