@@ -46,8 +46,8 @@ export default function ActivityBoard() {
       <ContentBoard header={header}>
         <WidgetIncomeOutcome operations={operations} />
         <WidgetBiggestOperations operations={operations} />
-        <WidgetBalanceFlow numberOfDays={activityRange} operations={operations} />
         <DummyWidget />
+        <WidgetBalanceFlow numberOfDays={activityRange} operations={operations} />
         <DummyWidget />
         <DummyWidget />
         <DummyWidget />
