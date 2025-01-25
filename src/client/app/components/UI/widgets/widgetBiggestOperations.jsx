@@ -51,7 +51,7 @@ export default function WidgetBiggestOperations({ operations }) {
 
   return (
     <div className="widget">
-      <Widget name='Наибольший Доход/Расход'>
+      <Widget name='Наибольшие операции'>
         <div className="widget-container" style={widgetContainerStyles}>
           <div style={cardStyles}>
             <span style={generateDigitStyles(true)}>{biggestIncome.amount}</span>

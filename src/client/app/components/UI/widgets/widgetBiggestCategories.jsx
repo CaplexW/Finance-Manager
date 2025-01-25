@@ -58,11 +58,17 @@ export default function WidgetBiggestCategories({ operations }) {
       color: isIncome ? biggestIncome.color : biggestExpense.color,
     };
   };
+  const widgetContainerStyles = {
+    height: '100%',
+    display: 'grid',
+    alignItems: 'center',
+    padding: '.5em',
+  };
 
   return (
     <div className="widget">
-      <Widget name='Самая Д/Р категория'>
-        <div className="container">
+      <Widget name='Наибольшие категории'>
+        <div className="widget-container" style={widgetContainerStyles}>
           <div style={cardStyles}>
             <span style={generateDigitStyles(true)}>{biggestIncome.amount}</span>
             <span>{biggestIncome.name}</span>

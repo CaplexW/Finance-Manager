@@ -4,16 +4,13 @@ import { nodesPropType } from '../../../../types/propTypes';
 
 export default function ContentBoard({ children = '', header = 'Заголовок' }) {
 
-  const contentStyles = {
-    justifyContent: 'space-between',
-  };
   return (
     <main className='content-board_layout'>
       <div className="content-board_container">
         <section className='content-board_header'>
           {header}
         </section>
-        <section className='content-board_body' style={contentStyles}>
+        <section className='content-board_body'>
           {children}
         </section>
       </div>

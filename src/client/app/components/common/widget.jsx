@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { clrTransWhite500 } from '../../../../constants/colors';
 import { nodesPropType } from '../../../../types/propTypes';
 
-export default function Widget({ children, name }) {
+export default function Widget({ children, name = 'Widget name' }) {
+  const widgetStyles = {
+    margin: '1rem',
+  };
   const headerStyles = {
     borderRadius: '9px 9px 0 0',
     padding: '.20em',
@@ -11,22 +14,19 @@ export default function Widget({ children, name }) {
     fontWeight: '600',
 
   };
-  const styles = {
-    width: "14rem",
-    height: '9rem',
+  const contentStyles = {
+    width: "16rem",
+    height: '12rem',
     minWidth: '18%',
+    padding: '1em',
     borderRadius: '0 0 9px 9px',
     background: clrTransWhite500,
-    // margin: '',
-    // padding: '.7em',
-    // display: 'flex',
-    // justifyContent: 'center',
   };
 
   return (
-    <div className="widget">
+    <div className="widget" style={widgetStyles}>
       <header className='content-board_header' style={headerStyles}>{name}</header>
-      <div className="content" style={styles} >
+      <div className="content" style={contentStyles} >
         {children}
       </div>
     </div>
@@ -34,5 +34,6 @@ export default function Widget({ children, name }) {
 };
 
 Widget.propTypes = {
-  children: nodesPropType.isRequired
+  children: nodesPropType.isRequired,
+  name: PropTypes.string,
 };

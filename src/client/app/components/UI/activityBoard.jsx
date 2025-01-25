@@ -41,20 +41,21 @@ export default function ActivityBoard() {
       {' '}
       дней
     </h4>
-    );
+  );
+
+  const containerStyles = {
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  };
   return (
-    <div className="container d-flex justify-content-center">
-      <ContentBoard header={header}>
+    <ContentBoard header={header}>
+      <div className="widgets-container" style={containerStyles}>
         <WidgetIncomeOutcome operations={operations} />
-        <WidgetBiggestOperations operations={operations} />
         <WidgetBalanceFlow numberOfDays={activityRange} operations={operations} />
+        <WidgetBiggestOperations operations={operations} />
         <WidgetBiggestCategories operations={operations} />
-        <DummyWidget />
-        <DummyWidget />
-        <DummyWidget />
-        <DummyWidget />
-        <DummyWidget />
-      </ContentBoard>
-    </div>
+      </div>
+    </ContentBoard>
   );
 };

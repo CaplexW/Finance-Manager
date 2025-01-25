@@ -22,13 +22,17 @@ export default function WidgetIncomeOutcome({ operations }) {
     height: '100%',
     display: 'flex',
     alignItems: 'center',
-    padding: '.5em',
+    padding: '.5em 0'
   };
   const digitStyles = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
     height: '100%',
+  };
+  const chartContainerStyles = {
+    dispay: 'flex',
+    // width: '65%'
   };
 
   return (
@@ -40,13 +44,16 @@ export default function WidgetIncomeOutcome({ operations }) {
             <span style={{ color: greenColor }}>{income}</span>
             <span style={{ color: incomeChange > 0 ? greenColor : redColor, alignSelf: 'end' }}>{incomeChange}%</span>
           </div>
-          <Chart data={chartData} />
+          {/* <div className="chart-container" style={chartContainerStyles}> */}
+            <Chart data={chartData} />
+          {/* </div> */}
           <div className="outcome" style={digitStyles}>
             <span style={{ color: redColor }}>{outcome}</span>
             <span style={{ color: outcomeChange < 0 ? greenColor : redColor, alignSelf: 'end' }}>{outcomeChange}%</span>
           </div>
         </div>
       </Widget>
+
     </div>
   );
 };
