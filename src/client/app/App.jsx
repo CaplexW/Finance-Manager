@@ -39,7 +39,8 @@ export default function App() {
     if (!iconsIsLoaded) dispatch(loadIcons());
     if (!userDataIsLoaded) dispatch(loadUserData());
   }
-  if (dataIsLoaded) return (
+  if (!dataIsLoaded && isLoggedIn) return;
+  return (
     <div className="App" style={{ height: '100vh', width: '99vw' }}>
       <ToastContainer />
       <NavBar />
