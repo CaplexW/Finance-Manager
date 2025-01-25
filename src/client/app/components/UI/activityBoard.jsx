@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { getOperationsList } from '../../store/operations';
 import WidgetBiggestOperations from './widgets/widgetBiggestOperations';
 import WidgetBalanceFlow from './widgets/widgetBalanceFlow';
+import WidgetBiggestCategories from './widgets/widgetBiggestCategories';
 
 export default function ActivityBoard() {
   const [activityRange, setActivityRange] = useState(30);
@@ -46,8 +47,9 @@ export default function ActivityBoard() {
       <ContentBoard header={header}>
         <WidgetIncomeOutcome operations={operations} />
         <WidgetBiggestOperations operations={operations} />
-        <DummyWidget />
         <WidgetBalanceFlow numberOfDays={activityRange} operations={operations} />
+        <WidgetBiggestCategories operations={operations} />
+        <DummyWidget />
         <DummyWidget />
         <DummyWidget />
         <DummyWidget />
