@@ -42,10 +42,17 @@ export default function WidgetBiggestOperations({ operations }) {
     };
   };
 
+  const widgetContainerStyles = {
+    height: '100%',
+    display: 'grid',
+    alignItems: 'center',
+    padding: '.5em',
+  };
+
   return (
     <div className="widget">
       <Widget name='Наибольший Доход/Расход'>
-        <div className="container">
+        <div className="widget-container" style={widgetContainerStyles}>
           <div style={cardStyles}>
             <span style={generateDigitStyles(true)}>{biggestIncome.amount}</span>
             <span>{biggestIncome.name}</span>

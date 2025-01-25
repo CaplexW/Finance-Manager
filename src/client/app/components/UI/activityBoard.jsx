@@ -6,6 +6,7 @@ import WidgetIncomeOutcome from './widgets/widgetIncomeOutcome';
 import { useSelector } from 'react-redux';
 import { getOperationsList } from '../../store/operations';
 import WidgetBiggestOperations from './widgets/widgetBiggestOperations';
+import WidgetBalanceFlow from './widgets/widgetBalanceFlow';
 import WidgetBiggestCategories from './widgets/widgetBiggestCategories';
 
 export default function ActivityBoard() {
@@ -15,7 +16,7 @@ export default function ActivityBoard() {
 
   function handleChange({ target }) {
     showElement(target.value, 'value');
-    setActivityRange(target.value);
+    setActivityRange(parseInt(target.value));
   }
 
   const selectStyles = {
@@ -46,6 +47,7 @@ export default function ActivityBoard() {
       <ContentBoard header={header}>
         <WidgetIncomeOutcome operations={operations} />
         <WidgetBiggestOperations operations={operations} />
+        <WidgetBalanceFlow numberOfDays={activityRange} operations={operations} />
         <WidgetBiggestCategories operations={operations} />
         <DummyWidget />
         <DummyWidget />
