@@ -7,16 +7,19 @@ import { operationPropType } from '../../../../../types/propTypes';
 import showElement from '../../../../../utils/console/showElement';
 import ContentBoard from '../../common/contentBoard';
 import formChartData from '../../../../../utils/formChartData';
+import { isNumber } from 'lodash';
 
-export default function WidgetIncomeOutcome({ operations }) {
-  const income = operations.filter((op) => op.amount < 0).reduce((acc, op) => acc + Math.abs(op.amount), 0);
-  const outcome = operations.filter((op) => op.amount > 0).reduce((acc, op) => acc + op.amount, 0);
+export default function WidgetIncomeOutcome({ operations, prevOperations = null }) {
+  const outcome = operations.filter((op) => op.amount < 0).reduce((acc, op) => acc + Math.abs(op.amount), 0);
+  const income = operations.filter((op) => op.amount > 0).reduce((acc, op) => acc + op.amount, 0);
+  const prevOutcome = prevOperations.filter((op) => op.amount < 0).reduce((acc, op) => acc + Math.abs(op.amount), 0);
+  const prevIncome = prevOperations.filter((op) => op.amount > 0).reduce((acc, op) => acc + op.amount, 0);
   const labels = ["Расход", "Доход"];
 
-  const chartData = formChartData(labels, [income, outcome], [redColor, greenColor]);
+  const chartData = formChartData(labels, [outcome, income], [redColor, greenColor]);
 
-  const incomeChange = -15;
-  const outcomeChange = -30;
+  const incomeChange = getChange(income, prevIncome);
+  const outcomeChange = getChange(outcome, prevOutcome, false);
 
   const widgetContainerStyles = {
     height: '100%',
@@ -30,10 +33,6 @@ export default function WidgetIncomeOutcome({ operations }) {
     justifyContent: 'space-between',
     height: '100%',
   };
-  const chartContainerStyles = {
-    dispay: 'flex',
-    // width: '65%'
-  };
 
   return (
     <div className="widget">
@@ -42,22 +41,49 @@ export default function WidgetIncomeOutcome({ operations }) {
         <div className="widget-container" style={widgetContainerStyles}>
           <div className="income" style={digitStyles}>
             <span style={{ color: greenColor }}>{income}</span>
-            <span style={{ color: incomeChange > 0 ? greenColor : redColor, alignSelf: 'end' }}>{incomeChange}%</span>
+            {!!prevOperations &&
+              <span
+                style={{
+                  color: incomeChange > 0 ?
+                    greenColor : redColor,
+                  alignSelf: 'end'
+                }}
+              >
+                {isNumber(incomeChange) &&
+                  `${(incomeChange > 0 ? '+' : '-') + (Math.abs(incomeChange) < 1000 ? incomeChange : '1к')}%`}
+              </span>}
           </div>
-          {/* <div className="chart-container" style={chartContainerStyles}> */}
-            <Chart data={chartData} />
-          {/* </div> */}
+          <Chart data={chartData} />
           <div className="outcome" style={digitStyles}>
             <span style={{ color: redColor }}>{outcome}</span>
-            <span style={{ color: outcomeChange < 0 ? greenColor : redColor, alignSelf: 'end' }}>{outcomeChange}%</span>
+            {!!prevOperations &&
+              <span style={{
+                color: outcomeChange < 0 ?
+                  greenColor : redColor,
+                alignSelf: 'end'
+              }}
+              >
+                {isNumber(outcomeChange) && `${(outcomeChange > 0 ? '+' : '-') + (Math.abs(outcomeChange) < 1000 ? outcomeChange : '1к')}%`}
+              </span>}
           </div>
         </div>
       </Widget>
-
     </div>
   );
 };
 
 WidgetIncomeOutcome.propTypes = {
-  operations: PropTypes.arrayOf(PropTypes.shape(operationPropType)).isRequired
+  operations: PropTypes.arrayOf(PropTypes.shape(operationPropType)).isRequired,
+  prevOperations: PropTypes.arrayOf(PropTypes.shape(operationPropType)),
+};
+
+const getChange = (present, prev, isIncome = true) => {
+  if (!prev || !present) return '—';
+
+  const diff = present - prev;
+  const onePersent = prev / 100;
+
+  const result = isIncome ? (diff / onePersent) : -(diff / onePersent);
+
+  return Math.round(result);
 };
