@@ -15,7 +15,6 @@ export default function IconPicker({
   options,
   pageSize = 10,
 }) {
-  showElement(value, 'value');
   const [selectedOption, setSelectedOption] = useState(value);
   const [selectedPage, setSelectedPage] = useState(1);
 

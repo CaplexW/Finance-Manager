@@ -12,13 +12,13 @@ import { greenColor, redColor } from '../../../../../constants/colors';
 import Chart from '../../common/charts/chart';
 import getBalanceHistory from '../../../../../utils/getBalanceHistory';
 
-export default function WidgetBalanceFlow({ operations, numberOfDays }) {
+export default function WidgetBalanceFlow({ operations, dateRange }) {
   const userBalance = useSelector(getUserBalance());
 
   if (!operations) return;
-  if (!numberOfDays) return console.error('No number of days were given to balance flow');
+  if (!dateRange) return console.error('No date range were given to balance flow');
 
-  const dateMap = getBalanceHistory(numberOfDays, operations, userBalance);
+  const dateMap = getBalanceHistory(dateRange, operations, userBalance);
 
   const labelDates = [...dateMap.keys()].map((d) => formatDisplayDateFromInput(d));
   const chartPoints = [...dateMap.values()].reverse();
@@ -67,7 +67,7 @@ export default function WidgetBalanceFlow({ operations, numberOfDays }) {
 };
 
 WidgetBalanceFlow.propTypes = {
-  numberOfDays: PropTypes.number.isRequired,
+  dateRange: PropTypes.number.isRequired,
   operations: PropTypes.arrayOf(PropTypes.shape(operationPropType)).isRequired,
 };
 
