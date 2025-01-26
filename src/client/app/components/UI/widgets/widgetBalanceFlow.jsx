@@ -15,7 +15,7 @@ import getBalanceHistory from '../../../../../utils/getBalanceHistory';
 export default function WidgetBalanceFlow({ operations, dateRange }) {
   const userBalance = useSelector(getUserBalance());
 
-  if (!operations) return;
+  if (!operations.length) return;
   if (!dateRange) return console.error('No date range were given to balance flow');
 
   const dateMap = getBalanceHistory(dateRange, operations, userBalance);

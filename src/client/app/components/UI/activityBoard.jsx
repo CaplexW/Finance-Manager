@@ -9,11 +9,15 @@ import WidgetBiggestOperations from './widgets/widgetBiggestOperations';
 import WidgetBalanceFlow from './widgets/widgetBalanceFlow';
 import WidgetBiggestCategories from './widgets/widgetBiggestCategories';
 import getSomeDaysAgoDate from '../../../../utils/date/getSomeDaysAgoDate';
+import { getLoginStatus } from '../../store/user';
 
 export default function ActivityBoard() {
   const [activityRange, setActivityRange] = useState(30);
-
+  const userIsLogged = useSelector(getLoginStatus());
   const operations = useSelector(getOperationsList());
+
+  if (!userIsLogged) return;
+
   const relevantOperations = operations.filter((op) => {
     const operationDate = new Date(op.date);
     const startDate = getSomeDaysAgoDate(activityRange);

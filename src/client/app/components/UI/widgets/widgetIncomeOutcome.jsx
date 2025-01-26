@@ -4,12 +4,14 @@ import Widget from '../../common/widget';
 import Chart from '../../common/charts/chart';
 import { greenColor, redColor } from '../../../../../constants/colors';
 import { operationPropType } from '../../../../../types/propTypes';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../../utils/console/showElement';
-import ContentBoard from '../../common/contentBoard';
 import formChartData from '../../../../../utils/formChartData';
 import { isNumber } from 'lodash';
 
 export default function WidgetIncomeOutcome({ operations, prevOperations = null }) {
+  if(!operations.length) return;
+
   const outcome = operations.filter((op) => op.amount < 0).reduce((acc, op) => acc + Math.abs(op.amount), 0);
   const income = operations.filter((op) => op.amount > 0).reduce((acc, op) => acc + op.amount, 0);
   const prevOutcome = prevOperations.filter((op) => op.amount < 0).reduce((acc, op) => acc + Math.abs(op.amount), 0);
@@ -63,7 +65,8 @@ export default function WidgetIncomeOutcome({ operations, prevOperations = null 
                 alignSelf: 'end'
               }}
               >
-                {isNumber(outcomeChange) && `${(outcomeChange > 0 ? '+' : '-') + (Math.abs(outcomeChange) < 1000 ? outcomeChange : '1к')}%`}
+                {isNumber(outcomeChange) &&
+                `${(outcomeChange > 0 ? '+' : '-') + (Math.abs(outcomeChange) < 1000 ? outcomeChange : '1к')}%`}
               </span>}
           </div>
         </div>
