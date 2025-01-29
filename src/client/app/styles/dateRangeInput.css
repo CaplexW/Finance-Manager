@@ -3,8 +3,6 @@
   border-radius: 14px;
   cursor: pointer;
   padding: .3em 1em;
-
-  margin-left: 5.2rem; /* Для отладки. Убрать в проде */
 }
 
 .opened-display {

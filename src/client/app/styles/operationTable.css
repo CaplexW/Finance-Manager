@@ -1,0 +1,73 @@
+.operations__table-header__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.operations__table-header__title {
+  margin-block-end: 1rem;
+}
+
+.operations__table-header__button-group {
+  display: flex;
+}
+
+.operations__table-header__button-group__button {
+  padding: 0 .8em;
+  margin-inline-start: 1rem;
+}
+
+.operations__table-header__button-group__button--file {
+  background-color: #fff9;
+  border-radius: 50%;
+  padding: .3em;
+  cursor: pointer;
+  transition: .8s;
+}
+
+.operations__table-header__button-group__button--file:hover,
+.operations__table-header__button-group__button--file:focus {
+  background-color: #93bbca7d;
+}
+
+.operations__table-header__file-options {
+  position: absolute;
+  margin-top: .5rem;
+  width: 11rem;
+  height:max-content;
+  text-align: left;
+  box-shadow: 0 .2rem .5rem #0004;
+  overflow: hidden;
+  border-radius: 6%;
+
+  transition: .5s ease-in-out;
+
+  z-index: 100;
+}
+.file-section .closed {
+  height: 0;
+  opacity: 0;
+  transition: .5s ease-in-out;
+}
+.file-section .opened {
+  opacity: 1;
+  height: 8.3rem;
+  transition: .5s ease-in-out;
+}
+.file-options__title {
+  padding: .5rem;
+  width: 100%;
+  background-color: #dedededd;
+}
+.file-options__option {
+  padding: .5rem;
+  width: 100%;
+  background-color: #ffffff;
+  transition: .2s ease-in-out;
+}
+
+.file-options__option:hover {
+  transform: scale(1.05);
+  background-color: #efefefef;
+}

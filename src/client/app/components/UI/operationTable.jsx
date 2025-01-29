@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import Table from '../common/table';
 import { operationPropType } from '../../../../types/propTypes';
@@ -20,6 +20,10 @@ import CreateCategoryForm from './CreateCategoryForm';
 import closeModalWindow from '../../../../utils/modals/closeModalWindow';
 import { updateUserBalance } from '../../store/user';
 import { formatDisplayDateFromInput } from '../../../../utils/formatDate';
+import { alfaIcon, uploadIcon } from '../../../assets/icons';
+import T_BANK_ICON from '../../../assets/static_icons/tBankIcon.png';
+import DateRangeInput from '../common/form/dateRangeInput';
+import ContentBoard from '../common/contentBoard';
 
 // TODO 1. Реализовать условный рендеринг модальных окон
 
@@ -32,10 +36,10 @@ export default function OperationTable({
 }) {
   const [editingData, setEditingData] = useState({});
   const [newCategoryName, setNewCategoryName] = useState(null);
-
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openCategoryModal, setOpenCategoryModal] = useState(false);
+  const [fileOptionsIsOpen, setFileOptionsIsOpen] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -91,6 +95,9 @@ export default function OperationTable({
     if (!result) displayError('Некорректный файл');
     // TODO отправить результат в стор.
   }
+  function handleOpenFileOptions({ target }) {
+    setFileOptionsIsOpen(target.checked);
+  }
 
   const handleOpenCreateModal = useCallback(() => setOpenCreateModal(true));
   const handleCloseCreateModal = useCallback(() => setOpenCreateModal(false));
@@ -132,8 +139,42 @@ export default function OperationTable({
     setNewCategoryName(enteredName);
   }
 
+  const tinkoffIcon = (
+    <img
+      alt="Т-Банк"
+      height={32}
+      src={T_BANK_ICON}
+      style={{ borderRadius: '8px' }}
+      width={32}
+    />
+  );
+  const openState = fileOptionsIsOpen ? 'opened' : 'closed';
+
+  const tableHeader = (
+    <section className='d-flex justify-content-between align-items-center w-100'>
+      <div className="d-flex align-items-center">
+        <h3 className='me-2'>Операции</h3>
+        <DateRangeInput onPick={onDateFilter} pickValue={dateRange} />
+      </div>
+      <div className='button-group d-flex'>
+        <div className="file-section">
+          <label className='operations__table-header__button-group__button--file' htmlFor="file-input" title='Импортировать файл'>{uploadIcon}</label>
+          <input hidden id="file-input" onChange={handleOpenFileOptions} type="checkbox" />
+          <div className={`operations__table-header__file-options ${openState}`}>
+            <label className='file-options__title'>Загрузить файл</label>
+            <label className='file-options__option' htmlFor="tinkoff">{tinkoffIcon} (csv)</label>
+            <label className='file-options__option' htmlFor="alfa">{alfaIcon} (excel)</label>
+            <input accept=".csv" hidden id='tinkoff' name="tinkoff" onChange={handleImport} type="file" />
+            <input accept=".xlsx" hidden id='alfa' name="alfa" onChange={handleImport} type="file" />
+          </div>
+        </div>
+        <button className="operations__table-header__button-group__button" onClick={handleOpenCreateModal} type="button">Добавить</button>
+      </div>
+    </section >
+  );
+
   return (
-    <div id='operations-table-container'>
+    <ContentBoard header={tableHeader}>
       <Table
         columns={columns}
         data={displayedOperations}
@@ -145,7 +186,6 @@ export default function OperationTable({
         onSort={onSort}
         searchBar
         sortConfig={sortConfig}
-        title="Операции"
       />
       <ModalWindow headTitle="Добавьте операцию" isOpen={openCreateModal} onClose={handleCloseCreateModal} >
         <CreateOperationForm onCreateCategory={handleCreateCategory} />
@@ -156,7 +196,7 @@ export default function OperationTable({
       <ModalWindow headTitle="Создайте категорию" isOpen={openCategoryModal} onClose={handleCloseCategoryModal} >
         <CreateCategoryForm enteredName={newCategoryName} />
       </ModalWindow>
-    </div>
+    </ContentBoard>
   );
 };
 OperationTable.propTypes = {
