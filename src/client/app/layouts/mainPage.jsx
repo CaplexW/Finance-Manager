@@ -2,6 +2,7 @@ import React from 'react';
 import showElement from '../../../utils/console/showElement';
 import operationsService from '../services/operations.service';
 import ActivityBoard from '../components/UI/activityBoard';
+import SizeTestComponent from '../components/common/test/sizeTestComponent';
 
 export default function MainPage() {
   function showInfo() {
@@ -20,6 +21,7 @@ export default function MainPage() {
   return (
     <div className="main p-4">
       <ActivityBoard />
+      {/* <SizeTestComponent /> */}
     </div>
   );
 };
