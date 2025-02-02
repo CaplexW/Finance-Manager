@@ -4,6 +4,7 @@
 @import './app/styles/common.css';
 @import './app/styles/input.css';
 @import './app/styles/dateRangeInput.css';
+@import './app/styles/operationTable.css';
 /* --mainColor #93bbca */
 * {
   margin: 0;

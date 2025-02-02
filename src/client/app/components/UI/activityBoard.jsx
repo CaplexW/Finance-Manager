@@ -13,7 +13,7 @@ import { getLoginStatus } from '../../store/user';
 
 export default function ActivityBoard() {
   const [activityRange, setActivityRange] = useState(30);
-  const userIsLogged = useSelector(getLoginStatus());
+  const userIsLogged = useSelector(getLoginStatus());8
   const operations = useSelector(getOperationsList());
 
   if (!userIsLogged) return;

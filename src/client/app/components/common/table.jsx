@@ -1,10 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import lod from 'lodash';
-import { alfaIcon, uploadIcon } from '../../../assets/icons';
-import T_BANK_ICON from '../../../assets/static_icons/tBankIcon.png';
 import showElement from '../../../../utils/console/showElement';
-import DateRangeInput from './form/dateRangeInput';
 
 const dummySort = { path: '', order: '' };
 const dummyFunc = () => { };
@@ -12,16 +9,9 @@ const dummyFunc = () => { };
 export default function Table({
   columns,
   data,
-  dateRange,
-  onDateFilter,
-  title = 'Таблица',
   sortConfig = dummySort,
   onSort = dummyFunc,
-  onSearch = dummyFunc,
-  onFile = dummyFunc,
-  onAdd = dummyFunc
 }) {
-  const tinkoffIcon = <img alt="T-BANK" src={T_BANK_ICON} style={{ width: 30, height: 30, borderRadius: '20%'}} />;
 
   function noRequiredDataError() {
     console.error('no column config or data to display was given to this table');
@@ -46,12 +36,54 @@ export default function Table({
     }
   }
 
-  if(!data || !columns) return noRequiredDataError();
-  
+  if (!data || !columns) return noRequiredDataError();
+
   return (
-    <main className='table_layout'>
-      <div className="table_container">
-        <section className='table_header'>
+    <section className='table_body'>
+      <table className='table_content'>
+        <thead className='table_columns'>
+          <tr>
+            {Object.keys(columns).map((column) => (
+              <th
+                key={column}
+                onClick={
+                  columns[column].path
+                    ? () => handleSort(columns[column].path)
+                    : undefined
+                }
+                role={columns[column].path ? 'button' : null}
+                scope="col"
+              >
+                {columns[column].name}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map(
+            (
+              item, // item - объект одного пользователя
+            ) => (
+              <tr key={item._id}>
+                {Object.keys(columns).map(
+                  (
+                    column, // columns - объект с информацией для отображения и сортировки
+                  ) => (
+                    <td key={column}>
+                      {renderContent(item, column)}
+                    </td>
+                  ),
+                )}
+              </tr>
+            ),
+          )}
+        </tbody>
+      </table>
+    </section>
+
+    // <main className='table_layout'>
+    /* <div className="table_container"> */
+      /* <section className='table_header'>
           <h3 className='table_title'>{title}</h3>
           <DateRangeInput onPick={onDateFilter} pickValue={dateRange} />
           <div className='button-group'>
@@ -74,50 +106,9 @@ export default function Table({
               :
               ''}
           </div>
-        </section>
-        <section className='table_body'>
-          <table className='table_content'>
-            <thead className='table_columns'>
-              <tr>
-                {Object.keys(columns).map((column) => (
-                  <th
-                    key={column}
-                    onClick={
-                      columns[column].path
-                        ? () => handleSort(columns[column].path)
-                        : undefined
-                    }
-                    role={columns[column].path ? 'button' : null}
-                    scope="col"
-                  >
-                    {columns[column].name}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {data.map(
-                (
-                  item, // item - объект одного пользователя
-                ) => (
-                  <tr key={item._id}>
-                    {Object.keys(columns).map(
-                      (
-                        column, // columns - объект с информацией для отображения и сортировки
-                      ) => (
-                        <td key={column}>
-                          {renderContent(item, column)}
-                        </td>
-                      ),
-                    )}
-                  </tr>
-                ),
-              )}
-            </tbody>
-          </table>
-        </section>
-      </div>
-    </main>
+        </section> */
+      /* </div> */
+    // </main>
   );
 };
 
@@ -126,14 +117,10 @@ Table.propTypes = {
   columns: PropTypes.object.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.array.isRequired,
-  onAdd: PropTypes.func,
-  onFile: PropTypes.func,
-  onSearch: PropTypes.func,
   onSort: PropTypes.func,
   sortConfig: PropTypes.shape({
     path: PropTypes.string.isRequired,
     order: PropTypes.string.isRequired,
   }),
-  title: PropTypes.string,
-  
+
 };
