@@ -157,7 +157,17 @@ export default function DateRangeInput({ pickValue, onPick }) {
     const [startYear, startMonth, startDay] = pickValue.start.split('-');
     const [endYear, endMonth, endDay] = pickValue.end.split('-');
 
-    if (startYear === '1993') return 'За все время';
+    const startDate = new Date(pickValue.start);
+    const endDate = new Date(pickValue.end);
+    
+    startDate.setHours(0,0,0,0);
+    endDate.setHours(0,0,0,0);
+
+    if (startYear === '1993') return 'все время';
+    if (
+      startDate.getTime() === getTodayDate().getTime()
+      && endDate.getTime() === getTodayDate().getTime()
+    ) return 'сегодня';
     if (startYear === endYear) return `${startDay}.${startMonth} - ${endDay}.${endMonth}`;
 
     return `${formatDisplayDateFromInput(pickValue.start)} - ${formatDisplayDateFromInput(pickValue.end)}`;

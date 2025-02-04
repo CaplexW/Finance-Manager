@@ -6,7 +6,8 @@
 }
 
 .operations__table-header__title {
-  margin-block-end: 1rem;
+  display: flex;
+  margin-inline-end: 1rem;
 }
 
 .operations__table-header__button-group {
@@ -14,15 +15,19 @@
 }
 
 .operations__table-header__button-group__button {
-  padding: 0 .8em;
+  padding: .25em .8em;
   margin-inline-start: 1rem;
 }
 
 .operations__table-header__button-group__button--file {
   background-color: #fff9;
   border-radius: 50%;
-  padding: .3em;
+  padding: .25em;
   cursor: pointer;
+
+  display: flex;
+  align-items: center;
+
   transition: .8s;
 }
 
