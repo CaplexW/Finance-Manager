@@ -1,0 +1,8 @@
+.operations-page {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 3fr 7fr;
+  padding-block: 1rem;
+  padding-inline: 2rem;
+  gap: 2rem;
+}

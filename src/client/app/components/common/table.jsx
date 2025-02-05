@@ -39,9 +39,9 @@ export default function Table({
   if (!data || !columns) return noRequiredDataError();
 
   return (
-    <section className='table_body'>
-      <table className='table_content'>
-        <thead className='table_columns'>
+    <section className='table__contanier'>
+      <table className='table__content'>
+        <thead className='table__columns'>
           <tr>
             {Object.keys(columns).map((column) => (
               <th
@@ -59,7 +59,7 @@ export default function Table({
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className='table__rows'>
           {data.map(
             (
               item, // item - объект одного пользователя
@@ -80,35 +80,6 @@ export default function Table({
         </tbody>
       </table>
     </section>
-
-    // <main className='table_layout'>
-    /* <div className="table_container"> */
-      /* <section className='table_header'>
-          <h3 className='table_title'>{title}</h3>
-          <DateRangeInput onPick={onDateFilter} pickValue={dateRange} />
-          <div className='button-group'>
-            {onAdd ?
-              <button className="table_button" onClick={onAdd} type="button">Добавить</button>
-              :
-              ''}
-            {onFile ?
-              <div className="file-section">
-                <label className='file-button' htmlFor="file-input" title='Импортировать файл'  >{uploadIcon}</label>
-                <input id="file-input" type="checkbox" />
-                <div className="file-options" >
-                  <label className='file-options-title'>Загрузить файл</label>
-                  <label className='file-option' htmlFor="tinkoff">{tinkoffIcon} (csv)</label>
-                  <label className='file-option' htmlFor="alfa">{alfaIcon} (excel)</label>
-                  <input accept=".csv" id='tinkoff' name="tinkoff" onChange={onFile} type="file" />
-                  <input accept=".xlsx" id='alfa' name="alfa" onChange={onFile} type="file" />
-                </div>
-              </div>
-              :
-              ''}
-          </div>
-        </section> */
-      /* </div> */
-    // </main>
   );
 };
 

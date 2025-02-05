@@ -99,17 +99,23 @@ export default function Operations() {
     setSort(config);
   }
 
+  const sideContainerStyles = {
+    display: 'grid',
+    flexDirection: 'column',
+    maxWidth: 'calc(100% - 1.5rem)',
+  };
+
   if (isLoaded) return (
-    <div className='container row mt-3' id="operation-layout">
-      <section className='col-md-4' id="side">
+    <div className='operations-page' id="operation-layout">
+      <section className='' id="side">
         <ContentBoard header={<h4>Соотношение категорий</h4>}>
-          <CategoriesList onClick={handleCategoryFilter} operations={filteredByTypeOperations} />
-          <OperationsChart operations={filteredByCategoryOperations} />
+          <div className="side-container" style={{}}>
+            <CategoriesList onClick={handleCategoryFilter} operations={filteredByTypeOperations} />
+            <OperationsChart operations={filteredByCategoryOperations} />
+          </div>
         </ContentBoard>
       </section>
-      <section className='col-md-1' name='space' />
-      <section className='col-md-7' id="main">
-        {/*<DateRangePicker onPick={handlePick} pick={dateRange} /> */}
+      <section className='' id="main">
         <OperationTable
           dateRange={dateRange}
           displayedOperations={displayedOperations}
@@ -118,10 +124,6 @@ export default function Operations() {
           sortConfig={sort}
         />
       </section>
-      <section id="modals">
-        {/* <ModalWindow onClose={closeModal} /> */}
-      </section>
-      <input hidden type="color" />
     </div>
 
     // Кнопка "Показать больше"

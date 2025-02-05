@@ -66,8 +66,16 @@ export default function OperationsChart({ operations, switchPosition = null, typ
   const containerSyles = {
     backgroundColor: clrTransWhite600,
     borderRadius: '8px',
-    marginTop: '1rem',
-    maxWidth: '90%',
+
+    padding: '1rem 2.5rem',
+
+    width: '100%',
+
+    display: 'flex',
+    flexGrow: '1',
+    minHeight: '0',
+    justifyContent: 'center',
+    alignItems: 'center',
   };
   const subStyles = {
     padding: '1rem 2.3rem',
@@ -77,10 +85,10 @@ export default function OperationsChart({ operations, switchPosition = null, typ
   };
 
   return (
-    <div className="container" style={containerSyles}>
-      <div className="sub-container" style={subStyles}>
+    <div className="" style={containerSyles}>
+      {/* <div className="sub-container" style={subStyles}> */}
         <Chart data={data} options={options} type={type} />
-      </div>
+      {/* </div> */}
     </div>
   );
 };

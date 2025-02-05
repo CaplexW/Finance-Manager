@@ -151,12 +151,12 @@ export default function OperationTable({
   const openState = fileOptionsIsOpen ? 'opened' : 'closed';
 
   const tableHeader = (
-    <section className='d-flex justify-content-between align-items-center w-100'>
-      <div className="d-flex align-items-center">
-        <h3 className='me-2'>Операции</h3>
+    <section className='operations__table-header__container'>
+      <div className="operations__table-header__title">
+        <h4 className='me-2 mb-1'>Операции за</h4>
         <DateRangeInput onPick={onDateFilter} pickValue={dateRange} />
       </div>
-      <div className='button-group d-flex'>
+      <div className='operations__table-header__button-group'>
         <div className="file-section">
           <label className='operations__table-header__button-group__button--file' htmlFor="file-input" title='Импортировать файл'>{uploadIcon}</label>
           <input hidden id="file-input" onChange={handleOpenFileOptions} type="checkbox" />
@@ -165,7 +165,7 @@ export default function OperationTable({
             <label className='file-options__option' htmlFor="tinkoff">{tinkoffIcon} (csv)</label>
             <label className='file-options__option' htmlFor="alfa">{alfaIcon} (excel)</label>
             <input accept=".csv" hidden id='tinkoff' name="tinkoff" onChange={handleImport} type="file" />
-            <input accept=".xlsx" hidden id='alfa' name="alfa" onChange={handleImport} type="file" />
+            {/* <input accept=".xlsx" hidden id='alfa' name="alfa" onChange={handleImport} type="file" /> */}
           </div>
         </div>
         <button className="operations__table-header__button-group__button" onClick={handleOpenCreateModal} type="button">Добавить</button>
@@ -174,29 +174,31 @@ export default function OperationTable({
   );
 
   return (
-    <ContentBoard header={tableHeader}>
-      <Table
-        columns={columns}
-        data={displayedOperations}
-        dateRange={dateRange}
-        onAdd={handleOpenCreateModal}
-        onDateFilter={onDateFilter}
-        onDelete={handleDelete}
-        onFile={handleImport}
-        onSort={onSort}
-        searchBar
-        sortConfig={sortConfig}
-      />
-      <ModalWindow headTitle="Добавьте операцию" isOpen={openCreateModal} onClose={handleCloseCreateModal} >
-        <CreateOperationForm onCreateCategory={handleCreateCategory} />
-      </ModalWindow>
-      <ModalWindow headTitle="Измените операцию" isOpen={openEditModal} onClose={handleCloseEditModal} >
-        <EditOperationForm existingData={editingData} onCreateCategory={handleCreateCategory} />
-      </ModalWindow>
-      <ModalWindow headTitle="Создайте категорию" isOpen={openCategoryModal} onClose={handleCloseCategoryModal} >
-        <CreateCategoryForm enteredName={newCategoryName} />
-      </ModalWindow>
-    </ContentBoard>
+    <div className="operations-table__container">
+      <ContentBoard header={tableHeader}>
+        <Table
+          columns={columns}
+          data={displayedOperations}
+          dateRange={dateRange}
+          onAdd={handleOpenCreateModal}
+          onDateFilter={onDateFilter}
+          onDelete={handleDelete}
+          onFile={handleImport}
+          onSort={onSort}
+          searchBar
+          sortConfig={sortConfig}
+        />
+        <ModalWindow headTitle="Добавьте операцию" isOpen={openCreateModal} onClose={handleCloseCreateModal} >
+          <CreateOperationForm onCreateCategory={handleCreateCategory} />
+        </ModalWindow>
+        <ModalWindow headTitle="Измените операцию" isOpen={openEditModal} onClose={handleCloseEditModal} >
+          <EditOperationForm existingData={editingData} onCreateCategory={handleCreateCategory} />
+        </ModalWindow>
+        <ModalWindow headTitle="Создайте категорию" isOpen={openCategoryModal} onClose={handleCloseCategoryModal} >
+          <CreateCategoryForm enteredName={newCategoryName} />
+        </ModalWindow>
+      </ContentBoard>
+    </div>
   );
 };
 OperationTable.propTypes = {

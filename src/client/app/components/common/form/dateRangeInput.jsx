@@ -157,7 +157,17 @@ export default function DateRangeInput({ pickValue, onPick }) {
     const [startYear, startMonth, startDay] = pickValue.start.split('-');
     const [endYear, endMonth, endDay] = pickValue.end.split('-');
 
-    if (startYear === '1993') return 'За все время';
+    const startDate = new Date(pickValue.start);
+    const endDate = new Date(pickValue.end);
+
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(0, 0, 0, 0);
+
+    if (startYear === '1993') return 'все время';
+    if (
+      startDate.getTime() === getTodayDate().getTime()
+      && endDate.getTime() === getTodayDate().getTime()
+    ) return 'сегодня';
     if (startYear === endYear) return `${startDay}.${startMonth} - ${endDay}.${endMonth}`;
 
     return `${formatDisplayDateFromInput(pickValue.start)} - ${formatDisplayDateFromInput(pickValue.end)}`;
@@ -255,31 +265,30 @@ export default function DateRangeInput({ pickValue, onPick }) {
       >
         {formatDisplayRange()}
       </div>
-      {!!inputState.isOpen &&
-        <div className="opened-display">
-          <div className="selected-month d-flex justify-content-around">
-            <button onClick={() => { selectNextMonth(-1); }} type='button' >{arrowLeftIcon}</button>
-            <span className='month-name'>{months[inputState.displayedMonth.month]} {inputState.displayedMonth.year.toString()[2] + inputState.displayedMonth.year.toString()[3]}</span>
-            <button onClick={() => { selectNextMonth(1); }} type='button'>{arrowRightIcon}</button>
+      <div className={`opened-display ${inputState.isOpen ? 'opened' : 'closed'}`}>
+        <div className="selected-month d-flex justify-content-around">
+          <button onClick={() => { selectNextMonth(-1); }} type='button' >{arrowLeftIcon}</button>
+          <span className='month-name'>{months[inputState.displayedMonth.month]} {inputState.displayedMonth.year.toString()[2] + inputState.displayedMonth.year.toString()[3]}</span>
+          <button onClick={() => { selectNextMonth(1); }} type='button'>{arrowRightIcon}</button>
+        </div>
+        <div className="days-page pe-3 ps-3">{formMonthPage()}</div>
+        <div className="buttons-page d-flex justify-content-between mb-2">
+          <div className="pickButtons">
+            <button className='shortcut-btn' name='today' onClick={handleShortcut} type='button'>Сегодня</button>
+            <button className='shortcut-btn' name='week' onClick={handleShortcut} type='button'>1н</button>
+            <button className='shortcut-btn' name={1} onClick={handleShortcut} type='button'>1м</button>
+            <button className='shortcut-btn' name={3} onClick={handleShortcut} type='button'>3м</button>
+            <button className='shortcut-btn' name={6} onClick={handleShortcut} type='button'>6м</button>
+            <button className='shortcut-btn' name='infinity' onClick={handleShortcut} type='button'>&#8734;</button>
           </div>
-          <div className="days-page pe-3 ps-3">{formMonthPage()}</div>
-          <div className="buttons-page d-flex justify-content-between mb-2">
-            <div className="pickButtons">
-              <button className='shortcut-btn' name='today' onClick={handleShortcut} type='button'>Сегодня</button>
-              <button className='shortcut-btn' name='week' onClick={handleShortcut} type='button'>1н</button>
-              <button className='shortcut-btn' name={1} onClick={handleShortcut} type='button'>1м</button>
-              <button className='shortcut-btn' name={3} onClick={handleShortcut} type='button'>3м</button>
-              <button className='shortcut-btn' name={6} onClick={handleShortcut} type='button'>6м</button>
-              <button className='shortcut-btn' name='infinity' onClick={handleShortcut} type='button'>&#8734;</button>
-            </div>
-            <div className="end-buttons">
-              <button className='close-btn' onClick={toggleOpen} type='button'>Готово</button>
-            </div>
+          <div className="end-buttons">
+            <button className='close-btn' onClick={toggleOpen} type='button'>Готово</button>
           </div>
-        </div>}
+        </div>
+      </div>
       <input hidden id="start-date" name="start" type="date" />
       <input hidden id="end-date" name="end" type="date" />
-    </div>
+    </div >
   );
 };
 

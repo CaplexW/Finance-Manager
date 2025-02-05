@@ -51,7 +51,7 @@ export default function CategoriesList({ onClick, operations }) {
   const containerSyles = {
     background: clrTransWhite600,
     borderRadius: '8px',
-    maxWidth: '90%',
+    // maxWidth: '90%',
     padding: '1rem .5rem 1rem .8rem'
   };
 
@@ -91,7 +91,7 @@ export default function CategoriesList({ onClick, operations }) {
   }
 
   return (
-    <div className='container mt-2 d-flex justify-contetn-center' style={containerSyles}>
+    <div className='d-flex justify-contetn-center' style={containerSyles}>
       <div className="d-flex flex-wrap">
         {coloredIcons.map((i) => (
           <span
