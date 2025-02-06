@@ -19,7 +19,7 @@ export default function MainPage() {
   }
 
   return (
-    <div className="main p-4">
+    <div className="main-page">
       <ActivityBoard />
       {/* <SizeTestComponent /> */}
     </div>

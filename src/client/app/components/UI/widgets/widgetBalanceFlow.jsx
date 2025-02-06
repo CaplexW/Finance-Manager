@@ -50,15 +50,14 @@ export default function WidgetBalanceFlow({ operations, dateRange }) {
 
   const widgetContainerStyles = {
     height: '100%',
-    display: 'flex',
+    display: 'grid',
     alignItems: 'center',
-    padding: '.5em',
   };
 
   return (
     <div className="widget">
       <Widget name='Динамика баланса'>
-        <div className="widget-container" style={widgetContainerStyles} >
+        <div className="widget-balance-flow-container">
           <Chart data={chartData} options={chartOptions} type='line' />
         </div>
       </Widget>
