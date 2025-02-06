@@ -5,28 +5,20 @@ import { nodesPropType } from '../../../../types/propTypes';
 
 export default function Widget({ children, name = 'Widget name' }) {
   const widgetStyles = {
-    margin: '1rem',
   };
   const headerStyles = {
-    borderRadius: '9px 9px 0 0',
-    padding: '.20em',
-    justifyContent: 'center',
-    fontWeight: '600',
-
   };
   const contentStyles = {
-    width: "16rem",
-    height: '12rem',
-    minWidth: '18%',
+    aspectRatio: '4/3',
     padding: '1em',
     borderRadius: '0 0 9px 9px',
     background: clrTransWhite500,
   };
 
   return (
-    <div className="widget" style={widgetStyles}>
-      <header className='content-board_header' style={headerStyles}>{name}</header>
-      <div className="content" style={contentStyles} >
+    <div className="widget">
+      <header className='widget-header'>{name}</header>
+      <div className="widget-content">
         {children}
       </div>
     </div>

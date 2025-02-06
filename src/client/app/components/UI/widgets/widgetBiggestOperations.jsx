@@ -8,6 +8,7 @@ import { getCategoryById } from '../../../store/categories';
 import { getIconById } from '../../../store/icons';
 import SVGIcon from '../../common/svgIcon';
 import { operationPropType } from '../../../../../types/propTypes';
+import StatisticPlate from '../../common/statisticsPlate';
 
 export default function WidgetBiggestOperations({ operations }) {
   if (!operations.length) return;
@@ -22,47 +23,12 @@ export default function WidgetBiggestOperations({ operations }) {
   const expenseCategory = useSelector(getCategoryById(biggestExpense.category));
   const expenseIcon = useSelector(getIconById(expenseCategory.icon));
 
-  const cardStyles = {
-    background: 'white',
-    borderRadius: '8px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    paddingInline: '.5em',
-    paddingBlock: '.8em',
-    marginBlock: '.3rem',
-  };
-  const generateDigitStyles = (isIncome) => ({
-    color: isIncome ? greenColor : redColor,
-    fontSize: '1.2rem',
-    fontWeight: 'bold',
-  });
-  const generateIconStyles = (isIncome) => {
-    return {
-      color: isIncome ? incomeCategory.color : expenseCategory.color,
-    };
-  };
-
-  const widgetContainerStyles = {
-    height: '100%',
-    display: 'grid',
-    alignItems: 'center',
-    padding: '.5em',
-  };
-
   return (
     <div className="widget">
       <Widget name='Наибольшие операции'>
-        <div className="widget-container" style={widgetContainerStyles}>
-          <div style={cardStyles}>
-            <span style={generateDigitStyles(true)}>{biggestIncome.amount}</span>
-            <span>{biggestIncome.name}</span>
-            <span style={generateIconStyles(true)}><SVGIcon size={24} source={incomeIcon} /></span>
-          </div>
-          <div style={cardStyles}>
-            <span style={generateDigitStyles(false)}>{Math.abs(biggestExpense.amount)}</span>
-            <span>{biggestExpense.name}</span>
-            <span style={generateIconStyles(false)}><SVGIcon size={24} source={expenseIcon} /></span>
-          </div>
+        <div className="widget-biggest-operations-container">
+          <StatisticPlate amount={biggestIncome.amount} icon={{ src: incomeIcon, color: incomeCategory.color }} name={biggestIncome.name} />
+          <StatisticPlate amount={biggestExpense.amount} icon={{ src: expenseIcon, color: expenseCategory.color }} name={biggestExpense.name} />
         </div>
       </Widget>
     </div>

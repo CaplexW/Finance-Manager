@@ -99,12 +99,6 @@ export default function Operations() {
     setSort(config);
   }
 
-  const sideContainerStyles = {
-    display: 'grid',
-    flexDirection: 'column',
-    maxWidth: 'calc(100% - 1.5rem)',
-  };
-
   if (isLoaded) return (
     <div className='operations-page' id="operation-layout">
       <section className='' id="side">

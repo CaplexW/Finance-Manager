@@ -60,10 +60,12 @@ export default function ActivityBoard() {
   );
 
   const containerStyles = {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-evenly',
+    display: 'grid',
+    gridAutoFlow: 'column',
+    gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)',
+    gap: '1rem',
     alignItems: 'center',
+    height: '100%',
   };
 
   return (
