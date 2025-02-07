@@ -11,6 +11,9 @@ export default function UserBalance() {
     background: 'rgba(255, 255, 255, 0.6)',
     borderRadius: '8px',
     padding: '.4em 1em',
+
+    display: 'flex',
+    alignItems: 'center',
   };
   const digitsStyles = { color: balanceIsPositive ? 'green' : 'red' };
 

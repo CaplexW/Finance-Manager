@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUser, getUserDataStatus, loadUserData } from '../store/user';
+import { getUser, getUserDataStatus } from '../store/user';
 import { getOperationsList, getOperationsLoadStatus } from '../store/operations';
 import { getCategoriesList, getCategoriesLoadStatus } from '../store/categories';
 import { getIconsLoadStatus } from '../store/icons';
@@ -26,13 +26,8 @@ export default function Operations() {
 
   const operationsIsLoaded = useSelector(getOperationsLoadStatus());
   const categoriesIsLoaded = useSelector(getCategoriesLoadStatus());
-  const iconsIsLoaded = useSelector(getIconsLoadStatus());
   const userIsLoaded = useSelector(getUserDataStatus());
   const operations = useSelector(getOperationsList());
-  const categories = useSelector(getCategoriesList());
-  const user = useSelector(getUser());
-
-  const dispatch = useDispatch();
 
   const isLoaded = (
     operationsIsLoaded

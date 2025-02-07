@@ -31,14 +31,17 @@
 
 .table__contanier::-webkit-scrollbar {
   width: 0;
-  height: 0;
   visibility: hidden;
+  transition: .5s;
 }
-/* .table__contanier:hover::-webkit-scrollbar-thumb {
+.table__contanier:hover::-webkit-scrollbar {
+  width: .25rem;
+}
+.table__contanier:hover::-webkit-scrollbar-thumb {
   border-radius: 3px;
   background-color: #d1d9defe;
   visibility: visible;
-} */
+}
 
 
 @media (max-width: 1000px) {

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import UserAvatar from './userAvatar';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../utils/console/showElement';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserDataStatus, getUser, loadUserData } from '../../store/user';

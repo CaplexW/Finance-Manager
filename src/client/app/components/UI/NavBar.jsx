@@ -5,49 +5,50 @@ import { NavLink } from 'react-router-dom';
 // import { useSelector } from 'react-redux';
 // import NavProfile from './navProfile';
 // import { getCurrentUser } from '../../store/users';
-import { mainColor } from '../../../../constants/colors';
 import { useSelector } from 'react-redux';
 import { getLoginStatus } from '../../store/user';
 import NavProfile from './navProfile';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../utils/console/showElement';
 import UserBalance from './userBalance';
 
 export default function NavBar() {
   const isLogged = useSelector(getLoginStatus());
-  const lastColClass = `col-md-2 d-flex ${isLogged ? '' : 'justify-content-end'}`;
-  const loginLinkClasses = ({ isActive }) => (isActive ? 'nav-link navbar-brand' : 'nav-link');
 
   return (
-    <nav className="navbar row gutter-md py-1 px-4 d-flex justify-content-between">
-      <div className="col-md-1 align-items-center d-flex justify-content-center" id="main">
-        <NavLink
-          aria-current="page"
-          className={({ isActive }) => (isActive ? 'nav-link navbar-brand' : 'nav-link')}
-          to="/"
-        >
-          Главная
-        </NavLink>
-      </div>
-      <div className="col-md-1  align-items-center d-flex justify-content-center" id="users">
-        {isLogged ? (
-          <NavLink
-            aria-current="page"
-            className={({ isActive }) => (isActive ? 'nav-link navbar-brand' : 'nav-link')} //TODO убрать выделение, посмотреть другие варианты.
-            to="/operations"
-          >
-            Операции
-          </NavLink>
-        ) : ''}
-      </div>
-      <div className="col-md-6" id="space" />
-      <div className="col-md-2 d-flex justify-content-end" id="user-balance">
+    <div className="navbar">
+      <nav>
+        <ul className='nav-list'>
+          {isLogged ?
+            <>
+              <li className='nav-item'>
+                <NavLink
+                  aria-current="page"
+                  className={({ isActive }) => (isActive ? 'nav-link navbar-brand' : 'nav-link')}
+                  to="/"
+                >
+                  Главная
+                </NavLink>
+              </li>
+              <li className='nav-item'>
+                <NavLink
+                  aria-current="page"
+                  className={({ isActive }) => (isActive ? 'nav-link navbar-brand' : 'nav-link')} //TODO убрать выделение, посмотреть другие варианты.
+                  to="/operations"
+                >
+                  Операции
+                </NavLink>
+              </li>
+            </> :
+            <li className='nav-item'>
+              <NavLink className='nav-link' to="/login" >Войти</NavLink>
+            </li>}
+        </ul>
+      </nav>
+      <div className="user-panel">
         <UserBalance />
+        <NavProfile />
       </div>
-      <div className={lastColClass} id="login-or-profile">
-        {isLogged ?
-          <NavProfile /> :
-          <NavLink className={loginLinkClasses} to="/login">Войти</NavLink>}
-      </div>
-    </nav>
+    </div>
   );
 }

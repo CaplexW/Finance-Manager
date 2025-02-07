@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Form, { Checkbox, FieldInput } from '../common/form';
 import { signIn } from '../../store/user';
-import { mainColor } from '../../../../constants/colors';
 
 export default function LoginForm() {
   const emptyData = { email: '', password: '', stayIn: false };
@@ -42,7 +41,7 @@ export default function LoginForm() {
     if (prevLocation) {
       redirectTo(prevLocation);
     } else {
-      redirectTo('/operations');
+      redirectTo('/');
     }
   }
   function handleSubmit(data) {

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import lod from 'lodash';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../utils/console/showElement';
 
 const dummySort = { path: '', order: '' };
@@ -15,8 +16,6 @@ export default function Table({
 
   function noRequiredDataError() {
     console.error('no column config or data to display was given to this table');
-    showElement(data, 'data');
-    showElement(columns, 'columns');
   }
   function renderContent(item, column) {
     if (columns[column].component) {
