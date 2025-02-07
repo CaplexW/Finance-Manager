@@ -62,7 +62,7 @@ function FieldInput({
           value={value}
         />
         {type === 'password' && (
-          <button className="btn btn-outline-secondary mt-1 mb-1" onClick={togglePasswordVisibility} style={{ "border": "none" }} type="button">
+          <button className="btn btn-outline-secondary mt-1 mb-1" onClick={togglePasswordVisibility} style={{ "border": "none", background: 'white' }} type="button">
             {eyeIcon}
           </button>
         )}

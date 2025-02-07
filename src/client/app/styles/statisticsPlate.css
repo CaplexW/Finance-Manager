@@ -6,7 +6,7 @@
 .statistics-plate {
   display: grid;
   grid-auto-flow: column;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 2fr) minmax(0, 5fr) minmax(0, 1fr);
   justify-content: space-between;
 
   background: white;
@@ -28,7 +28,11 @@
 }
 
 .plate__name {
+  padding-inline: .5em;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .plate__icon {
   margin-inline-start: auto;

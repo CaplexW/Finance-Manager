@@ -1,4 +1,5 @@
 @import './app/styles/table.css';
+@import './app/styles/navbar.css';
 @import './app/styles/contentBoard.css';
 @import './app/styles/modal.css';
 @import './app/styles/common.css';
@@ -12,6 +13,7 @@
 @import './app/styles/statisticsPlate.css';
 @import './app/styles/widgets/widgetBiggestOperations.css';
 @import './app/styles/widgets/widgetBiggestCategories.css';
+@import './app/styles/navbar.css';
 
 /* --mainColor #93bbca */
 *,
@@ -23,6 +25,10 @@
 }
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
+}
+ol, ul, dl {
+  margin: 0;
+  padding: 0;
 }
 body {
   background: url(./assets/background.png);

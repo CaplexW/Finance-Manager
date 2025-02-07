@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { getCategoriesList } from '../../store/categories';
@@ -11,6 +11,8 @@ import { clrTransWhite600 } from '../../../../constants/colors';
 
 export default function CategoriesList({ onClick, operations }) {
   const [filteredList, setFilteredList] = useState([]);
+
+  useEffect(() => { onClick(filteredList); }, [filteredList]);
 
   const categories = useSelector(getCategoriesList());
   const icons = useSelector(getIconsList());
@@ -46,7 +48,7 @@ export default function CategoriesList({ onClick, operations }) {
     };
   });
 
-  const defaultLimit = 15;
+  const defaultLimit = 15; // TODO сделать скролл
 
   const containerSyles = {
     background: clrTransWhite600,
@@ -76,14 +78,14 @@ export default function CategoriesList({ onClick, operations }) {
     setFilteredList((prevState) => {
       if (prevState.includes(item.category._id)) {
         const newState = prevState.filter((i) => i !== item.category._id);
-        onClick(newState);
+        // onClick(newState);
 
         return newState;
       }
       else {
         const newState = prevState.map(i => i);
         newState.push(item.category._id);
-        onClick(newState);
+        // onClick(newState);
 
         return newState;
       }

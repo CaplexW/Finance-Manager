@@ -8,16 +8,13 @@ import { getCategoriesList } from '../../store/categories';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../utils/console/showElement';
 import { updateOperation } from '../../store/operations';
-import { formatInputDateFromDisplay } from '../../../../utils/formatDate';
 import { updateUserBalance } from '../../store/user';
 import capitalize from '../../../../utils/capitalize';
 
 const emptyObject = {};
 
-export default function EditOperationForm({ onClose = null, existingData = emptyObject, }) {
+export default function EditOperationForm({ onClose = null, existingData = emptyObject, onCreateCategory }) {
   if (!existingData.date) return;
-
-  showElement(existingData, 'existingData');
 
   const dispatch = useDispatch();
   const categories = useSelector(getCategoriesList());
@@ -75,10 +72,13 @@ export default function EditOperationForm({ onClose = null, existingData = empty
     };
   }
   function handleClose() { onClose(); }
+  function handleCreateCategory(enteredName) {
+    onCreateCategory(enteredName, parent);
+  }
 
   return (
     <Form defaultData={displayedData} id="edit-operation-form" onSubmit={handleUpdate} validatorConfig={validatorConfig} >
-      <SelectInputWithCreate data={categories} label="Категория" name="category" />
+      <SelectInputWithCreate data={categories} label="Категория" name="category" onCreate={handleCreateCategory} />
       <FieldInput autoFocus label="Название" name="name" />
       <FieldInput label="Сумма" minimumValue={1} name="amount" type="number" />
       <FieldInput label="Дата" name="date" type="date" />
@@ -98,4 +98,5 @@ EditOperationForm.propTypes = {
     date: PropTypes.string,
   }),
   onClose: PropTypes.func,
+  onCreateCategory: PropTypes.func,
 };

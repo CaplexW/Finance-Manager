@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import Table from '../common/table';
 import { operationPropType } from '../../../../types/propTypes';
@@ -173,12 +173,13 @@ export default function OperationTable({
     </section >
   );
 
+
   return (
     <div className="operations-table__container">
       <ContentBoard header={tableHeader}>
         <Table
           columns={columns}
-          data={displayedOperations}
+          data={displayedOperations} //TODO Сделать пагинацию
           dateRange={dateRange}
           onAdd={handleOpenCreateModal}
           onDateFilter={onDateFilter}
