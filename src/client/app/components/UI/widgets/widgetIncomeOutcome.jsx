@@ -94,7 +94,7 @@ const getChange = (present, prev) => {
   if (result > 1_000_000) return `${Math.floor(result / 1_000_000)}m`;
   if (result > 100_000) return `${Math.floor(result / 1000)}k`;
   if (result > 1000) return `${(result / 1000).toFixed(1)}k`;
-  showElement(result, 'result');
+
   return Math.round(result);
 };
 const getDisplayedStyles = (number) => {

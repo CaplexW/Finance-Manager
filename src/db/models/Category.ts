@@ -1,12 +1,11 @@
 import { Schema, model, Types } from "mongoose";
-import { ReactElement } from "react";
 
 const schema = {
   name: { type: String, required: true },
   color: { type: String, required: true },
   isIncome: { type: Boolean, required: true },
   user: { type: Schema.Types.ObjectId, ref: 'User' },
-  icon: { type: Object, required: true },
+  icon: { type: Schema.Types.ObjectId, ref: 'Icon', required: true },
 };
 
 const category = new Schema(schema);
@@ -18,7 +17,7 @@ export interface ICategory {
   name: string,
   color: string,
   isIncome: boolean,
-  icon: ReactElement,
+  icon: Types.ObjectId,
   user: Types.ObjectId,
 }
 export type TCategory = {
