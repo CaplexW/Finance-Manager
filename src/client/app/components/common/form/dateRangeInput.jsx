@@ -163,11 +163,11 @@ export default function DateRangeInput({ pickValue, onPick }) {
     startDate.setHours(0, 0, 0, 0);
     endDate.setHours(0, 0, 0, 0);
 
-    if (startYear === '1993') return 'все время';
+    if (startYear === '1993') return 'Все время';
     if (
       startDate.getTime() === getTodayDate().getTime()
       && endDate.getTime() === getTodayDate().getTime()
-    ) return 'сегодня';
+    ) return 'Сегодня';
     if (startYear === endYear) return `${startDay}.${startMonth} - ${endDay}.${endMonth}`;
 
     return `${formatDisplayDateFromInput(pickValue.start)} - ${formatDisplayDateFromInput(pickValue.end)}`;

@@ -1,9 +1,10 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from "./console/showElement.ts";
 
 export function getDisplayDate(date: Date): string {
   return Intl.DateTimeFormat('ru').format(date);
 }
-export function getInputDate(date: Date): string {
+export function getInputDate(date: Date = new Date()): string {
   const year = date.getFullYear();
   const month = date.getMonth();
   const day = date.getDate();

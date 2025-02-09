@@ -16,11 +16,6 @@ export default function CreateOperationForm({ onCreateCategory = null, onClose =
   const categories = useSelector(getCategoriesList());
   const emptyFields = { operationName: '', category: '', amount: '', date: '' };
   const validatorConfig = {
-    operationName: {
-      isRequired: {
-        message: 'Введите название',
-      },
-    },
     amount: {
       isRequired: {
         message: 'Введите сумму',
@@ -43,7 +38,7 @@ export default function CreateOperationForm({ onCreateCategory = null, onClose =
   
   async function handleCreate(rawData) {
     const normolizedData = {
-      name: capitalize(rawData.operationName.trim()),
+      name: capitalize(rawData.operationName?.trim() || rawData.category.label),
       date: rawData.date,
       category: rawData.category.value,
       amount: parseFloat(rawData.amount),
