@@ -5,6 +5,7 @@ import { eyeOpenIcon, eyeShutIcon } from '../../../../assets/icons';
 import showElement from '../../../../../utils/console/showElement';
 import flashInvalidInputs from '../../../../../utils/flashInvalidInputs';
 import flashOffInvalidInputs from '../../../../../utils/flashOffInvalidInputs';
+import { getInputDate } from '../../../../../utils/formatDate';
 
 function FieldInput({
   value = '',
@@ -20,6 +21,7 @@ function FieldInput({
   const [passwordVisible, setPasswordVisible] = useState(false);
   const input = useRef();
 
+  useEffect(setInitialDate, []);
   useEffect(handelInvalid, [error]);
 
   function handelInvalid() {
@@ -36,6 +38,12 @@ function FieldInput({
 
   function togglePasswordVisibility() {
     setPasswordVisible((prevState) => !prevState);
+  }
+  function setInitialDate() {
+    if (type === 'date' && !value) {
+      const initialDate = { value: getInputDate(), name };
+      onChange(initialDate);
+    }
   }
 
   const eyeIcon = passwordVisible ? eyeOpenIcon : eyeShutIcon;
@@ -81,7 +89,7 @@ FieldInput.propTypes = {
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
   type: PropTypes.string,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default memo(FieldInput);

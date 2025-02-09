@@ -21,11 +21,6 @@ export default function EditOperationForm({ onClose = null, existingData = empty
   const oldCategory = categories.filter((c) => c._id === existingData.category)[0];
   const categoryName = oldCategory.name;
   const validatorConfig = {
-    name: {
-      isRequired: {
-        message: 'Введите название',
-      },
-    },
     amount: {
       isRequired: {
         message: 'Введите сумму',
@@ -55,7 +50,7 @@ export default function EditOperationForm({ onClose = null, existingData = empty
   async function handleUpdate(inputValue) {
     const normolizedData = {
       ...existingData,
-      name: capitalize(inputValue.name.trim()),
+      name: capitalize(inputValue.name?.trim() || inputValue.category.label),
       date: inputValue.date || existingData.date,
       category: inputValue.category.value,
       amount: Math.abs(parseFloat(inputValue.amount)),
@@ -77,7 +72,7 @@ export default function EditOperationForm({ onClose = null, existingData = empty
   }
 
   return (
-    <Form defaultData={displayedData} id="edit-operation-form" onSubmit={handleUpdate} validatorConfig={validatorConfig} >
+    <Form defaultData={displayedData} onSubmit={handleUpdate} validatorConfig={validatorConfig} >
       <SelectInputWithCreate data={categories} label="Категория" name="category" onCreate={handleCreateCategory} />
       <FieldInput autoFocus label="Название" name="name" />
       <FieldInput label="Сумма" minimumValue={1} name="amount" type="number" />

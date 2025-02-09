@@ -142,10 +142,10 @@ export default function OperationTable({
   const tinkoffIcon = (
     <img
       alt="Т-Банк"
-      height={32}
+      height={30}
       src={T_BANK_ICON}
       style={{ borderRadius: '8px' }}
-      width={32}
+      width={30}
     />
   );
   const openState = fileOptionsIsOpen ? 'opened' : 'closed';
@@ -173,13 +173,14 @@ export default function OperationTable({
     </section >
   );
 
+  const TwentyOperations = displayedOperations.filter((_, i) => i < 20);
 
   return (
     <div className="operations-table__container">
       <ContentBoard header={tableHeader}>
         <Table
           columns={columns}
-          data={displayedOperations} //TODO Сделать пагинацию
+          data={TwentyOperations} //TODO Сделать пагинацию
           dateRange={dateRange}
           onAdd={handleOpenCreateModal}
           onDateFilter={onDateFilter}
