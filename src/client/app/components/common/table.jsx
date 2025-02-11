@@ -37,7 +37,7 @@ export default function Table({
 
   if (!data || !columns) return noRequiredDataError();
 
-  return (
+  if(data.length) return (
     <section className='table__contanier'>
       <table className='table__content'>
         <thead className='table__columns'>

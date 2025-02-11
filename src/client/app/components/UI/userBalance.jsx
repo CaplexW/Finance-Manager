@@ -1,10 +1,12 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { getUserBalance } from '../../store/user';
+import showElement from '../../../../utils/console/showElement';
+import { isNumber } from 'lodash';
 
 export default function UserBalance() {
   const balance = useSelector(getUserBalance());
-  if(!balance) return;
+  if(typeof balance !== 'number' && !balance) return;
 
   const balanceIsPositive = balance > 0;
   const balanceStyles = {
@@ -15,7 +17,7 @@ export default function UserBalance() {
     display: 'flex',
     alignItems: 'center',
   };
-  const digitsStyles = { color: balanceIsPositive ? 'green' : 'red' };
+  const digitsStyles = { marginInlineStart: '.5rem', color: balanceIsPositive ? 'green' : 'red' };
 
-  return <div style={balanceStyles}>Ваш баланс: <span style={digitsStyles}>{balance}</span></div>;
+  return <div style={balanceStyles}>Ваш баланс:<span style={digitsStyles}>{balance}</span></div>;
 };

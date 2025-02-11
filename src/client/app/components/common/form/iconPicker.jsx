@@ -29,13 +29,15 @@ export default function IconPicker({
     };
   }, [selectedOption]);
 
-  //TODO value нету пока не ткунть по иконке. Задать initialValue при рендере компонента.
-
   const firstPage = selectedPage === 1;
-  const lastPage = selectedPage >= Math.floor(options.length / pageSize);
+  const lastPage = selectedPage >= Math.ceil(options.length / pageSize);
   const onlyPage = firstPage && lastPage;
 
-  const displayedIcons = options.filter((_, index) => index >= pageSize * selectedPage - pageSize && index <= pageSize * selectedPage);
+  showElement(pageSize * selectedPage - pageSize, 'page start');
+  showElement(pageSize * selectedPage - 1, 'pageend');
+  showElement(pageSize, 'pageSize');
+
+  const displayedIcons = options.filter((_, index) => index >= pageSize * selectedPage - pageSize && index <= pageSize * selectedPage - 1);
 
   const leftCurret = arrowLeftIcon || '<';
   const rightCurret = arrowRightIcon || '>';
@@ -87,7 +89,9 @@ export default function IconPicker({
     if (selectedPage > 1) setSelectedPage((prevState) => prevState - 1);
   }
   function turnNextPage() {
-    if (selectedPage < Math.floor(options.length / pageSize)) setSelectedPage((prevState) => prevState + 1);
+    showElement(Math.ceil(options.length / pageSize), 'Math.ceil(options.length / pageSize)');
+    showElement(selectedPage, 'selectedPage');
+    if (selectedPage < Math.ceil(options.length / pageSize)) setSelectedPage((prevState) => prevState + 1);
   }
 
   if (selectedOption) return (

@@ -11,7 +11,7 @@ import Chart from '../common/charts/chart';
 export default function OperationsChart({ operations, switchPosition = null, type = 'doughnut' }) {
   const allCategories = useSelector(getCategoriesList());
 
-  if (!operations || !allCategories) return;
+  if (!operations?.length || !allCategories?.length) return;
 
   const sortedOperations = operations.toSorted((a, b) => a.amount - b.amount);
 
@@ -67,9 +67,9 @@ export default function OperationsChart({ operations, switchPosition = null, typ
     backgroundColor: clrTransWhite600,
     borderRadius: '8px',
 
-    padding: '1rem 2.5rem',
+    padding: '5% 0',
 
-    width: '100%',
+    width: '',
 
     display: 'flex',
     flexGrow: '1',

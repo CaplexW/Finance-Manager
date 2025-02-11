@@ -98,7 +98,7 @@ export default function Operations() {
     <div className='operations-page' id="operation-layout">
       <section className='' id="side">
         <ContentBoard header={<h4>Соотношение категорий</h4>}>
-          <div className="side-container" style={{}}>
+          <div className="side-container">
             <CategoriesList onClick={handleCategoryFilter} operations={filteredByTypeOperations} />
             <OperationsChart operations={filteredByCategoryOperations} />
           </div>
