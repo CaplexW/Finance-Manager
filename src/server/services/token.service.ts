@@ -14,11 +14,10 @@ const tokenService = {
         return { accessToken, refreshToken, expiresIn: 3600 };
     },
     async save(userId: Types.ObjectId, refreshToken: string): Promise<Document> {
-        const data = await Token.findOne({ user: userId });
-
-        if (data) {
-            data.refreshToken = refreshToken;
-            return data.save();
+        const token = await Token.findOne({ user: userId });
+        if (token) {
+            token.refreshToken = refreshToken;
+            return token.save();
         }
         return await Token.create({ user: userId, refreshToken });
     },

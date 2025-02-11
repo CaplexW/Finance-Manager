@@ -3,7 +3,7 @@ import showElement from '../../console/showElement.ts';
 import createErrorMessage, { CreatedErrorMessage } from './createErrorMessage.ts';
 import displayError from './displayError.ts';
 
-const tokenOutDatedError = 'Token is outdated';
+const invalidToken = 'Token is invalid';
 
 export default function handleError(err: ExpectedError) {
   const errorMessage: CreatedErrorMessage = createErrorMessage(err);
@@ -11,10 +11,10 @@ export default function handleError(err: ExpectedError) {
   if (typeof errorMessage === 'object') {
     displayError(errorMessage.client);
     showElement(errorMessage.server, 'Error ocured');
-    if (errorMessage.server === tokenOutDatedError) removeAuthData();
+    if (errorMessage.server === invalidToken) removeAuthData();
   }
   if (typeof errorMessage === 'string') {
-    if (errorMessage === tokenOutDatedError) removeAuthData();
+    if (errorMessage === invalidToken) removeAuthData();
     return displayError(errorMessage);
   }
 }

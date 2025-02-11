@@ -11,6 +11,7 @@ export function setTokens({
   localStorage.setItem(TOKEN_KEY, accessToken);
   localStorage.setItem(REFRESH_KEY, refreshToken);
   localStorage.setItem(EXPIRES_KEY, expiresDate.toString());
+  window.location.reload();
 }
 
 export function getAccessToken(): string | null {
