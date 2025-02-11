@@ -6,3 +6,10 @@
   padding-inline: 1.5rem;
   gap: 2rem;
 }
+
+.side-container {
+  display: grid;
+  grid-template-rows: minmax(0, auto) minmax(0, 1fr);
+  height: 100%;
+  gap: 1rem;
+}

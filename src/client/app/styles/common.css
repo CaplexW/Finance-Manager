@@ -9,6 +9,9 @@ button:hover {
   background-color: #93bbca;
   transition: .5s;
 }
+button:disabled {
+  opacity: .3;
+}
 p {
   margin: 0;
 }

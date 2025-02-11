@@ -11,10 +11,11 @@ const userService = {
     const { data } = await httpService.get(userEndpoint);
     if (!data) throw new Error('user data was not loaded');
     return data;
-  },
+  }, 
   async deleteUser(userId: string, userPassword: string): Promise<number> {
     cyanLog('user delete requested');
-    const headers = { Authorization: `Bearer ${userPassword}` };
+    showElement(userPassword, 'userPassword');
+    const headers = { password: `Bearer ${userPassword}` };
     const response = await httpService.delete(userEndpoint + userId, { headers });
 
     return response.data.deletedCount;

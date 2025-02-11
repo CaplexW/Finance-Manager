@@ -12,6 +12,7 @@ import { getIconsLoadStatus, loadIcons } from "./store/icons";
 import { getLoginStatus, getUserDataStatus, loadUserData } from "./store/user";
 import { getOperationsLoadStatus, loadOperations } from "./store/operations";
 import { getCategoriesLoadStatus, loadCategories } from "./store/categories";
+import showElement from "../../utils/console/showElement";
 
 export default function App() {
   const dispatch = useDispatch();

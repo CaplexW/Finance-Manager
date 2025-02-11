@@ -32,7 +32,7 @@ export default function CreateCategoryForm({ enteredName = null, onClose = null 
     <Form defaultData={existingData} onSubmit={handleCreate} validatorConfig={validatorConfig} >
       <FieldInput label="Название новой категории" name="name" />
       <FieldInput label="Цвет новой категории" name="color" type="color" />
-      <IconPicker label="Выберете иконку для категории" name="icon" options={icons} pageSize={14} />
+      <IconPicker label="Выберете иконку для категории" name="icon" options={icons} pageSize={15} />
       <Checkbox label="Категория является доходной" name='income' />
       <div className="button-container">
         <button className='add-btn' type='submit' >Создать</button>

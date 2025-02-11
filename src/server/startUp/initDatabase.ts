@@ -1,4 +1,3 @@
-// import defaultCategories, { TDefaultCategory } from "../initialData/defaultCategories.ts";
 import defaultCategories from "../../db/initialData/defaultCategories.ts";
 import { Document, Mongoose } from "mongoose";
 import { redLog } from "../../utils/console/coloredLogs.ts";

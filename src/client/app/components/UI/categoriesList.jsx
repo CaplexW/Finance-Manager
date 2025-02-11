@@ -17,7 +17,7 @@ export default function CategoriesList({ onClick, operations }) {
   const categories = useSelector(getCategoriesList());
   const icons = useSelector(getIconsList());
 
-  if (!operations || !categories || !icons) return;
+  if (!operations?.length || !categories?.length || !icons?.length) return;
 
   const includedCategoriesIds = operations.map((s) => s.category);
   const includedCategories = categories.filter((cat) => includedCategoriesIds.includes(cat._id));

@@ -38,12 +38,6 @@
 
   padding-inline: 1rem;
 }
-.side-container {
-  display: grid;
-  grid-template-rows: minmax(0, auto) minmax(0, 1fr);
-  height: 100%;
-  gap: 1rem;
-}
 .content-board_body::-webkit-scrollbar {
   width: 0;
   height: 0;
