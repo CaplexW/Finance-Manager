@@ -3,16 +3,19 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import NavBar from "./components/UI/NavBar";
 import { Route, Routes } from "react-router-dom";
-import Login from "./layouts/login";
+import LoginPage from "./layouts/loginPage";
 import MainPage from "./layouts/mainPage";
 import LogOut from "./layouts/logOut";
-import Operations from "./layouts/operations";
+import OperationsPage from "./layouts/operationsPage";
 import { useDispatch, useSelector } from "react-redux";
 import { getIconsLoadStatus, loadIcons } from "./store/icons";
 import { getLoginStatus, getUserDataStatus, loadUserData } from "./store/user";
 import { getOperationsLoadStatus, loadOperations } from "./store/operations";
 import { getCategoriesLoadStatus, loadCategories } from "./store/categories";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from "../../utils/console/showElement";
+import ProtectedRoute from "./components/routes/protectedRoute";
+import AnalyticsPage from "./layouts/analyticsPage";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -46,10 +49,15 @@ export default function App() {
       <ToastContainer />
       <NavBar />
       <Routes>
-        <Route Component={MainPage} index />
-        <Route Component={Login} path="/login/:register?" />
+        <Route element={<ProtectedRoute isAuthenticated={!isLoggedIn} redirectPath="/analytics" />}>
+          <Route Component={MainPage} index />
+          <Route Component={LoginPage} path="/login/:register?" />
+        </Route>
+        <Route element={<ProtectedRoute isAuthenticated={isLoggedIn} />}>
+          <Route Component={AnalyticsPage} path="/analytics" />
+          <Route Component={OperationsPage} path="/operations" />
+        </Route>
         <Route Component={LogOut} path="/logout" />
-        <Route Component={Operations} path="/operations" />
       </Routes>
     </div>
   );
