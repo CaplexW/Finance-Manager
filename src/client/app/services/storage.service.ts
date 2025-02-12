@@ -31,7 +31,7 @@ export function removeAuthData() {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(REFRESH_KEY);
   localStorage.removeItem(EXPIRES_KEY);
-  window.location.reload();
+  // window.location.reload();
 }
 
 const storageService = {

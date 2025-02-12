@@ -25,9 +25,9 @@ export default function NavBar() {
                 <NavLink
                   aria-current="page"
                   className={({ isActive }) => (isActive ? 'nav-link navbar-brand' : 'nav-link')}
-                  to="/"
+                  to="/analytics"
                 >
-                  Главная
+                  Аналитика
                 </NavLink>
               </li>
               <li className='nav-item'>
@@ -40,9 +40,20 @@ export default function NavBar() {
                 </NavLink>
               </li>
             </> :
-            <li className='nav-item'>
-              <NavLink className='nav-link' to="/login" >Войти</NavLink>
-            </li>}
+            <>
+              <li className='nav-item'>
+                <NavLink
+                  aria-current="page"
+                  className={({ isActive }) => (isActive ? 'nav-link navbar-brand' : 'nav-link')}
+                  to="/"
+                >
+                  Главная
+                </NavLink>
+              </li>
+              <li className='nav-item login'>
+                <NavLink className='nav-link' to="/login" >Войти</NavLink>
+              </li>
+            </>}
         </ul>
       </nav>
       <div className="user-panel">

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getUser, getUserDataStatus } from '../store/user';
+import { useSelector } from 'react-redux';
+import { getUserDataStatus } from '../store/user';
 import { getOperationsList, getOperationsLoadStatus } from '../store/operations';
-import { getCategoriesList, getCategoriesLoadStatus } from '../store/categories';
-import { getIconsLoadStatus } from '../store/icons';
+import { getCategoriesLoadStatus } from '../store/categories';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../utils/console/showElement';
 import CategoriesList from '../components/UI/categoriesList';
@@ -14,11 +13,9 @@ import ContentBoard from '../components/common/contentBoard';
 import { getInputDate, todayInput } from '../../../utils/formatDate';
 
 // TODO 1. Реализовать создание и редактирование категорий.
-// TODO 2. Реализовать диаграммы.
 // TODO 4. Реализовать фильтрацию и сортировку.
-// TODO 5. Реализовать модальные окна и формы.
 
-export default function Operations() {
+export default function OperationsPage() {
   const [switchPosition, setSwitchPosition] = useState('both');
   const [dateRange, setDateRange] = useState({ start: '1993-03-24', end: todayInput() });
   const [filter, setFilter] = useState({ category: null, type: null, date: null });
@@ -43,17 +40,6 @@ export default function Operations() {
   const sortedOperations = orderBy(filteredByCategoryOperations, [sort.path], [sort.order]);
 
   const displayedOperations = sortedOperations;
-
-  // useEffect(loadData, [isLoaded]);
-
-  // function loadData() {
-  //   if (isLoaded) return;
-
-  //   if (!operationsIsLoaded) dispatch(loadOperations());
-  //   if (!categoriesIsLoaded) dispatch(loadCategories());
-  //   if (!iconsIsLoaded) dispatch(loadIcons());
-  //   if (!userIsLoaded) dispatch(loadUserData());
-  // }
 
   function filterOperationsByDate(operations) {
     let result = operations.filter((o) => (

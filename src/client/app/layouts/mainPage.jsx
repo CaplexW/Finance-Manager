@@ -17,11 +17,4 @@ export default function MainPage() {
     formData.append('file', file);
     const result = await operationsService.uploadCSV(formData, 'tinkoff');
   }
-
-  return (
-    <div className="main-page">
-      <ActivityBoard />
-      {/* <SizeTestComponent /> */}
-    </div>
-  );
 };

@@ -3,7 +3,7 @@ import { useParams } from 'react-router';
 import LoginForm from '../components/UI/loginForm';
 import RegisterForm from '../components/UI/rgisterForm';
 
-export default function Login() {
+export default function LoginPage() {
   const { register } = useParams();
   return (
     <div className="container d-flex justify-content-center mt-3" id="loginPageContainer" style={{ maxWidth: '300px' }}>
