@@ -130,6 +130,7 @@ export function signIn(payload: Credentials) {
 export function logOut() {
   return (dispatch: Dispatch) => {
     try {
+      console.log('logging out...');
       removeAuthData();
       dispatch(userLoggedOut());
     } catch (err) {

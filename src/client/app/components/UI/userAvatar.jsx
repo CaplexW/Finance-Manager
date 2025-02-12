@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { defaultAvatar } from '../../../assets/icons';
 
-export default function UserAvatar({ source, size = 40 }) {
+export default function UserAvatar({ source = null, size = 40 }) {
   if (!source) {
     return defaultAvatar;
   }
@@ -19,5 +19,5 @@ export default function UserAvatar({ source, size = 40 }) {
 
 UserAvatar.propTypes = {
   size: PropTypes.number,
-  source: PropTypes.string.isRequired,
+  source: PropTypes.string,
 };
