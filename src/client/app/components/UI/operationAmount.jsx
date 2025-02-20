@@ -7,8 +7,7 @@ import { operationPropType } from '../../../../types/propTypes';
 import showElement from '../../../../utils/console/showElement';
 
 export default function OperationAmount({ operation }) {
-  const category = useSelector(getCategoryById(operation.category));
-  const amountColor = category.isIncome ? greenColor : redColor;
+  const amountColor = operation.amount > 0 ? greenColor : redColor;
   return <span style={{ color: amountColor }}>{operation.amount}</span>;
 };
 

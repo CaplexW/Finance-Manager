@@ -8,6 +8,8 @@ import defaultIcons from "../../db/initialData/defaultIcons.tsx";
 import showElement from "../../utils/console/showElement.ts";
 import DefaultCategory, { TDefaultCategory } from "../../db/models/DefaultCategory.ts";
 import forEachAsync from "../../utils/iterators/forEachAsync.ts";
+import MCC, { TMcc } from "../../db/models/mcc.ts";
+import mccCatalog from "../../db/initialData/mccCatalog.ts";
 
 export default async function initDatabase() {
     const icons = await Icon.find();
@@ -23,6 +25,15 @@ export default async function initDatabase() {
         await createCollection<TDefaultCategory>(DefaultCategory, defaultCategories);
         await giveIconsToDefaultCategories();
     }
+
+    const mccs = await MCC.find();
+    const mccsExists = !!mccs.length;
+    const mccsIsFull = mccs.length > mccCatalog.length;
+    if (!mccsExists) {
+        await createCollection<TMcc>(MCC, mccCatalog);
+    }
+    if (mccsExists && !mccsIsFull) { //TODO добавить недостающие
+    }
 }
 
 
@@ -30,14 +41,14 @@ async function createCollection<T>(Model: Mongoose["Model"], source: T[]) {
     await Model.collection.drop();
 
     await forEachAsync(source, async (item) => {
-            try {
-                const newItem: Document<unknown, object, T> = new Model(item);
-                await newItem.save();
-            } catch (err) {
-                catchError(err);
-                redLog(err);
-            }
-        });
+        try {
+            const newItem: Document<unknown, object, T> = new Model(item);
+            await newItem.save();
+        } catch (err) {
+            catchError(err);
+            redLog(err);
+        }
+    });
 }
 async function normolizeIconColor(iconDocuments: (Document<unknown, object, TIcon>)[]) {
     const goalValue = 'currentColor';
@@ -58,7 +69,7 @@ async function normolizeIconColor(iconDocuments: (Document<unknown, object, TIco
 
             icon.markModified('src');
             icon.save();
-            
+
             return;
         }
     });

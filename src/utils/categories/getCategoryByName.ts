@@ -1,13 +1,17 @@
-import { Types } from 'mongoose';
-import Category from '../../db/models/Category.ts';
+import Category, { CategoryDocument } from '../../db/models/Category.ts';
 import capitalize from '../capitalize.ts';
-import DefaultCategory from '../../db/models/DefaultCategory.ts';
+import DefaultCategory, { DefaultCategoryDoument } from '../../db/models/DefaultCategory.ts';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../console/showElement.ts';
 
-export default async function getCategoryIdByName(categoryName: string): Promise<Types.ObjectId | null> {
-  let category = await Category.findOne({ name: capitalize(categoryName) });
-  if(!category) category = await DefaultCategory.findOne({ name: capitalize(categoryName) });
+export default async function getCategoryByName(categoryName: string): Promise<CategoryDocument | DefaultCategoryDoument | null> {
+  let category;
+  
+  if (categoryName) {
+    category = await Category.findOne({ name: capitalize(categoryName) });
+    if (!category) category = await DefaultCategory.findOne({ name: capitalize(categoryName) });
+  }
 
-  if(!category) return null;
-  return category._id;
+  if(category) return category;
+  return null;
 }

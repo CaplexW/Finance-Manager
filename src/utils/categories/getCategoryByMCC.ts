@@ -1,21 +1,16 @@
-import { Types } from "mongoose";
-import getCategoryIdByName from "./getCategoryByName.ts";
-import defaultCategories from "../../db/initialData/defaultCategories.ts";
+import getCategoryByName from "./getCategoryByName.ts";
+import MCC from "../../db/models/mcc.ts";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import showElement from "../console/showElement.ts";
+import { CategoryDocument } from "../../db/models/Category.ts";
+import { DefaultCategoryDoument } from "../../db/models/DefaultCategory.ts";
 
-export default async function getCategoryByMCC(MCC: string): Promise<Types.ObjectId | null> {
-  let categoryId;
-  
-  switch (MCC.trim()) {
-    case '':
-      return null;
-    case '5411': case '5921':
-      categoryId = await getCategoryIdByName(defaultCategories[1].name);
-      break;
-    default:
-      categoryId = await getCategoryIdByName(defaultCategories[14].name);
-      break;
-  }
+export default async function getCategoryByMCC(code: string): Promise<CategoryDocument | DefaultCategoryDoument | null> {
+  if (!code) return null;
 
-  if (categoryId) return categoryId;
-  throw new Error(`Category was not found during check MCC: ${MCC}`);
+  const mcc = await MCC.findOne({ code });
+  const category = await getCategoryByName(mcc ? mcc.name : 'Разное');
+
+  if (category) return category;
+  throw new Error(`Category was not found during check MCC: ${code}`);
 }

@@ -61,12 +61,12 @@ export default function Table({
         <tbody className='table__rows'>
           {data.map(
             (
-              item, // item - объект одного пользователя
+              item,
             ) => (
               <tr key={item._id}>
                 {Object.keys(columns).map(
                   (
-                    column, // columns - объект с информацией для отображения и сортировки
+                    column,
                   ) => (
                     <td key={column}>
                       {renderContent(item, column)}
