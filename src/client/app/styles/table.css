@@ -14,6 +14,12 @@
   border-collapse: collapse;
   padding: .6em;
 }
+.table__content td[colspan] {
+  width: 100%;
+  display: grid;
+  justify-content: center;
+  cursor: pointer;
+}
 
 .table__columns th {
   position: sticky;

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import lod from 'lodash';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../utils/console/showElement';
-import { arrowDownShortIcon } from '../../../assets/icons';
+import { arrowDownIcon, arrowDownShortIcon } from '../../../assets/icons';
 
 const dummySort = { path: '', order: '' };
 const dummyFunc = () => { };
@@ -13,12 +13,11 @@ export default function Table({
   data,
   sortConfig = dummySort,
   onSort = dummyFunc,
-  startLimit = 50,
+  startLimit = 2,
 }) {
-  const [displayedLimit, setDisplayedLimit] = useState(startLimit)
-  const displayedData = data.filter((_, i) => i > displayedLimit);
+  const [displayedLimit, setDisplayedLimit] = useState(startLimit);
+  const displayedData = data.filter((_, i) => (i < displayedLimit));
 
-  useEffect([])
   function noRequiredDataError() {
     console.error('no column config or data to display was given to this table');
   }
@@ -40,7 +39,7 @@ export default function Table({
       onSort({ path: item, order: 'asc', caret: 'up' });
     }
   }
-  function handleIncriceDisplayedData() {
+  function handleIncreaseDisplayedData() {
     setDisplayedLimit((prevState) => prevState + 50);
   }
 
@@ -85,7 +84,7 @@ export default function Table({
               </tr>
             ),
           )}
-          {data.length > displayedData.length && <tr><button onClick={handleIncriceDisplayedData}>arrowDownShortIcon</button></tr>}
+          {data.length > displayedData.length && <tr><td colSpan={Object.keys(columns).length} onClick={handleIncreaseDisplayedData}>{arrowDownIcon}</td></tr>}
         </tbody>
       </table>
     </section>

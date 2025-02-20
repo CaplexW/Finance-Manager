@@ -122,8 +122,16 @@ export const alfaIcon = (
   </svg>
 );
 
-export const arrowDownShortIcon = <i class="bi bi-arrow-down-short" />;
-
+export const arrowDownShortIcon = (
+  <svg className="bi bi-arrow-down-short" fill="currentColor" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4" fillRule="evenodd" />
+  </svg>
+);
+export const arrowDownIcon = (
+  <svg className="bi bi-arrow-down" fill="currentColor" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1" fillRule="evenodd" />
+  </svg>
+);
 
 // export const tinkoffIcon = (
 //   <? xml version = "1.0" encoding = "UTF-8" ?>

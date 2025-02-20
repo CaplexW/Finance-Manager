@@ -173,14 +173,14 @@ export default function OperationTable({
     </section >
   );
 
-  const TwentyOperations = displayedOperations.filter((_, i) => i < 20);
+  const TwentyOperations = displayedOperations.filter((_, i) => i < 20);//TODO Сделать пагинацию
 
   return (
     <div className="operations-table__container">
       <ContentBoard header={tableHeader}>
         <Table
           columns={columns}
-          data={TwentyOperations} //TODO Сделать пагинацию
+          data={displayedOperations} 
           dateRange={dateRange}
           onAdd={handleOpenCreateModal}
           onDateFilter={onDateFilter}
