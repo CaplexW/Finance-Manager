@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import lod from 'lodash';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../utils/console/showElement';
+import { arrowDownShortIcon } from '../../../assets/icons';
 
 const dummySort = { path: '', order: '' };
 const dummyFunc = () => { };
@@ -12,8 +13,12 @@ export default function Table({
   data,
   sortConfig = dummySort,
   onSort = dummyFunc,
+  startLimit = 50,
 }) {
+  const [displayedLimit, setDisplayedLimit] = useState(startLimit)
+  const displayedData = data.filter((_, i) => i > displayedLimit);
 
+  useEffect([])
   function noRequiredDataError() {
     console.error('no column config or data to display was given to this table');
   }
@@ -27,6 +32,7 @@ export default function Table({
     }
     return lod.get(item, columns[column].path);
   }
+
   function handleSort(item) {
     if (sortConfig.path === item && sortConfig.order === 'asc') {
       onSort({ path: item, order: 'desc', caret: 'down' });
@@ -34,10 +40,13 @@ export default function Table({
       onSort({ path: item, order: 'asc', caret: 'up' });
     }
   }
+  function handleIncriceDisplayedData() {
+    setDisplayedLimit((prevState) => prevState + 50);
+  }
 
   if (!data || !columns) return noRequiredDataError();
 
-  if(data.length) return (
+  if (displayedData.length) return (
     <section className='table__contanier'>
       <table className='table__content'>
         <thead className='table__columns'>
@@ -59,7 +68,7 @@ export default function Table({
           </tr>
         </thead>
         <tbody className='table__rows'>
-          {data.map(
+          {displayedData.map(
             (
               item, // item - объект одного пользователя
             ) => (
@@ -76,6 +85,7 @@ export default function Table({
               </tr>
             ),
           )}
+          {data.length > displayedData.length && <tr><button onClick={handleIncriceDisplayedData}>arrowDownShortIcon</button></tr>}
         </tbody>
       </table>
     </section>
@@ -92,5 +102,5 @@ Table.propTypes = {
     path: PropTypes.string.isRequired,
     order: PropTypes.string.isRequired,
   }),
-
+  startLimit: PropTypes.number,
 };
