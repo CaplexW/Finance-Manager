@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import Table from '../common/table';
+import Table from '../common/table/table';
 import { operationPropType } from '../../../../types/propTypes';
 import ModalWindow from '../common/modalWindow';
 import openModalById from '../../../../utils/modals/openModalById';
@@ -172,8 +172,6 @@ export default function OperationTable({
       </div>
     </section >
   );
-
-  const TwentyOperations = displayedOperations.filter((_, i) => i < 20);//TODO Сделать пагинацию
 
   return (
     <div className="operations-table__container">

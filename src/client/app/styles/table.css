@@ -14,11 +14,20 @@
   border-collapse: collapse;
   padding: .6em;
 }
-.table__content td[colspan] {
+.more-btn {
   width: 100%;
   display: grid;
   justify-content: center;
+  align-items: center;
   cursor: pointer;
+  padding: .5em;
+}
+.more-btn:hover {
+  background: rgba(203, 203, 203, 0.4);
+}
+.more-btn span {
+  display: grid;
+  align-items: center;
 }
 
 .table__columns th {

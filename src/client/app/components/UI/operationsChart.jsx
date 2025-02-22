@@ -42,15 +42,13 @@ export default function OperationsChart({ operations, switchPosition = null, typ
         if (switchPosition === 'both') {
           const typedColor = op.amount > 0 ? greenColor : redColor;
           dataset.backgroundColor.push(typedColor);
-          // dataset.borderColor.push(typedColor);
         }
         else {
           dataset.backgroundColor.push(operationCategory.color);
-          // dataset.borderColor.push(operationCategory.color);
         }
       }
     });
-
+    
     return dataObject;
   }
 
