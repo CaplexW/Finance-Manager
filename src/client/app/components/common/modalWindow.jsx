@@ -1,8 +1,9 @@
-import React, { cloneElement, useCallback, useEffect, useRef, useState } from 'react';
+import React, { cloneElement, useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { nodesPropType } from '../../../../types/propTypes';
 import { mainColor } from '../../../../constants/colors';
 import closeModalWindow from '../../../../utils/modals/closeModalWindow';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../utils/console/showElement';
 import openModal from '../../../../utils/modals/openModal';
 
