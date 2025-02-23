@@ -1,4 +1,4 @@
-import { TMcc } from "../models/mcc.ts";
+import { TMcc } from "../models/Mcc.ts";
 
 const mccCatalog: TMcc[] = [
   {

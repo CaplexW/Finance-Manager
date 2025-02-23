@@ -2,7 +2,7 @@ import express, { Response } from 'express';
 import multer from 'multer';
 import fs from 'fs';
 import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
-import Operation from '../../db/models/Operation.ts';
+import Operation, { OperationDocument } from '../../db/models/Operation.ts';
 import { getDisplayDate } from '../../utils/formatDate.ts';
 import showError from '../../utils/console/showError.ts';
 import User from '../../db/models/User.ts';
@@ -15,9 +15,11 @@ import sendForbidden from '../../utils/errors/fromServerToClient/sendForbidden.t
 import sendAuthError from '../../utils/errors/fromServerToClient/sendAuthError.ts';
 import showElement from '../../utils/console/showElement.ts';
 import extractDataFromCSV from '../../utils/import/extractDataFromCSV.ts';
-import createOperationFromTinkoffData from '../../utils/import/createOperationFromTinkoffData.ts';
+import createOperationFromTinkoffData, { OperationData } from '../../utils/import/createOperationFromTinkoffData.ts';
 import DefaultCategory from '../../db/models/DefaultCategory.ts';
 import forEachAsync from '../../utils/iterators/forEachAsync.ts';
+import { cyanLog } from '../../utils/console/coloredLogs.ts';
+import roundToHundredths from '../../utils/math/roundToHundredths.ts';
 
 const router = express.Router({ mergeParams: true });
 const upload = multer({ dest: './src/server/uploads' });
@@ -67,7 +69,7 @@ async function create(req: AuthedRequest, res: Response) {
     const hostUser = await User.findById(newOperation.user);
     if (hostUser) {
       hostUser.operations.push(newOperation._id);
-      await hostUser.updateOne({ currentBalance: hostUser.currentBalance + newOperation.amount });
+      await hostUser.updateOne({ currentBalance: roundToHundredths(hostUser.currentBalance + newOperation.amount) });
       await hostUser.save();
     }
 
@@ -89,25 +91,36 @@ async function importCSVTinkoff(req: AuthedRequest, res: Response) {
     if (!rawData) return serverError(res, 'rawData');
 
     rawData.shift();
-    const operationsArray = await createOperationFromTinkoffData(rawData);
-    const result = await Promise.all(operationsArray.map(async (operationData) => {
+    const operationsData = await createOperationFromTinkoffData(rawData);
+    const existingOperations = await Operation.find({
+      user: authedUser,
+      time: { $exists: true }
+    });
+    const uniqOperationsData = operationsData.filter((newOperation) => {
+      const result = existingOperations.some((operation: OperationDocument) => isOperationDuplicate(newOperation, operation));
+      return !result;
+    });
+    
+    const operations = await Promise.all(uniqOperationsData.map(async (operationData) => {
       operationData.user = authedUser;
       const operation = await Operation.create(operationData);
       return operation;
     }));
-    if (result) {
+    if (operations) {
       const hostUser = await User.findById(req.user);
+      let balanceChange = 0;
       if (hostUser) {
-        await forEachAsync(result, async (newOperation) => {
+        await forEachAsync(operations, async (newOperation) => {
           await hostUser.operations.push(newOperation._id);
-          await hostUser.updateOne({ currentBalance: hostUser.currentBalance + newOperation.amount });
+          balanceChange = roundToHundredths(balanceChange + newOperation.amount);
         });
+        await hostUser.updateOne({ currentBalance: hostUser.currentBalance + balanceChange });
         await hostUser.save();
       }
     }
 
-    res.status(200).send(result);
-    fs.rm(req.file.path, showElement);
+    res.status(200).send(operations);
+    fs.rm(req.file.path, cyanLog);
   } catch (err) {
     showElement(err, 'err');
     serverError(res, 'operation/import');
@@ -166,7 +179,7 @@ async function remove(req: AuthedRequest, res: Response) {
 
     const result = await removingOperation.deleteOne();
     const filtered = hostUser.operations.filter((op) => op.toString() !== operationId);
-    const newBalance: number = hostUser.currentBalance - removingOperation.amount;
+    const newBalance = roundToHundredths(hostUser.currentBalance - removingOperation.amount);
     await hostUser.updateOne({ currentBalance: newBalance, operations: filtered });
 
     res.status(200).send({ result: result.deletedCount, newBalance });
@@ -189,6 +202,13 @@ async function findCategoryById(categoryId: string) {
   if (customCategory) return customCategory;
 
   return null;
+}
+function isOperationDuplicate(newOperation: OperationData, existingOperations: OperationDocument) {
+  return (
+    newOperation.date === existingOperations.date
+    && newOperation.time === existingOperations.time
+    && newOperation.amount === existingOperations.amount
+  );
 }
 
 export default router;

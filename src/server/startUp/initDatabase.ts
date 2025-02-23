@@ -8,7 +8,7 @@ import defaultIcons from "../../db/initialData/defaultIcons.tsx";
 import showElement from "../../utils/console/showElement.ts";
 import DefaultCategory, { TDefaultCategory } from "../../db/models/DefaultCategory.ts";
 import forEachAsync from "../../utils/iterators/forEachAsync.ts";
-import MCC, { TMcc } from "../../db/models/mcc.ts";
+import MCC, { TMcc } from "../../db/models/Mcc.ts";
 import mccCatalog from "../../db/initialData/mccCatalog.ts";
 
 export default async function initDatabase() {
