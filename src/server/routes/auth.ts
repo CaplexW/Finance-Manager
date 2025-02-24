@@ -42,7 +42,7 @@ async function signUp(req: Request, res: Response) {
         const hashedPassword: string = await cryptService.hash(password, 12);
         const defaultCategoriesList: TDefaultCategory[] = await DefaultCategory.find();
         const newUserData: IUser = {
-            image: createUserAvatar(email),
+            image: null,
             categories: defaultCategoriesList,
             accounts: [],
             currentBalance: 0,
