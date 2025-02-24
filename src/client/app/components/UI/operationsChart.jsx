@@ -65,7 +65,7 @@ export default function OperationsChart({ operations, switchPosition = null, typ
     backgroundColor: clrTransWhite600,
     borderRadius: '8px',
 
-    padding: '5% 0',
+    padding: '5%',
 
     width: '',
 

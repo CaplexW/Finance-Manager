@@ -11,5 +11,9 @@ export default async function extractDataFromCSV(file: Express.Multer.File): Pro
     .on('data', (record) => records.push(record))
     .on('end', () => resolve(records))
     .on('error', (err) => reject(err));
+
+    function addRecord(record: string[]) { records.push(record); }
+    function resolvePromise(records: string[][]) { resolve(records); }
+    function rejectPromise(err: unknown) { reject(err); }
   });
 }

@@ -1,17 +1,31 @@
 import { Types } from "mongoose";
-import getCategoryIdByName from "./getCategoryByName.ts";
+import getCategoryByName from "./getCategoryByName.ts";
 import getCategoryByMCC from "./getCategoryByMCC.ts";
 import determineTransferType from "./determineTransferType.ts";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import showElement from "../console/showElement.ts";
 
-export default async function determineCategoryFromTinkoffData(rowCSV: string[]): Promise<Types.ObjectId> {
+export default async function determineCategoryFromTinkoffData(operation: OperationData): Promise<Types.ObjectId> {
+
   let result;
-  result = await getCategoryIdByName(rowCSV[9]);
-  if (result) return result;
-  result = await getCategoryByMCC(rowCSV[10]);
-  if (result) return result;
-  result = await determineTransferType(rowCSV[6]);
+  result = operation.category === 'Переводы' ? null : await getCategoryByName(operation.category);
+  if (result) return result._id;
+  result = await getCategoryByMCC(operation.mcc);
+  if (result) return result._id;
+  result = await determineTransferType(operation.amount);
   if (result) return result;
 
-  throw new Error(`Cannot determine category from row named ${rowCSV[9]}, with MCC ${rowCSV[10]}`);
-  
+  throw new Error(`Cannot determine category from row named ${operation.name}, with MCC ${operation.mcc}`);
 }
+
+type OperationData = {
+  time: string,
+  date: string,
+  cardNumber: string,
+  status: string,
+  amount: number,
+  currency: string,
+  category: string,
+  mcc: number,
+  name: string,
+};

@@ -5,8 +5,8 @@ import { operationPropType } from '../../../../types/propTypes';
 import ModalWindow from '../common/modalWindow';
 import openModalById from '../../../../utils/modals/openModalById';
 import CreateOperationForm from './createOperationForm';
-import { useDispatch } from 'react-redux';
-import { deleteOperation } from '../../store/operations';
+import { useDispatch, useSelector } from 'react-redux';
+import { addOperations, createOperation, deleteOperation } from '../../store/operations';
 import DeleteButton from '../common/deleteButton';
 import EditButton from '../common/editButton';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -18,7 +18,7 @@ import operationsService from '../../services/operations.service';
 import displayError from '../../../../utils/errors/onClient/displayError';
 import CreateCategoryForm from './CreateCategoryForm';
 import closeModalWindow from '../../../../utils/modals/closeModalWindow';
-import { updateUserBalance } from '../../store/user';
+import { getUserBalance, updateUserBalance } from '../../store/user';
 import { formatDisplayDateFromInput } from '../../../../utils/formatDate';
 import { alfaIcon, uploadIcon } from '../../../assets/icons';
 import T_BANK_ICON from '../../../assets/static_icons/tBankIcon.png';
@@ -88,7 +88,14 @@ export default function OperationTable({
     formData.append('file', file);
 
     let result;
-    if (file.type === 'text/csv') result = await operationsService.uploadCSV(formData, target.name);
+    if (file.type === 'text/csv') {
+      result = await operationsService.uploadCSV(formData, target.name);
+      showElement(result, 'result of import');
+      if (result.length > 0) {
+        dispatch(addOperations(result));
+        dispatch(updateUserBalance(0));
+      }
+    }
     // if (type === 'tinkoff/csv') result = await operationsService.uploadCSV(file, 'tinkoff');
     // if (type === 'alfa/excel') result = await operationsService.uploadEXCEL(file, 'alfa');
 

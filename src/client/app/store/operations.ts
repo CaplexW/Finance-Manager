@@ -13,7 +13,8 @@ export const {
   loadData: loadOperations,
   createData: createOperation,
   updateData: updateOperation,
-  deleteData: deleteOperation
+  deleteData: deleteOperation,
+  updateState: addOperations,
 } = createCRUDFunctions(actions, operationsService);
 export const {
   getList: getOperationsList,

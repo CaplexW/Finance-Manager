@@ -4,22 +4,36 @@ import { formatInputDateFromDisplay } from "../formatDate.ts";
 
 export default async function createOperationFromTinkoffData(rawCSV: string[][]): Promise<OperationData[]> {
   const array = await Promise.all(rawCSV.map(async (row) => {
-    if (row[3] === 'FAILED') return null;
-      const operation = {
-        date: formatInputDateFromDisplay(row[1]),
-        amount: parseInt(row[6]),
-        name: row[11],
-        category: await determineCategoryFromTinkoffData(row),
-      };
-      return operation;
+    const operationData = {
+      date: row[0].split(' ')[0],
+      time: row[0].split(' ')[1],
+      cardNumber: row[2],
+      status: row[3],
+      amount: parseFloat(row[4].replace(',', '.')),
+      currency: row[5],
+      category: row[9],
+      mcc: parseInt(row[10]),
+      name: row[11],
+    };
+
+    if (operationData.status === 'FAILED') return null;
+    const operation = {
+      date: formatInputDateFromDisplay(operationData.date),
+      time: operationData.time,
+      amount: operationData.amount,
+      name: operationData.name,
+      category: await determineCategoryFromTinkoffData(operationData),
+    };
+    return operation;
   })
   );
   const filteredArray = array.filter((row) => row !== null);
   return filteredArray;
 }
 
-type OperationData = {
+export type OperationData = {
   date: string,
+  time: string,
   amount: number,
   name: string,
   category: Types.ObjectId,

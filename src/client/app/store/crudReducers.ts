@@ -32,10 +32,21 @@ export function createCRUDSlice<CRUDEntity extends CRUDObject>(sliceName: string
         const { message } = action.payload as ErrorMessage;
         state.error = message || `Error occured in attempt of load ${action.type} but there is no error message to display`;
       },
+      updateStateRequested() { },
+      updateStateSucceed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<CRUDEntity | CRUDEntity[]>) {
+        if (Array.isArray(action.payload)) {
+          if (state?.entities) action.payload.forEach((entity) => state.entities.push(entity));
+        } else {
+          if (state?.entities) state.entities.push(action.payload);
+        }
+      },
+      updateStateFailed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<unknown>) {
+        state.error = action.payload;
+      },
       updateRequested() { },
       updateSucceed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<CRUDEntity>) {
         if (state?.entities) {
-          const index = state.entities.findIndex((obj) => obj?._id === action.payload?._id);
+          const index = state.entities.findIndex((obj: CRUDEntity) => obj?._id === action.payload?._id);
           state.entities[index] = action.payload as Draft<CRUDEntity>;
         }
       },
@@ -53,7 +64,7 @@ export function createCRUDSlice<CRUDEntity extends CRUDObject>(sliceName: string
       deleteRequested() { },
       deleteSucceed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<string>) {
         if (state.entities) {
-          state.entities = state.entities.filter((op) => op?._id !== action.payload);
+          state.entities = state.entities.filter((op: CRUDEntity) => op?._id !== action.payload);
         }
       },
       deleteFailed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<unknown>) {
@@ -71,8 +82,9 @@ export function createCRUDFunctions<CRUDEntity>(actions: CRUDActions<CRUDEntity>
   const createData = createCreationFunction(actions, service);
   const updateData = createUpdateFunction(actions, service);
   const deleteData = createDeleteFunction(actions, service);
+  const updateState = createUpdateStateFunction(actions);
 
-  return { loadData, createData, updateData, deleteData };
+  return { loadData, createData, updateData, deleteData, updateState };
 }
 export function createCRUDGetters<StoreName extends keyof CRUDStateMap>(storeName: StoreName) {
   const getList = createGetListFunction<StoreName>(storeName);
@@ -96,6 +108,20 @@ function createLoadFunction<CRUDEntity>(actions: CRUDActions<CRUDEntity>, servic
       }
     };
   };
+}
+function createUpdateStateFunction<CRUDEntity>(actions: CRUDActions<CRUDEntity>) {
+  return function updateState(payload: CRUDEntity) {
+    return function dispatchUpdate(dispatch: Dispatch) {
+      const { updateStateRequested, updateStateSucceed, updateStateFailed } = actions;
+      dispatch(updateStateRequested());
+      try {
+        dispatch(updateStateSucceed(payload));
+        return true;
+      } catch (err) {
+        dispatch(updateStateFailed(err));
+      }
+    }
+  }
 }
 function createCreationFunction<CRUDEntity>(actions: CRUDActions<CRUDEntity>, service: CRUDService<CRUDEntity>) {
   return function createData(payload: CRUDEntity) {

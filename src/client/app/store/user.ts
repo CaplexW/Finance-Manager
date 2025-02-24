@@ -6,6 +6,7 @@ import { getAccessToken, getUserId, removeAuthData, setTokens } from "../service
 import userService from "../services/user.service";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from "../../../utils/console/showElement";
+import roundToHundredths from "../../../utils/math/roundToHundredths";
 
 const initialState = initState();
 const sliceConfig = {
@@ -30,7 +31,7 @@ const sliceConfig = {
       if (state.userData) {
         const { currentBalance } = state.userData;
         if (currentBalance) {
-          state.userData.currentBalance = currentBalance + action.payload;
+          state.userData.currentBalance = roundToHundredths(currentBalance + action.payload);
         }
       }
     },

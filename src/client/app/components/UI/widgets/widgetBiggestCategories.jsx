@@ -9,6 +9,7 @@ import { getIconById, getIconsList } from '../../../store/icons';
 import SVGIcon from '../../common/svgIcon';
 import { operationPropType } from '../../../../../types/propTypes';
 import StatisticPlate from '../../common/statisticsPlate';
+import roundToHundredths from '../../../../../utils/math/roundToHundredths';
 
 export default function WidgetBiggestCategories({ operations }) {
   const categories = useSelector(getCategoriesList());
@@ -20,7 +21,7 @@ export default function WidgetBiggestCategories({ operations }) {
 
   operations.forEach((op) => {
     if(Object.hasOwn(categoriesSummary, op.category)) {
-      categoriesSummary[op.category].amount += op.amount;
+      categoriesSummary[op.category].amount = roundToHundredths(categoriesSummary[op.category].amount + op.amount);
     }
     else {
       const currentCategory = categories.find((c) => c._id === op.category);
