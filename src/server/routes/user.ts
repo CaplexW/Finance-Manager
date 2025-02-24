@@ -57,10 +57,7 @@ async function removeUser(req: AuthedRequest, res: Response) {
 
     if (!req?.headers?.authorization) return sendForbidden(res, thisPlace);
     const password = req.headers.password?.split(' ')[1];
-    showElement(password, 'password');
-    showElement(removingUser.password, 'removingUser.pasword');
     const passwordIsOk = await cryptService.compare(password, removingUser.password);
-    showElement(passwordIsOk, 'passwordIsOk');
     if (!passwordIsOk) return sendCredentialsError(res);
     cyanLog('password check passed');
     const isPermitted = (id === req.user._id);

@@ -13,8 +13,6 @@ const userService = {
     return data;
   }, 
   async deleteUser(userId: string, userPassword: string): Promise<number> {
-    cyanLog('user delete requested');
-    showElement(userPassword, 'userPassword');
     const headers = { password: `Bearer ${userPassword}` };
     const response = await httpService.delete(userEndpoint + userId, { headers });
 

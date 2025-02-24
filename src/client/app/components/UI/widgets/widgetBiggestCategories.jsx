@@ -44,8 +44,8 @@ export default function WidgetBiggestCategories({ operations }) {
     <div className="widget">
       <Widget name='Наибольшие категории'>
         <div className="widget-biggest-categories-container">
-          <StatisticPlate amount={biggestIncome.amount} icon={{ src: biggestIncome.icon, color: biggestIncome.color }} name={biggestIncome.name} />
-          <StatisticPlate amount={biggestExpense.amount} icon={{ src: biggestExpense.icon, color: biggestExpense.color }} name={biggestExpense.name} />
+          <StatisticPlate amount={Math.round(biggestIncome.amount)} icon={{ src: biggestIncome.icon, color: biggestIncome.color }} name={biggestIncome.name} />
+          <StatisticPlate amount={Math.round(biggestExpense.amount)} icon={{ src: biggestExpense.icon, color: biggestExpense.color }} name={biggestExpense.name} />
         </div>
       </Widget>
     </div>

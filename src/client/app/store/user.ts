@@ -30,7 +30,7 @@ const sliceConfig = {
     updateUserBalanceSucceed(state: UserState, action: PayloadAction<number>) {
       if (state.userData) {
         const { currentBalance } = state.userData;
-        if (currentBalance) {
+        if (currentBalance || currentBalance === 0) {
           state.userData.currentBalance = roundToHundredths(currentBalance + action.payload);
         }
       }

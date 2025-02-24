@@ -33,10 +33,6 @@ export default function IconPicker({
   const lastPage = selectedPage >= Math.ceil(options.length / pageSize);
   const onlyPage = firstPage && lastPage;
 
-  showElement(pageSize * selectedPage - pageSize, 'page start');
-  showElement(pageSize * selectedPage - 1, 'pageend');
-  showElement(pageSize, 'pageSize');
-
   const displayedIcons = options.filter((_, index) => index >= pageSize * selectedPage - pageSize && index <= pageSize * selectedPage - 1);
 
   const leftCurret = arrowLeftIcon || '<';
@@ -89,8 +85,6 @@ export default function IconPicker({
     if (selectedPage > 1) setSelectedPage((prevState) => prevState - 1);
   }
   function turnNextPage() {
-    showElement(Math.ceil(options.length / pageSize), 'Math.ceil(options.length / pageSize)');
-    showElement(selectedPage, 'selectedPage');
     if (selectedPage < Math.ceil(options.length / pageSize)) setSelectedPage((prevState) => prevState + 1);
   }
 

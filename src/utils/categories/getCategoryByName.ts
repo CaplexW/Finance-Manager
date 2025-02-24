@@ -9,8 +9,6 @@ export default async function getCategoryByName(categoryName: string): Promise<C
   
   if (categoryName) {
     category = await DefaultCategory.findOne({ name: categoryName });
-    showElement(categoryName, 'categoryName');
-    showElement(category, 'category');
     if (!category) category = await Category.findOne({ name: categoryName });
   }
 

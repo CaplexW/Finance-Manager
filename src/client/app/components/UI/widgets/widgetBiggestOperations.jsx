@@ -27,8 +27,8 @@ export default function WidgetBiggestOperations({ operations }) {
     <div className="widget">
       <Widget name='Наибольшие операции'>
         <div className="widget-biggest-operations-container">
-          <StatisticPlate amount={biggestIncome.amount} icon={{ src: incomeIcon, color: incomeCategory.color }} name={biggestIncome.name} />
-          <StatisticPlate amount={biggestExpense.amount} icon={{ src: expenseIcon, color: expenseCategory.color }} name={biggestExpense.name} />
+          <StatisticPlate amount={Math.round(biggestIncome.amount)} icon={{ src: incomeIcon, color: incomeCategory.color }} name={biggestIncome.name} />
+          <StatisticPlate amount={Math.round(biggestExpense.amount)} icon={{ src: expenseIcon, color: expenseCategory.color }} name={biggestExpense.name} />
         </div>
       </Widget>
     </div>

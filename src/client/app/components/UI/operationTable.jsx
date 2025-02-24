@@ -24,6 +24,11 @@ import { alfaIcon, uploadIcon } from '../../../assets/icons';
 import T_BANK_ICON from '../../../assets/static_icons/tBankIcon.png';
 import DateRangeInput from '../common/form/dateRangeInput';
 import ContentBoard from '../common/contentBoard';
+import roundToHundredths from '../../../../utils/math/roundToHundredths';
+import displayLoading from '../../../../utils/errors/onClient/displayLoading';
+import displaySuccess from '../../../../utils/errors/onClient/displaySuccess';
+import { toast } from 'react-toastify';
+import showError from '../../../../utils/console/showError';
 
 // TODO 1. Реализовать условный рендеринг модальных окон
 
@@ -89,11 +94,16 @@ export default function OperationTable({
 
     let result;
     if (file.type === 'text/csv') {
+      const loadingToast = toast.loading('Загрузка...');
       result = await operationsService.uploadCSV(formData, target.name);
-      showElement(result, 'result of import');
       if (result.length > 0) {
         dispatch(addOperations(result));
-        dispatch(updateUserBalance(0));
+        const resultAmount = result.reduce((total, op) => roundToHundredths(total + op.amount), 0);
+        dispatch(updateUserBalance(resultAmount));
+        toast.dismiss(loadingToast);
+        displaySuccess('Загрузка завершена!');
+      } else {
+        displayError('Загрузка не удалась');
       }
     }
     // if (type === 'tinkoff/csv') result = await operationsService.uploadCSV(file, 'tinkoff');

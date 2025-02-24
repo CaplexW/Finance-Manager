@@ -66,6 +66,7 @@ function FieldInput({
           onChange={handleChange}
           placeholder={placeholder}
           ref={input}
+          step={minimumValue || 1}
           type={passwordVisible ? 'text' : type}
           value={value}
         />

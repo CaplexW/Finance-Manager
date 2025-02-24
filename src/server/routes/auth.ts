@@ -96,11 +96,7 @@ async function updateToken(req: Request, res: Response) {
     if (processingTokens.has(user?._id)) return res.status(429).json({ message: "Token update in progress" });
     processingTokens.add(user._id);
     try {
-        cyanLog('Updating token...');
-        showElement(processingTokens, 'processingTokens');
         const dbToken = await tokenService.findToken(refreshToken) as IToken;
-        showElement(dbToken, 'dbToken');
-        // if(user?._id && !dbToken) return sendTokenIsOutDated(res); //TODO потестить, нужна ли эта строка
 
         const tokenIsInvalid = (!user || !dbToken || user._id !== dbToken?.user?.toString());
         if (tokenIsInvalid) {

@@ -75,7 +75,7 @@ export default function EditOperationForm({ onClose = null, existingData = empty
     <Form defaultData={displayedData} onSubmit={handleUpdate} validatorConfig={validatorConfig} >
       <SelectInputWithCreate data={categories} label="Категория" name="category" onCreate={handleCreateCategory} />
       <FieldInput autoFocus label="Название" name="name" />
-      <FieldInput label="Сумма" minimumValue={1} name="amount" type="number" />
+      <FieldInput label="Сумма" minimumValue={0.01} name="amount" type="number" />
       <FieldInput label="Дата" name="date" type="date" />
       <div className="button-container">
         <button className='submit-btn' type='submit' >Изменить</button>

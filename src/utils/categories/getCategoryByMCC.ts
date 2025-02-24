@@ -1,4 +1,3 @@
-import getCategoryByName from "./getCategoryByName.ts";
 import MCC from "../../db/models/Mcc.ts";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from "../console/showElement.ts";
@@ -15,8 +14,6 @@ export default async function getCategoryByMCC(code: number): Promise<CategoryDo
   if (mcc) category = await DefaultCategory.findOne({ name: mcc.name });
   if (mcc && !category) category = await Category.findOne({ name: mcc.name });
   if (mcc && !category) category = await DefaultCategory.findOne({ name: 'Разное' });
-  showElement(mcc, 'mcc');
-  showElement(category, 'category');
 
   if (category) return category;
   throw new Error(`Category was not found during check MCC: ${code}`);

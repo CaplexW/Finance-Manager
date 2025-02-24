@@ -1080,7 +1080,7 @@ const defaultIcons: TIcon[] = [
     ),
   },
   {
-    name: 'sumwoofer',
+    name: 'subwoofer',
     src: (
       <svg
         enableBackground="new 0 0 64 64" fill="#000000" height="800px" id="Layer_1" version="1.0"

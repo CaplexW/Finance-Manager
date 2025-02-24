@@ -28,7 +28,6 @@ export default function NavProfile() {
     const confirmed = confirm('Вы хотите удалить свой аккаунт? Это действие не обратимо!');
     if (confirmed) {
       const password = prompt('Тогда введите свой пароль');
-      showElement(password, 'promped password');
       const result = await deleteUserAccount(user._id, password);
       if (result) { removeAuthData(); alert('Ваш аккаунт удален! Спасибо, что были с нами!'); };
       if (!result) alert('Неверный пароль!');

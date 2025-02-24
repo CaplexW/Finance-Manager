@@ -106,7 +106,7 @@ const getDisplayedStyles = (number) => {
 };
 const getDisplayedDigits = (number) => {
   let result = '';
-  result = Math.abs(number);
+  result = roundToHundredths(Math.abs(number));
   if (Math.abs(number) > 100000) result = `${Math.floor(number / 1000)}k`;
   if (Math.abs(number) > 1000000) result = `${roundToHundredths(number / 1_000_000)}m`;
 

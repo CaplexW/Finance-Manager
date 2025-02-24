@@ -48,6 +48,21 @@ export default function OperationsChart({ operations, switchPosition = null, typ
         }
       }
     });
+    const categoryObjects = dataObject.datasets[0].data.map((amount, index) => ({
+      amount,
+      color: dataObject.datasets[0].backgroundColor[index],
+      name: dataObject.labels[index],
+    }));
+    const sortedObjects = categoryObjects.toSorted((a, b) => b.amount - a.amount);
+
+    dataObject.labels = [];
+    dataObject.datasets[0].data = [];
+    dataObject.datasets[0].backgroundColor = [];
+    sortedObjects.forEach((object) => {
+      dataObject.labels.push(object.name);
+      dataObject.datasets[0].data.push(object.amount);
+      dataObject.datasets[0].backgroundColor.push(object.color);
+    });
     
     return dataObject;
   }
@@ -85,7 +100,7 @@ export default function OperationsChart({ operations, switchPosition = null, typ
   return (
     <div className="" style={containerSyles}>
       {/* <div className="sub-container" style={subStyles}> */}
-        <Chart data={data} options={options} type={type} />
+      <Chart data={data} options={options} type={type} />
       {/* </div> */}
     </div>
   );
