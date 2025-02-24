@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import Table from '../common/table';
+import Table from '../common/table/table';
 import { operationPropType } from '../../../../types/propTypes';
 import ModalWindow from '../common/modalWindow';
 import openModalById from '../../../../utils/modals/openModalById';
@@ -180,14 +180,12 @@ export default function OperationTable({
     </section >
   );
 
-  const TwentyOperations = displayedOperations.filter((_, i) => i < 20);
-
   return (
     <div className="operations-table__container">
       <ContentBoard header={tableHeader}>
         <Table
           columns={columns}
-          data={TwentyOperations} //TODO Сделать пагинацию
+          data={displayedOperations} 
           dateRange={dateRange}
           onAdd={handleOpenCreateModal}
           onDateFilter={onDateFilter}
