@@ -35,7 +35,7 @@ export function createCRUDSlice<CRUDEntity extends CRUDObject>(sliceName: string
       updateStateRequested() { },
       updateStateSucceed(state: WritableDraft<CRUDState<CRUDEntity>>, action: PayloadAction<CRUDEntity | CRUDEntity[]>) {
         if (Array.isArray(action.payload)) {
-          if (state?.entities) action.payload.forEach((entity: CRUDEntity) => state.entities.push(entity));
+          if (state?.entities) action.payload.forEach((entity) => state.entities.push(entity));
         } else {
           if (state?.entities) state.entities.push(action.payload);
         }
@@ -82,7 +82,7 @@ export function createCRUDFunctions<CRUDEntity>(actions: CRUDActions<CRUDEntity>
   const createData = createCreationFunction(actions, service);
   const updateData = createUpdateFunction(actions, service);
   const deleteData = createDeleteFunction(actions, service);
-  const updateState = createUpdateStateFunction(actions, service);
+  const updateState = createUpdateStateFunction(actions);
 
   return { loadData, createData, updateData, deleteData, updateState };
 }
@@ -109,7 +109,7 @@ function createLoadFunction<CRUDEntity>(actions: CRUDActions<CRUDEntity>, servic
     };
   };
 }
-function createUpdateStateFunction<CRUDEntity>(actions: CRUDActions<CRUDEntity>, service: CRUDService<CRUDEntity>) {
+function createUpdateStateFunction<CRUDEntity>(actions: CRUDActions<CRUDEntity>) {
   return function updateState(payload: CRUDEntity) {
     return function dispatchUpdate(dispatch: Dispatch) {
       const { updateStateRequested, updateStateSucceed, updateStateFailed } = actions;

@@ -60,7 +60,7 @@ export type CRUDActions<CRUDEntity> = {
   deleteFailed: ActionCreatorWithNonInferrablePayload<`${string}/deleteFailed`>,
 
   updateStateRequested: ActionCreatorWithoutPayload<`${string}/updateStateRequested`>,
-  updateStateSucceed: ActionCreatorWithPayload<CRUDEntity, `${string}/updateStateSucceed`>,
+  updateStateSucceed: ActionCreatorWithPayload<CRUDEntity | CRUDEntity[], `${string}/updateStateSucceed`>,
   updateStateFailed: ActionCreatorWithNonInferrablePayload<`${string}/updateStateFailed`>,
 };
 

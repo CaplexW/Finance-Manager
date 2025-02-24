@@ -28,4 +28,4 @@ type OperationData = {
   category: string,
   mcc: number,
   name: string,
-}
+};

@@ -8,6 +8,7 @@ import { operationPropType } from '../../../../../types/propTypes';
 import showElement from '../../../../../utils/console/showElement';
 import formChartData from '../../../../../utils/formChartData';
 import { isNumber } from 'lodash';
+import roundToHundredths from '../../../../../utils/math/roundToHundredths';
 
 export default function WidgetIncomeOutcome({ operations, prevOperations = null }) {
   if (!operations.length) return;
@@ -56,6 +57,7 @@ export default function WidgetIncomeOutcome({ operations, prevOperations = null 
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
+    alignItems: 'center',
     height: '100%',
   };
 
@@ -105,8 +107,8 @@ const getDisplayedStyles = (number) => {
 const getDisplayedDigits = (number) => {
   let result = '';
   result = Math.abs(number);
-  if (Math.abs(number) > 1000000) result = `${Math.floor(number / 1_000_000)}m`;
   if (Math.abs(number) > 100000) result = `${Math.floor(number / 1000)}k`;
+  if (Math.abs(number) > 1000000) result = `${roundToHundredths(number / 1_000_000)}m`;
 
   return result;
 };

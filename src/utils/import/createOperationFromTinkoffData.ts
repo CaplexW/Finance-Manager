@@ -39,5 +39,3 @@ export type OperationData = {
   category: Types.ObjectId,
   user?: Types.ObjectId | string
 };
-
-

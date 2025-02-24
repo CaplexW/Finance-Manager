@@ -8,8 +8,10 @@ export default async function getCategoryByName(categoryName: string): Promise<C
   let category;
   
   if (categoryName) {
-    category = await Category.findOne({ name: capitalize(categoryName) });
-    if (!category) category = await DefaultCategory.findOne({ name: capitalize(categoryName) });
+    category = await DefaultCategory.findOne({ name: categoryName });
+    showElement(categoryName, 'categoryName');
+    showElement(category, 'category');
+    if (!category) category = await Category.findOne({ name: categoryName });
   }
 
   if(category) return category;
