@@ -3,9 +3,9 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import forbidExtraProps from 'prop-types-exact';
-import validator from '../../../../../utils/validator';
+import validator from '../../../utils/validation/validator';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../../../utils/console/showElement';
+import showElement from '../../../utils/console/showElement';
 
 const emptyObject = {};
 

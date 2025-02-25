@@ -3,7 +3,7 @@ import {
   getAccessToken, getRefreshToken, getTokenExpiresDate, setTokens,
 } from './storage.service';
 import authService from './auth.service';
-import handleError from '../../../utils/errors/onClient/handleError';
+import handleError from '../utils/errors/onClient/handleError';
 import config from '../../../config/config';
 
 const http = axios.create({

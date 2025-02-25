@@ -1,4 +1,4 @@
-import showElement from "./console/showElement";
+import showElement from "../../../../utils/console/showElement";
 
 export default function validator(data, config) {
   const errors = {};

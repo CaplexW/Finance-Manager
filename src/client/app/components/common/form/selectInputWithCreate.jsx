@@ -1,11 +1,9 @@
-/* eslint-disable react/require-default-props */
 /* eslint-disable react/forbid-component-props */
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import CreatableSelect from 'react-select/creatable';
-import flashInvalidInputs from '../../../../../utils/flashInvalidInputs';
-import showElement from '../../../../../utils/console/showElement';
-import flashOffInvalidInputs from '../../../../../utils/flashOffInvalidInputs';
+import flashInvalidInputs from '../../../utils/validation/flashInvalidInputs';
+import flashOffInvalidInputs from '../../../utils/validation/flashOffInvalidInputs';
 
 export default function SelectInputWithCreate({
   data,
@@ -28,7 +26,6 @@ export default function SelectInputWithCreate({
       return { label: obj, value: obj.toLowerCase };
     });
   };
-  const [isLoading, setIsLoading] = useState(false);
   const thisInput = useRef(undefined);
 
   const options = createOptions(data);
@@ -61,8 +58,6 @@ export default function SelectInputWithCreate({
           aria-invalid={Boolean(error)}
           className="select from-control"
           isClearable
-          isDisabled={isLoading}
-          isLoading={isLoading}
           name={name}
           onChange={handleChange}
           onCreateOption={handleCreate}

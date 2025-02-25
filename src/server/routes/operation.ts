@@ -7,7 +7,7 @@ import { getDisplayDate } from '../../utils/formatDate.ts';
 import showError from '../../utils/console/showError.ts';
 import User from '../../db/models/User.ts';
 import Category from '../../db/models/Category.ts';
-import calculateAmount from '../../utils/calculateAmount.ts';
+import calculateAmount from '../../client/app/utils/calculateAmount.ts';
 import checkRequest from '../../utils/checkRequest.ts';
 import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
 import sendBadRequest from '../../utils/errors/fromServerToClient/sendBadRequest.ts';

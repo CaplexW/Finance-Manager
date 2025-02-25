@@ -1,4 +1,4 @@
-import { removeAuthData } from '../../../client/app/services/storage.service.ts';
+import { removeAuthData } from '../../../services/storage.service.ts';
 import showElement from '../../console/showElement.ts';
 import createErrorMessage, { CreatedErrorMessage } from './createErrorMessage.ts';
 import displayError from './displayError.ts';

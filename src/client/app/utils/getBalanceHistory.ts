@@ -1,6 +1,5 @@
-import { Operation } from "../types/types.ts";
-import getTodayDate from "./date/getTodayDate.ts";
-import { getInputDate } from "./formatDate.ts";
+import { Operation } from "../../../types/types.ts";
+import { getInputDate } from "../../../utils/formatDate.ts";
 
 export default function getBalanceHistory(
   daysRange: number,
@@ -8,14 +7,15 @@ export default function getBalanceHistory(
   currentBalance: number
 ): Map<string, number> {
   const map = new Map();
-  const today = getTodayDate();
+  const today = new Date();
+  today.setHours(0,0,0,0);
   const daysArray = new Array(daysRange).fill(0);
 
   daysArray.reduce((balance, _, day) => {
     const date = getInputDate(new Date(today.getFullYear(), today.getMonth(), today.getDate() - day));
     const prevDate = getInputDate(new Date(today.getFullYear(), today.getMonth(), today.getDate() - day + 1));
     const dateOperations = operations.filter((op) => op.date === prevDate);
-    const dateBalanceChange = dateOperations.reduce((acc, op) => (acc += op.amount), 0);
+    const dateBalanceChange = dateOperations.reduce((acc, op) => (acc + op.amount), 0);
     balance -= dateBalanceChange;
 
     map.set(date, balance);

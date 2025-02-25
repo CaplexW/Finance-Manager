@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../../utils/console/showElement';
+import showElement from '../../utils/console/showElement';
 import ContentBoard from '../common/contentBoard';
 import WidgetIncomeOutcome from './widgets/widgetIncomeOutcome';
 import { useSelector } from 'react-redux';
@@ -8,7 +8,7 @@ import { getOperationsList } from '../../store/operations';
 import WidgetBiggestOperations from './widgets/widgetBiggestOperations';
 import WidgetBalanceFlow from './widgets/widgetBalanceFlow';
 import WidgetBiggestCategories from './widgets/widgetBiggestCategories';
-import getSomeDaysAgoDate from '../../../../utils/date/getSomeDaysAgoDate';
+import getSomeDaysAgoDate from '../../utils/date/getSomeDaysAgoDate';
 import { getLoginStatus } from '../../store/user';
 
 export default function ActivityBoard() {

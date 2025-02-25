@@ -5,10 +5,10 @@ import Chart from '../../common/charts/chart';
 import { greenColor, redColor } from '../../../../../constants/colors';
 import { operationPropType } from '../../../../../types/propTypes';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../../../utils/console/showElement';
-import formChartData from '../../../../../utils/formChartData';
+import showElement from '../../../utils/console/showElement';
+import formChartData from '../../../utils/formChartData';
 import { isNumber } from 'lodash';
-import roundToHundredths from '../../../../../utils/math/roundToHundredths';
+import roundToHundredths from '../../../utils/math/roundToHundredths';
 
 export default function WidgetIncomeOutcome({ operations, prevOperations = null }) {
   if (!operations.length) return;
