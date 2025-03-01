@@ -1,24 +1,27 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { eyeOpenIcon, eyeShutIcon } from '../../../../assets/icons';
-import showElement from '../../../../../utils/console/showElement';
-import flashInvalidInputs from '../../../../../utils/flashInvalidInputs';
-import flashOffInvalidInputs from '../../../../../utils/flashOffInvalidInputs';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import showElement from '../../../utils/console/showElement';
+import flashInvalidInputs from '../../../utils/validation/flashInvalidInputs';
+import flashOffInvalidInputs from '../../../utils/validation/flashOffInvalidInputs';
+import { getInputDate } from '../../../utils/formatDate';
 
 function FieldInput({
-  value,
+  value = '',
   onChange,
-  name,
-  type,
-  label,
-  error,
-  placeholder,
-  autoFocus,
-  minimumValue
+  name = `textInput-${Date.now()}`,
+  type = 'text',
+  label = undefined,
+  error = undefined,
+  placeholder = undefined,
+  autoFocus = false,
+  minimumValue = undefined,
 }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const input = useRef();
 
+  useEffect(setInitialDate, []);
   useEffect(handelInvalid, [error]);
 
   function handelInvalid() {
@@ -35,6 +38,12 @@ function FieldInput({
 
   function togglePasswordVisibility() {
     setPasswordVisible((prevState) => !prevState);
+  }
+  function setInitialDate() {
+    if (type === 'date' && !value) {
+      const initialDate = { value: getInputDate(), name };
+      onChange(initialDate);
+    }
   }
 
   const eyeIcon = passwordVisible ? eyeOpenIcon : eyeShutIcon;
@@ -57,11 +66,12 @@ function FieldInput({
           onChange={handleChange}
           placeholder={placeholder}
           ref={input}
+          step={minimumValue || 1}
           type={passwordVisible ? 'text' : type}
           value={value}
         />
         {type === 'password' && (
-          <button className="btn btn-outline-secondary mt-1 mb-1" onClick={togglePasswordVisibility} style={{ "border": "none" }} type="button">
+          <button className="btn btn-outline-secondary mt-1 mb-1" onClick={togglePasswordVisibility} style={{ "border": "none", background: 'white' }} type="button">
             {eyeIcon}
           </button>
         )}
@@ -80,18 +90,7 @@ FieldInput.propTypes = {
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
   type: PropTypes.string,
-  value: PropTypes.string,
-};
-
-FieldInput.defaultProps = {
-  autoFocus: false,
-  error: undefined,
-  label: undefined,
-  minimumValue: undefined,
-  name: `textInput-${Date.now()}`,
-  placeholder: undefined,
-  type: 'text',
-  value: '',
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default memo(FieldInput);

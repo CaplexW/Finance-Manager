@@ -5,24 +5,22 @@ import FieldInput from '../common/form/fieldInput';
 import SelectInputWithCreate from '../common/form/selectInputWithCreate';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCategoriesList } from '../../store/categories';
-import closeModalWindow from '../../../../utils/modals/closeModalWindow';
-import showElement from '../../../../utils/console/showElement';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import showElement from '../../../../server/utils/console/showElement';
 import { updateOperation } from '../../store/operations';
-import { formatDisplayDateFromInput, formatInputDateFromDisplay } from '../../../../utils/formatDate';
+import { updateUserBalance } from '../../store/user';
+import capitalize from '../../../../server/utils/capitalize';
 
-export default function EditOperationForm({ existingData, onClose }) {
-  if(!existingData.date) return;
+const emptyObject = {};
+
+export default function EditOperationForm({ onClose = null, existingData = emptyObject, onCreateCategory }) {
+  if (!existingData.date) return;
 
   const dispatch = useDispatch();
   const categories = useSelector(getCategoriesList());
-  const categoryName = categories.filter((c) => c._id === existingData.category)[0].name;
-
+  const oldCategory = categories.filter((c) => c._id === existingData.category)[0];
+  const categoryName = oldCategory.name;
   const validatorConfig = {
-    name: {
-      isRequired: {
-        message: 'Введите название',
-      },
-    },
     amount: {
       isRequired: {
         message: 'Введите сумму',
@@ -45,28 +43,39 @@ export default function EditOperationForm({ existingData, onClose }) {
   const displayedData = {
     ...existingData,
     category: { label: categoryName, value: existingData.category },
-    date: formatInputDateFromDisplay(existingData.date),
+    date: existingData.date,
     amount: Math.abs(parseFloat(existingData.amount)),
   };
 
   async function handleUpdate(inputValue) {
     const normolizedData = {
       ...existingData,
-      name: inputValue.name.trim(),
-      date: formatDisplayDateFromInput(inputValue.date),
+      name: capitalize(inputValue.name?.trim() || inputValue.category.label),
+      date: inputValue.date || existingData.date,
       category: inputValue.category.value,
       amount: Math.abs(parseFloat(inputValue.amount)),
     };
     const result = dispatch(updateOperation(normolizedData));
-    if (result) handleClose();
+    if (result) {
+      const oldAmount = existingData.amount;
+      const newCategory = categories.find((cat) => cat._id === normolizedData.category);
+      const newAmount = newCategory.isIncome ? normolizedData.amount : -normolizedData.amount;
+      const difference = newAmount - oldAmount;
+
+      dispatch(updateUserBalance(difference));
+      handleClose();
+    };
   }
   function handleClose() { onClose(); }
+  function handleCreateCategory(enteredName) {
+    onCreateCategory(enteredName, parent);
+  }
 
   return (
-    <Form defaultData={displayedData} id="edit-operation-form" onSubmit={handleUpdate} validatorConfig={validatorConfig} >
-      <SelectInputWithCreate data={categories} label="Категория" name="category" />
+    <Form defaultData={displayedData} onSubmit={handleUpdate} validatorConfig={validatorConfig} >
+      <SelectInputWithCreate data={categories} label="Категория" name="category" onCreate={handleCreateCategory} />
       <FieldInput autoFocus label="Название" name="name" />
-      <FieldInput label="Сумма" minimumValue={1} name="amount" type="number" />
+      <FieldInput label="Сумма" minimumValue={0.01} name="amount" type="number" />
       <FieldInput label="Дата" name="date" type="date" />
       <div className="button-container">
         <button className='submit-btn' type='submit' >Изменить</button>
@@ -78,14 +87,11 @@ export default function EditOperationForm({ existingData, onClose }) {
 
 EditOperationForm.propTypes = {
   existingData: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    category: PropTypes.string.isRequired,
-    amount: PropTypes.number.isRequired,
-    date: PropTypes.string.isRequired,
+    name: PropTypes.string,
+    category: PropTypes.string,
+    amount: PropTypes.number,
+    date: PropTypes.string,
   }),
-  onClose: PropTypes.func.isRequired,
+  onClose: PropTypes.func,
+  onCreateCategory: PropTypes.func,
 };
-EditOperationForm.defaultProps = {
-  existingData: undefined,
-};
-

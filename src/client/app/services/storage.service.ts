@@ -11,6 +11,7 @@ export function setTokens({
   localStorage.setItem(TOKEN_KEY, accessToken);
   localStorage.setItem(REFRESH_KEY, refreshToken);
   localStorage.setItem(EXPIRES_KEY, expiresDate.toString());
+  window.location.reload();
 }
 
 export function getAccessToken(): string | null {
@@ -30,7 +31,7 @@ export function removeAuthData() {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(REFRESH_KEY);
   localStorage.removeItem(EXPIRES_KEY);
-  window.location.reload();
+  // window.location.reload();
 }
 
 const storageService = {

@@ -2,15 +2,16 @@ import { Request, Response, Router } from 'express';
 import User, { IUser } from '../../db/models/User.ts';
 import cryptService from '../services/crypt.service.ts';
 import tokenService from '../services/token.service.ts';
-import { redLog } from '../../utils/console/coloredLogs.ts';
-import Category, { ICategory } from '../../db/models/Category.ts';
+import { cyanLog, redLog } from '../utils/console/coloredLogs.ts';
 import validatorService from '../services/validator.service.ts';
 import { JwtPayload } from 'jsonwebtoken';
-import sendCredentialsError from '../../utils/errors/fromServerToClient/sendCredentialsError.ts';
-import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
-import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound.ts';
+import sendCredentialsError from '../utils/errors/fromServerToClient/sendCredentialsError.ts';
+import serverError from '../utils/errors/fromServerToClient/serverError.ts';
+import { sendNotFound } from '../utils/errors/fromServerToClient/sendNotFound.ts';
 import { IToken } from '../../db/models/Token.ts';
-import showElement from '../../utils/console/showElement.ts';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import showElement from '../utils/console/showElement.ts';
+import DefaultCategory, { TDefaultCategory } from '../../db/models/DefaultCategory.ts';
 
 const router = Router({ mergeParams: true });
 const { getResult, getValidation } = validatorService;
@@ -26,7 +27,9 @@ const signInWithPasswordValidations = [
 router.post('/signUp', [...singUpValidations, signUp]);
 router.post('/signInWithPassword', [...signInWithPasswordValidations, signInWithPassword]);
 router.post('/updateToken', updateToken);
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjlmZDE5MDQzMTY4OWU3N2RiYTlmYWIiLCJpYXQiOjE3MzMwNTAwNDR9.an0c52zdOQqR3EjsUJsNMNYsrrfMrVKMXzDlqZLOlco
+
+const processingTokens = new Set<string>();
+
 async function signUp(req: Request, res: Response) {
     const thisPlace = 'auth/signUp';
     try {
@@ -37,9 +40,9 @@ async function signUp(req: Request, res: Response) {
         if (userExists) return sendEmailExistsError(res);
 
         const hashedPassword: string = await cryptService.hash(password, 12);
-        const defaultCategoriesList: ICategory[] = await Category.find({ user: undefined });
+        const defaultCategoriesList: TDefaultCategory[] = await DefaultCategory.find();
         const newUserData: IUser = {
-            image: createUserAvatar(email),
+            image: null,
             categories: defaultCategoriesList,
             accounts: [],
             currentBalance: 0,
@@ -88,23 +91,29 @@ async function signInWithPassword(req: Request, res: Response) {
 }
 async function updateToken(req: Request, res: Response) {
     const thisPlace = 'auth/updateToken';
+    const { refresh_token: refreshToken } = req.body;
+    const user = tokenService.validateRefresh(refreshToken) as JwtPayload;
+    if (processingTokens.has(user?._id)) return res.status(429).json({ message: "Token update in progress" });
+    processingTokens.add(user._id);
     try {
-        const { refresh_token: refreshToken } = req.body;
-        const data = tokenService.validateRefresh(refreshToken) as JwtPayload;
         const dbToken = await tokenService.findToken(refreshToken) as IToken;
-        if(data?._id && !dbToken) return sendTokenIsOutDated(res);
 
-        const tokenIsInvalid = (!data || !dbToken || data._id !== dbToken?.user?.toString());
-        if (tokenIsInvalid) return sendTokenError(res);
+        const tokenIsInvalid = (!user || !dbToken || user._id !== dbToken?.user?.toString());
+        if (tokenIsInvalid) {
+            processingTokens.delete(user._id);
+            return sendTokenError(res);
+        }
 
-        const tokens = tokenService.generate({ _id: data._id });
-        await tokenService.save(data._id, tokens.refreshToken);
+        const tokens = tokenService.generate({ _id: user._id });
+        await tokenService.save(user._id, tokens.refreshToken);
 
-        res.status(201).send({ ...tokens, userId: data._id });
+        res.status(201).send({ ...tokens, userId: user._id });
 
     } catch (e) {
         redLog(e);
         serverError(res, thisPlace);
+    } finally {
+        processingTokens.delete(user._id);
     }
 
     function sendTokenError(response: Response) {

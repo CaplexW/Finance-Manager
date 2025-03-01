@@ -1,0 +1,6 @@
+.widget-biggest-categories-container {
+  height: 100%;
+  display: grid;
+  align-items: center;
+  padding: .5em;
+}

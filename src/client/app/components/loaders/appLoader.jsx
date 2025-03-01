@@ -6,7 +6,7 @@ import { getLoginStatus, getUsersDataStatus, loadUsers } from '../../../store/us
 import { loadQualities } from '../../../store/qualities';
 import { loadProfessions } from '../../../store/professions';
 import Loader from '../../common/loader';
-import { nodesPropType } from '../../../../types/propTypes';
+import { nodesPropType } from '../../../types/propTypes';
 
 export default function AppLoader({ children }) {
   // const isLogged = useSelector(getLoginStatus());
@@ -16,8 +16,6 @@ export default function AppLoader({ children }) {
 
   useEffect(loadData, [isLogged]);
   function loadData() {
-    // dispatch(loadProfessions());
-    // dispatch(loadQualities());
     // if (isLogged) dispatch(loadUsers());
   }
 

@@ -5,11 +5,11 @@ import PropTypes from 'prop-types';
 function SelectInput({
   options,
   name,
-  value,
+  value = null,
   onChange,
-  error,
+  error = null,
   label,
-  defaultOption,
+  defaultOption = 'Выберите вариант',
 }) {
   const selectClass = `form-select mt-1 w-100 ${error ? 'is-invalid' : ' '}`;
   const isGuest = defaultOption === 'Бродяга';
@@ -39,7 +39,7 @@ function SelectInput({
     onChange(event.target);
   }
   return (
-    <div className="mb-2 mt-3 mx-auto w-100" id="selector-continer">
+    <div className="mb-2 mt-3 mx-auto w-100" id="selector-continer" style={{ background: 'black' }} >
       <label className="form-label" htmlFor="select">
         {label}
         <div className="input-group has-validation" key={`${label}SelectDiv`}>
@@ -85,10 +85,6 @@ SelectInput.propTypes = {
   ]).isRequired,
   value: PropTypes.string,
 };
-SelectInput.defaultProps = {
-  defaultOption: 'Выберите вариант',
-  error: undefined,
-  value: '',
-};
+
 
 export default memo(SelectInput);

@@ -1,16 +1,18 @@
 import express, { Response } from 'express';
 import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
-import showError from '../../utils/console/showError.ts';
+import showError from '../utils/console/showError.ts';
 import User from '../../db/models/User.ts';
 import Category, { ICategory } from '../../db/models/Category.ts';
-import getCategoriesForUser from '../../utils/getCategoriesForUser.ts';
-import capitalize from '../../utils/capitalize.ts';
-import checkRequest from '../../utils/checkRequest.ts';
-import sendAuthError from '../../utils/errors/fromServerToClient/sendAuthError.ts';
-import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound.ts';
-import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
-import sendBadRequest from '../../utils/errors/fromServerToClient/sendBadRequest.ts';
-import { sendAlreadyExists } from '../../utils/errors/fromServerToClient/sendAlreadyExists.ts';
+import getCategoriesForUser from '../utils/getCategoriesForUser.ts';
+import capitalize from '../utils/capitalize.ts';
+import checkRequest from '../utils/checkRequest.ts';
+import sendAuthError from '../utils/errors/fromServerToClient/sendAuthError.ts';
+import { sendNotFound } from '../utils/errors/fromServerToClient/sendNotFound.ts';
+import serverError from '../utils/errors/fromServerToClient/serverError.ts';
+import sendBadRequest from '../utils/errors/fromServerToClient/sendBadRequest.ts';
+import { sendAlreadyExists } from '../utils/errors/fromServerToClient/sendAlreadyExists.ts';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import showElement from '../utils/console/showElement.ts';
 
 const router = express.Router({ mergeParams: true });
 
@@ -23,9 +25,9 @@ async function sendList(req: AuthedRequest, res: Response) {
   const thisPlace = 'category/sendList';
   try {
     if (!req.user) return sendAuthError(res, thisPlace);
-    const list = await getCategoriesForUser(req.user._id);
-    if (!list) return sendNotFound(res, 'user', req.user._id);
+    const list = await getCategoriesForUser(req.user._id); 
 
+    if (!list) return sendNotFound(res, 'user', req.user._id);
     res.status(200).send(list);
   } catch (err) {
     showError(err);
@@ -60,16 +62,15 @@ async function create(req: AuthedRequest, res: Response) {
     };
     const newCategory = await Category.create(newCategoryData);
     userCategories.push(newCategory);
-    const updatedCategory = await User.findByIdAndUpdate(authedUser, { categories: userCategories }, { new: true });
+    await User.findByIdAndUpdate(authedUser, { categories: userCategories }, { new: true });
 
-    res.status(201).send(updatedCategory);
+    res.status(201).send(newCategory);
   } catch (err) {
     showError(err);
     serverError(res, thisPlace);
   }
 }
 async function update(req: AuthedRequest, res: Response) {
-
   // requestBody: {
   //  _id: string,
   //  user: string,
@@ -79,11 +80,11 @@ async function update(req: AuthedRequest, res: Response) {
   //  icon?: ReactElement,
   // }
   const thisPlace = 'category/update';
-  const request = ['_id', 'user'];
-  const requestIsOk = checkRequest(req, request);
+  const body = ['_id', 'user'];
+  const requestIsOk = checkRequest(req, body);
   try {
-    if (!req.user) return sendAuthError(res, thisPlace);
     if (!requestIsOk) return sendBadRequest(res, thisPlace);
+    if (!req.user) return sendAuthError(res, thisPlace);
     const isPermitted: boolean = req.user._id === req.body.user;
     if (!isPermitted) return sendAuthError(res, thisPlace, req.user._id);
     const categoryExists = await Category.findById(req.body._id);

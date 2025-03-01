@@ -1,12 +1,34 @@
 @import './app/styles/table.css';
+@import './app/styles/navbar.css';
+@import './app/styles/contentBoard.css';
 @import './app/styles/modal.css';
 @import './app/styles/common.css';
 @import './app/styles/input.css';
+@import './app/styles/dateRangeInput.css';
+@import './app/styles/operationTable.css';
+@import './app/styles/layouts/operationsPage.css';
+@import './app/styles/layouts/mainPage.css';
+@import './app/styles/widgets/widget.css';
+@import './app/styles/widgets/widgetBalanceFlow.css';
+@import './app/styles/statisticsPlate.css';
+@import './app/styles/widgets/widgetBiggestOperations.css';
+@import './app/styles/widgets/widgetBiggestCategories.css';
+@import './app/styles/navbar.css';
+
 /* --mainColor #93bbca */
-* {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+ol, ul, dl {
+  margin: 0;
+  padding: 0;
 }
 body {
   background: url(./assets/background.png);

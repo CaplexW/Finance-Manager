@@ -1,21 +1,22 @@
+import { Category } from "../../types/types.ts";
 import categoriesService from "../services/categories.service";
-import { createCrudFunctions, createCrudGetters, createCrudSlice } from "./crudReducers";
+import { createCRUDFunctions, createCRUDGetters, createCRUDSlice } from "./crudReducers.ts";
 
 const storeName = 'categories';
 
-const operationsSlice = createCrudSlice(storeName);
+const operationsSlice = createCRUDSlice<Category>(storeName);
 const { reducer: categoriesReducer, actions } = operationsSlice;
 
 export const {
   loadData: loadCategories,
-  createData: createCategories,
-  updateData: updateCategories,
-  deleteData: deleteCategories
-} = createCrudFunctions(actions, categoriesService); //TODO Устранить ошибку когда разберусь с дженериками.
+  createData: createCategory,
+  updateData: updateCategory,
+  deleteData: deleteCategory
+} = createCRUDFunctions<Category>(actions, categoriesService);
 export const {
   getList: getCategoriesList,
   getLoadStatus: getCategoriesLoadStatus,
   getElementById: getCategoryById,
-} = createCrudGetters(storeName);
+} = createCRUDGetters(storeName);
 
 export default categoriesReducer;

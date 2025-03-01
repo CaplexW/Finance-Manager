@@ -1,24 +1,21 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Form from '../common/form';
 import FieldInput from '../common/form/fieldInput';
 import SelectInputWithCreate from '../common/form/selectInputWithCreate';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCategoriesList } from '../../store/categories';
-import closeModalWindow from '../../../../utils/modals/closeModalWindow';
-import showElement from '../../../../utils/console/showElement';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import showElement from '../../../../server/utils/console/showElement';
+import capitalize from '../../../../server/utils/capitalize';
 import { createOperation } from '../../store/operations';
-import { formatDisplayDateFromInput } from '../../../../utils/formatDate';
+import { updateUserBalance } from '../../store/user';
 
-export default function CreateOperationForm({ onCreateCategory, parent, onClose }) {
+export default function CreateOperationForm({ onCreateCategory = null, onClose = null }) {
   const dispatch = useDispatch();
   const categories = useSelector(getCategoriesList());
   const emptyFields = { operationName: '', category: '', amount: '', date: '' };
   const validatorConfig = {
-    operationName: {
-      isRequired: {
-        message: 'Введите название',
-      },
-    },
     amount: {
       isRequired: {
         message: 'Введите сумму',
@@ -41,13 +38,18 @@ export default function CreateOperationForm({ onCreateCategory, parent, onClose 
   
   async function handleCreate(rawData) {
     const normolizedData = {
-      name: rawData.operationName.trim(),
-      date: formatDisplayDateFromInput(rawData.date),
+      name: capitalize(rawData.operationName?.trim() || rawData.category.label),
+      date: rawData.date,
       category: rawData.category.value,
       amount: parseFloat(rawData.amount),
     };
     const result = await dispatch(createOperation(normolizedData));
-    if (result) handleClose();
+    if (result) {
+      const category = categories.find((cat) => cat._id === normolizedData.category);
+      const amount = category.isIncome ? normolizedData.amount : -normolizedData.amount;
+      dispatch(updateUserBalance(amount));
+      handleClose();
+    }
   }
   function handleCreateCategory(enteredName) {
     onCreateCategory(enteredName, parent);
@@ -66,4 +68,9 @@ export default function CreateOperationForm({ onCreateCategory, parent, onClose 
       </div>
     </Form>
   );
+};
+
+CreateOperationForm.propTypes = {
+  onClose: PropTypes.func,
+  onCreateCategory: PropTypes.func,
 };

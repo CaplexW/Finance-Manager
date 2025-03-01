@@ -5,9 +5,12 @@ button {
   transition: .5s;
 }
 button:hover {
-  border-radius: .5rem;
+  border-radius: 8px;
   background-color: #93bbca;
   transition: .5s;
+}
+button:disabled {
+  opacity: .3;
 }
 p {
   margin: 0;

@@ -1,13 +1,19 @@
-/* eslint-disable react/require-default-props */
 /* eslint-disable react/forbid-component-props */
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import CreatableSelect from 'react-select/creatable';
-import flashInvalidInputs from '../../../../../utils/flashInvalidInputs';
-import showElement from '../../../../../utils/console/showElement';
-import flashOffInvalidInputs from '../../../../../utils/flashOffInvalidInputs';
+import flashInvalidInputs from '../../../utils/validation/flashInvalidInputs';
+import flashOffInvalidInputs from '../../../utils/validation/flashOffInvalidInputs';
 
-export default function SelectInputWithCreate({ data, label, onCreate, name, value, onChange, error }) {
+export default function SelectInputWithCreate({
+  data,
+  label = null,
+  onCreate = noCreateWarning,
+  name,
+  value = null,
+  onChange = null,
+  error = null,
+}) {
   // Документация:
     // В value следует передавать объект формата
     // { label: [отображаемое название], value: [передоваемое значение] }
@@ -20,7 +26,6 @@ export default function SelectInputWithCreate({ data, label, onCreate, name, val
       return { label: obj, value: obj.toLowerCase };
     });
   };
-  const [isLoading, setIsLoading] = useState(false);
   const thisInput = useRef(undefined);
 
   const options = createOptions(data);
@@ -40,13 +45,9 @@ export default function SelectInputWithCreate({ data, label, onCreate, name, val
     onChange(result);
   }
   async function handleCreate(inputValue) {
-    // setIsLoading(true);
-    const result = await onCreate(inputValue);
-    // if (result) {
-    //   setIsLoading(false);
-    //   setOptions((prev) => [...prev, result]);
-    // };
+    await onCreate(inputValue);
   };
+  
   return (
     <div>
       <label className="label-control" htmlFor={name}>
@@ -57,26 +58,30 @@ export default function SelectInputWithCreate({ data, label, onCreate, name, val
           aria-invalid={Boolean(error)}
           className="select from-control"
           isClearable
-          isDisabled={isLoading}
-          isLoading={isLoading}
           name={name}
-          placeholder="Выберите категорию"
           onChange={handleChange}
           onCreateOption={handleCreate}
           options={options}
-          value={value || null}
+          placeholder="Выберите категорию"
+          value={value}
         />
       </div>
     </div>
   );
 };
+
 SelectInputWithCreate.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.array.isRequired,
   error: PropTypes.string,
   label: PropTypes.string,
   name: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   onCreate: PropTypes.func,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.shape({
+    value: PropTypes.string,
+    lable: PropTypes.string,
+  }),
 };
+
+function noCreateWarning() { console.error('no onCreate function was given to this input'); };

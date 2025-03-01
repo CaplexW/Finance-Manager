@@ -2,17 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FieldInput from '../common/form/fieldInput';
 import Form, { Checkbox } from '../common/form';
-import closeModalWindow from '../../../../utils/modals/closeModalWindow';
-import categoriesService from '../../services/categories.service';
-import showElement from '../../../../utils/console/showElement';
-import openModalById from '../../../../utils/modals/openModalById';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import showElement from '../../../../server/utils/console/showElement';
 import IconPicker from '../common/form/iconPicker';
-import { useSelector } from 'react-redux';
-import { getCategoriesList } from '../../store/categories';
+import { useDispatch, useSelector } from 'react-redux';
+import { getIconsList } from '../../store/icons';
+import { createCategory } from '../../store/categories';
 
-export default function CreateCategoryForm({ enteredName, onClose }) {
-  const categories = useSelector(getCategoriesList());
-  const icons = categories.map((cat) => cat.icon);
+export default function CreateCategoryForm({ enteredName = null, onClose = null }) {
+  const dispatch = useDispatch();
+
+  const icons = useSelector(getIconsList());
   const existingData = { name: enteredName || '', color: "#fff", income: false, icon: '' };
   const validatorConfig = {};
 
@@ -22,9 +22,9 @@ export default function CreateCategoryForm({ enteredName, onClose }) {
       name: data.name,
       color: data.color,
       isIncome: data.income,
-      icon: data.icon,
+      icon: data.icon._id,
     };
-    await categoriesService.create(categoryData);
+    dispatch(createCategory(categoryData));
     handleClose();
   }
   
@@ -32,7 +32,7 @@ export default function CreateCategoryForm({ enteredName, onClose }) {
     <Form defaultData={existingData} onSubmit={handleCreate} validatorConfig={validatorConfig} >
       <FieldInput label="Название новой категории" name="name" />
       <FieldInput label="Цвет новой категории" name="color" type="color" />
-      <IconPicker label="Выберете иконку для категории" name="icon" options={icons} pageSize={14} />
+      <IconPicker label="Выберете иконку для категории" name="icon" options={icons} pageSize={15} />
       <Checkbox label="Категория является доходной" name='income' />
       <div className="button-container">
         <button className='add-btn' type='submit' >Создать</button>
@@ -43,7 +43,6 @@ export default function CreateCategoryForm({ enteredName, onClose }) {
 };
 
 CreateCategoryForm.propTypes = {
-  enteredName: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
+  enteredName: PropTypes.string,
+  onClose: PropTypes.func,
 };
-

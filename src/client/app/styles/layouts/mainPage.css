@@ -1,0 +1,6 @@
+.main-page {
+  display: grid;
+  padding-inline: 2rem;
+
+  height: 89%;
+}

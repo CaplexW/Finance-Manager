@@ -1,22 +1,39 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import ButtonWithIcon from '../buttonWithIcon';
-import showError from '../../../../../utils/console/showError';
-import displayError from '../../../../../utils/errors/onClient/displayError';
+import showError from '../../../utils/console/showError';
+import displayError from '../../../utils/errors/onClient/displayError';
 import { arrowLeftIcon, arrowRightIcon } from '../../../../assets/icons';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import showElement from '../../../utils/console/showElement';
+import { iconPropType } from '../../../../types/propTypes';
 
 export default function IconPicker({
+  value = undefined,
   onChange,
   name,
-  label,
+  label = undefined,
   options,
-  pageSize,
+  pageSize = 10,
 }) {
-  const [selectedOption, setSelectedOption] = useState(options[0]);
+  const [selectedOption, setSelectedOption] = useState(value);
   const [selectedPage, setSelectedPage] = useState(1);
 
-  const displayedIcons = options.filter((_, index) => index >= pageSize * selectedPage - pageSize && index <= pageSize * selectedPage);
-
   const openedPicker = useRef();
+
+  useEffect(() => {
+    if (!value) {
+      setInitialValue();
+    } else {
+      // if(value._id !== selectedOption._id) setSelectedOption(value);
+    };
+  }, [selectedOption]);
+
+  const firstPage = selectedPage === 1;
+  const lastPage = selectedPage >= Math.ceil(options.length / pageSize);
+  const onlyPage = firstPage && lastPage;
+
+  const displayedIcons = options.filter((_, index) => index >= pageSize * selectedPage - pageSize && index <= pageSize * selectedPage - 1);
 
   const leftCurret = arrowLeftIcon || '<';
   const rightCurret = arrowRightIcon || '>';
@@ -38,20 +55,22 @@ export default function IconPicker({
   const paginatorStyles = { display: 'flex', marginBlock: '1rem .7rem', justifyContent: 'space-between' };
 
   function handleChoice(icon) {
-    const value = icon._id || icon;
-
-    if (!value) {
+    if (!icon) {
       showError('No value on iconPicker in choice handler!');
       displayError('Произошла ошибка, попробуйте позже');
       closeIconPage();
       return;
     }
 
-    setSelectedOption(value);
-    onChange({ value, name });
+    setSelectedOption(icon);
+    onChange({ value: icon, name });
     closeIconPage();
   }
 
+  function setInitialValue() {
+    onChange({ value: options[0], name });
+    setSelectedOption(options[0]);
+  }
   function toggleIconPage() {
     if (openedPicker.current.hasAttribute('hidden')) {
       openedPicker.current.removeAttribute('hidden');
@@ -60,30 +79,44 @@ export default function IconPicker({
     }
   }
   function closeIconPage() {
-    openedPicker.current.setAttribute('hidden', true);
+    if (openedPicker.current) openedPicker.current.setAttribute('hidden', true);
   }
   function turnPrevPage() {
     if (selectedPage > 1) setSelectedPage((prevState) => prevState - 1);
   }
   function turnNextPage() {
-    if (selectedPage <= Math.floor(options.length / pageSize)) setSelectedPage((prevState) => prevState + 1);
+    if (selectedPage < Math.ceil(options.length / pageSize)) setSelectedPage((prevState) => prevState + 1);
   }
 
-  return (
+  if (selectedOption) return (
     <div>
       <label htmlFor="icon-picker">{label}</label>
       <div className="picker-container" style={containerSyles} >
-        <div className="picker--closed button" style={{ ...pickerStyles, ...closedPickerStyles }} ><ButtonWithIcon icon={selectedOption} onClick={toggleIconPage} /></div>
+        <div className="picker--closed button" style={{ ...pickerStyles, ...closedPickerStyles }} >
+          <ButtonWithIcon color='black' icon={selectedOption} onClick={toggleIconPage} size={24} />
+        </div>
         <div className="picker--open" hidden ref={openedPicker} style={{ ...pickerStyles, ...openPickerStyles }}>
           <div className="picker__page" style={pickerPageStyles} >
             {displayedIcons.map((option) => <ButtonWithIcon icon={option} key={option._id} onClick={handleChoice} size={24} />)}
           </div>
-          <div className="picker__paginator" style={paginatorStyles} >
-            <button onClick={turnPrevPage} type='button'>{leftCurret}</button>
-            <button onClick={turnNextPage} type='button'>{rightCurret}</button>
+          <div className="picker__paginator" style={paginatorStyles}>
+            {onlyPage ||
+              <>
+                <button disabled={firstPage} onClick={turnPrevPage} type='button'>{leftCurret}</button>
+                <button disabled={lastPage} onClick={turnNextPage} type='button'>{rightCurret}</button>
+              </>}
           </div>
         </div>
       </div>
     </div >
   );
+};
+
+IconPicker.propTypes = {
+  label: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(PropTypes.shape(iconPropType)).isRequired,
+  pageSize: PropTypes.number,
+  value: PropTypes.shape(iconPropType).isRequired
 };

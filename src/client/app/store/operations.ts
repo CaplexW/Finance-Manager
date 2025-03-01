@@ -1,22 +1,24 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from "../../../utils/console/showElement";
+import { Operation } from "../../types/types.ts";
+import showElement from "../../../server/utils/console/showElement.ts";
 import operationsService from "../services/operations.service";
-import { createCrudFunctions, createCrudGetters, createCrudSlice } from "./crudReducers";
+import { createCRUDFunctions, createCRUDGetters, createCRUDSlice } from "./crudReducers.ts";
 
 const storeName = 'operations';
 
-const operationsSlice = createCrudSlice(storeName);
+const operationsSlice = createCRUDSlice<Operation>(storeName);
 const { reducer: operationsReducer, actions } = operationsSlice;
 
 export const {
   loadData: loadOperations,
   createData: createOperation,
   updateData: updateOperation,
-  deleteData: deleteOperation
-} = createCrudFunctions(actions, operationsService);
+  deleteData: deleteOperation,
+  updateState: addOperations,
+} = createCRUDFunctions(actions, operationsService);
 export const {
   getList: getOperationsList,
   getLoadStatus: getOperationsLoadStatus,
-} = createCrudGetters(storeName);
+} = createCRUDGetters(storeName);
 
 export default operationsReducer;

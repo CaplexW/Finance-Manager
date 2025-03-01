@@ -1,12 +1,11 @@
-import { Schema, model, Types } from "mongoose";
-import { ReactElement } from "react";
+import { Schema, model, Types, HydratedDocument } from "mongoose";
 
 const schema = {
   name: { type: String, required: true },
   color: { type: String, required: true },
   isIncome: { type: Boolean, required: true },
-  user: { type: Schema.Types.ObjectId, ref: 'User' },
-  icon: { type: Object, required: true },
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  icon: { type: Schema.Types.ObjectId, ref: 'Icon', required: true },
 };
 
 const category = new Schema(schema);
@@ -18,13 +17,21 @@ export interface ICategory {
   name: string,
   color: string,
   isIncome: boolean,
-  icon: ReactElement,
+  icon: Types.ObjectId,
   user: Types.ObjectId,
 }
 export type TCategory = {
   name: string,
   color: string,
-  IsIncome: boolean,
+  isIncome: boolean,
   icon: Types.ObjectId,
   user: Types.ObjectId,
 };
+
+export type CategoryDocument = HydratedDocument<{
+  name: string;
+  color: string;
+  isIncome: boolean;
+  user: Types.ObjectId;
+  icon: Types.ObjectId;
+}>;

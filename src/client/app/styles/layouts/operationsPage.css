@@ -1,0 +1,15 @@
+.operations-page {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 3fr 7fr;
+  padding-block: 1.5rem;
+  padding-inline: 1.5rem;
+  gap: 2rem;
+}
+
+.side-container {
+  display: grid;
+  grid-template-rows: minmax(0, auto) minmax(0, 1fr);
+  height: 100%;
+  gap: 1rem;
+}

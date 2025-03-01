@@ -1,6 +1,8 @@
 import React from 'react';
-import showElement from '../../../utils/console/showElement';
+import showElement from '../../../server/utils/console/showElement';
 import operationsService from '../services/operations.service';
+import ActivityBoard from '../components/UI/activityBoard';
+import SizeTestComponent from '../components/common/test/sizeTestComponent';
 
 export default function MainPage() {
   function showInfo() {
@@ -15,12 +17,4 @@ export default function MainPage() {
     formData.append('file', file);
     const result = await operationsService.uploadCSV(formData, 'tinkoff');
   }
-
-  return (
-    <div className="main">
-      <input id="inputFilie" onClick={showInfo} type="file" />
-      <button onClick={showInfo} type='button'>Показать инпут</button>
-      <button onClick={prepareData} type='button'>Сформировать</button>
-    </div>
-  );
 };

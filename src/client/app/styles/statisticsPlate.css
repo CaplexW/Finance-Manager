@@ -1,0 +1,39 @@
+* {
+  --clr-green: #04a802;
+  --clr-red: #ff3838;
+}
+
+.statistics-plate {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 5fr) minmax(0, 1fr);
+  justify-content: space-between;
+
+  background: white;
+  border-radius: 8px;
+  padding-inline: .5em;
+  padding-block: .8em;
+  margin-block: .3rem;
+}
+
+.plate__amount {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.plate__amount.income {
+  color: var(--clr-green);
+}
+.plate__amount.outcome {
+  color: var(--clr-red);
+}
+
+.plate__name {
+  padding-inline: .5em;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.plate__icon {
+  margin-inline-start: auto;
+}

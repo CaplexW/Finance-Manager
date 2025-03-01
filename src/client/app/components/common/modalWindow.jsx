@@ -1,13 +1,18 @@
-import React, { cloneElement, useCallback, useEffect, useRef, useState } from 'react';
+import React, { cloneElement, useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { nodesPropType } from '../../../../types/propTypes';
-import { mainColor } from '../../../../constants/colors';
-import closeModalWindow from '../../../../utils/modals/closeModalWindow';
-import showElement from '../../../../utils/console/showElement';
-import openModal from '../../../../utils/modals/openModal';
+import { nodesPropType } from '../../../types/propTypes';
+import { mainColor } from '../../constants/colors';
+import closeModalWindow from '../../utils/modals/closeModalWindow';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import showElement from '../../utils/console/showElement';
+import openModal from '../../utils/modals/openModal';
 
 export default function ModalWindow({
-  headTitle, children, text, isOpen, onClose,
+  headTitle = 'Введите данные',
+  children = null,
+  text = null,
+  isOpen,
+  onClose,
 }) {
   // TODO придумать как перенести механизм откытия в сам компонент
 
@@ -68,11 +73,9 @@ export default function ModalWindow({
 ModalWindow.propTypes = {
   children: nodesPropType,
   headTitle: PropTypes.string,
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
   text: PropTypes.string,
 };
 
-ModalWindow.defaultProps = {
-  children: undefined,
-  headTitle: 'Введите данные',
-  text: undefined,
-};
+

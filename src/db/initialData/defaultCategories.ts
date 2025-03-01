@@ -1,6 +1,6 @@
 import {
   blueColor, blueLightColor, brownColor, cyanColor, grayColor, greenColor, greenLightColor, greenToxicColor, orangeColor, pinkColor, purpleColor, redColor, redSolidColor, violetColor, yellowColor
-} from '../../constants/colors.ts';
+} from '../../client/app/constants/colors.ts';
 import { TDefaultCategory } from '../models/DefaultCategory.ts';
 
 
@@ -15,7 +15,7 @@ const defaultCategories:TDefaultCategory[] = [
   {
     name: 'Продукты',
     iconName: "food",
-    color: redColor,
+    color: '#AD0000',
     isIncome: false,
     icon: null,
   },
@@ -112,16 +112,30 @@ const defaultCategories:TDefaultCategory[] = [
   },
   {
     name: 'Переводы',
-    iconName: "money",
+    iconName: "credit-card",
     color: 'red',
     isIncome: false,
     icon: null,
   },
   {
     name: 'Поступления',
-    iconName: "money",
+    iconName: "credit-card",
     color: 'green',
     isIncome: true,
+    icon: null,
+  },
+  {
+    name: 'Дом и Ремонт',
+    iconName: "wrench",
+    color: '#ff8624',
+    isIncome: false,
+    icon: null,
+  },
+  {
+    name: 'Такси',
+    iconName: "car",
+    color: '#e5ff1f',
+    isIncome: false,
     icon: null,
   },
 ];

@@ -3,31 +3,38 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import forbidExtraProps from 'prop-types-exact';
-import validator from '../../../../../utils/validator';
+import validator from '../../../utils/validation/validator';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../../../utils/console/showElement';
+import showElement from '../../../utils/console/showElement';
+
+const emptyObject = {};
 
 export default function Form({
-  children, validatorConfig, onSubmit, defaultData, dataScheme,
+  children,
+  validatorConfig = undefined,
+  onSubmit = noSubmitWarning,
+  defaultData = emptyObject,
+  dataScheme = '',
 }) {
   // Документация:
-  // defaultData и dataScheme - оба представляют из себя оьбъект ключ:значение.
-  // Ключ - это название поля, он должен соответствовать параметру name элемента input.
+  // defaultData и dataScheme - оба представляют из себя оьбъект ключ:значение где:
+  // Ключ - это название поля инпута, он должен соответствовать параметру name элемента input.
+  // Значение - представляет value инпута.
   // Пример { email: "value", password: "value" }
-  // defaultData и dataScheme - взаимоисключающие параметры.
+  // defaultData и dataScheme - взаимоисключающие параметры,
+  // но один из них должен присутствовать в валидироемой форме.
   // defaultData следует использовать когда нужно передать в поля формы
   // какие-то существующие данные, например в форме для редактирования { name: "existing name", pass: "existing pass"}.
   // dataScheam же это объект с ключами-полями формы, но с пустыми значениями { name: "", pass: "" }.
   // Этот параметр используется для формы где не должно быть изначальных значений.
   // Его следует задать, чтобы не триггерить валидацию на только-что открывшейся форме.
-  // В случае отсутствие этого параметра или передачи пустых полей в defaultData, форма будет отрабатывать корректно,
+  // В случае передачи пустых полей в defaultData, форма будет отрабатывать корректно,
   // но валидатор сразу выдаст все ошибки при открытии формы.
-  
+
   const [data, setData] = useState(defaultData);
   const [errors, setErrors] = useState({});
   const [formIsInvalid, setFormIsInvalid] = useState(Object.keys(errors).length !== 0);
 
-  useEffect(() => setData(defaultData), [defaultData]);
   useEffect(() => setFormIsInvalid(Object.keys(errors).length !== 0), [errors]);
 
   const formIsValidating = !!validatorConfig;
@@ -36,21 +43,18 @@ export default function Form({
   const validate = useCallback((validatingData) => {
     const errorsObj = validator(validatingData, validatorConfig);
     setErrors(errorsObj);
-  
+
     return Object.keys(errorsObj).length === 0;
   }, [validatorConfig, setData]);
 
-  useEffect(() => { if (formIsValidating && dataExists) validate(data); }, [data]);
+  function validateData() { if (formIsValidating && dataExists) validate(data); }
+  useEffect(validateData, [data]);
 
   const handleChange = useCallback((target) => {
     if (target.value !== undefined) {
-      setData((prevState) => ({
-        ...prevState,
-        [target.name]: target.value,
-      }));
+      setData((prevState) => ({ ...prevState, [target.name]: target.value, }));
     }
   }, []);
-
   function handleSubmit(event) {
     event.preventDefault();
     if (formIsValidating) {
@@ -118,9 +122,8 @@ Form.propTypes = forbidExtraProps({
   // eslint-disable-next-line react/forbid-prop-types
   validatorConfig: PropTypes.object,
 });
-Form.defaultProps = {
-  dataScheme: {},
-  defaultData: {},
-  onSubmit: () => console.error('You trying to submit a form, but no function handling submit event were added to this form'),
-  validatorConfig: undefined,
-};
+
+
+function noSubmitWarning() {
+  console.error('You trying to submit a form, but no function handling submit event were added to this form');
+}

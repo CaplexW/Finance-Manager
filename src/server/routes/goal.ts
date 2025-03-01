@@ -1,22 +1,22 @@
 import express, { Response } from 'express';
 import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
-import getDataOfUser from '../../utils/getDataOfUser.ts';
-import showError from '../../utils/console/showError.ts';
+import getDataOfUser from '../utils/getDataOfUser.ts';
+import showError from '../utils/console/showError.ts';
 import Goal, { IGoal } from '../../db/models/Goal.ts';
 import User from '../../db/models/User.ts';
 import { Types } from 'mongoose';
-import sendAuthError from '../../utils/errors/fromServerToClient/sendAuthError.ts';
-import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound.ts';
-import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
-import checkRequest from '../../utils/checkRequest.ts';
-import sendBadRequest from '../../utils/errors/fromServerToClient/sendBadRequest.ts';
+import sendAuthError from '../utils/errors/fromServerToClient/sendAuthError.ts';
+import { sendNotFound } from '../utils/errors/fromServerToClient/sendNotFound.ts';
+import serverError from '../utils/errors/fromServerToClient/serverError.ts';
+import checkRequest from '../utils/checkRequest.ts';
+import sendBadRequest from '../utils/errors/fromServerToClient/sendBadRequest.ts';
 
 const router = express.Router({ mergeParams: true });
 
 router.get('/', checkAuth, sendList);
-router.post('/create', checkAuth, create);
-router.patch('/update', checkAuth, update);
-router.delete('/remove', checkAuth, remove);
+router.post('/', checkAuth, create);
+router.patch('/', checkAuth, update);
+router.delete('/', checkAuth, remove);
 
 async function sendList(req: AuthedRequest, res: Response) {
   const thisPlace = 'goal/sendList';

@@ -1,0 +1,6 @@
+.widget-biggest-operations-container {
+  height: 100%;
+  display: grid;
+  align-items: center;
+  padding: .5em;
+}

@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import config from '../../../../config/config';
-import showElement from '../../../../utils/console/showElement';
+import showElement from '../../../../server/utils/console/showElement';
 
-export default function Loader({ min, max, reason }) {
+export default function Loader({ min = null, max = null, reason = null }) {
   if (reason && !config.IN_PRODUCTION) showElement(reason, 'reason of loader');
 
   if (max) return <h1><span className="badge bg-warning m-3 w-100">Загрузка...</span></h1>;
@@ -15,8 +15,4 @@ Loader.propTypes = {
   min: PropTypes.bool,
   reason: PropTypes.string,
 };
-Loader.defaultProps = {
-  max: false,
-  min: false,
-  reason: null,
-};
+

@@ -4,20 +4,20 @@ import PropTypes, { object } from 'prop-types';
 import Select from 'react-select';
 
 function MultiSelectInput({
-  options, name, onChange, label, value,
+  options, name, onChange, label = null, value = null,
 }) {
-  const [normolizedOption, setNormolizedOptions] = useState();
+  const [normolizedOption, setNormolizedOption] = useState();
 
   function normolizeOptions() {
     if (typeof options === 'string') {
-      setNormolizedOptions([{ value: 'loading', label: 'Загрузка...' }]);
+      setNormolizedOption([{ value: 'loading', label: 'Загрузка...' }]);
     }
     if (typeof (options) === 'object') {
       const array = Object.values(options).map((quality) => {
         const result = { label: quality.name, value: quality._id };
         return result;
       });
-      setNormolizedOptions(array);
+      setNormolizedOption(array);
     }
   }
   useEffect(() => { normolizeOptions(); }, [options]);
@@ -50,7 +50,7 @@ function MultiSelectInput({
 }
 MultiSelectInput.propTypes = {
   label: PropTypes.string,
-  name: PropTypes.string,
+  name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   options: PropTypes.oneOfType([
     PropTypes.objectOf(object).isRequired,
@@ -58,11 +58,6 @@ MultiSelectInput.propTypes = {
   ]).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   value: PropTypes.array,
-};
-MultiSelectInput.defaultProps = {
-  label: undefined,
-  name: `MultiSelectInput-${Date.now()}`,
-  value: undefined,
 };
 
 export default memo(MultiSelectInput);
