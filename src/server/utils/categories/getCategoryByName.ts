@@ -1,6 +1,6 @@
-import Category, { CategoryDocument } from '../../db/models/Category.ts';
+import Category, { CategoryDocument } from '../../../db/models/Category.ts';
 import capitalize from '../capitalize.ts';
-import DefaultCategory, { DefaultCategoryDoument } from '../../db/models/DefaultCategory.ts';
+import DefaultCategory, { DefaultCategoryDoument } from '../../../db/models/DefaultCategory.ts';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../console/showElement.ts';
 

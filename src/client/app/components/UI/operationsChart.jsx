@@ -3,9 +3,9 @@ import { useSelector } from 'react-redux';
 import { getCategoriesList } from '../../store/categories';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../../utils/console/showElement';
-import { operationPropType } from '../../../../types/propTypes';
-import { clrTransWhite600, greenColor, redColor } from '../../../../constants/colors';
+import showElement from '../../../../server/utils/console/showElement';
+import { operationPropType } from '../../../types/propTypes';
+import { clrTransWhite600, greenColor, redColor } from '../../constants/colors';
 import Chart from '../common/charts/chart';
 
 export default function OperationsChart({ operations, switchPosition = null, type = 'doughnut' }) {

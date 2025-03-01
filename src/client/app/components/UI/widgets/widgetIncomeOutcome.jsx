@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Widget from '../../common/widget';
 import Chart from '../../common/charts/chart';
-import { greenColor, redColor } from '../../../../../constants/colors';
-import { operationPropType } from '../../../../../types/propTypes';
+import { greenColor, redColor } from '../../../constants/colors';
+import { operationPropType } from '../../../../types/propTypes';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../utils/console/showElement';
 import formChartData from '../../../utils/formChartData';

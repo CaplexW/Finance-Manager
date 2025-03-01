@@ -1,6 +1,6 @@
 import {
   blueColor, blueLightColor, brownColor, cyanColor, grayColor, greenColor, greenLightColor, greenToxicColor, orangeColor, pinkColor, purpleColor, redColor, redSolidColor, violetColor, yellowColor
-} from '../../constants/colors.ts';
+} from '../../client/app/constants/colors.ts';
 import { TDefaultCategory } from '../models/DefaultCategory.ts';
 
 

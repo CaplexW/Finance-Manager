@@ -4,7 +4,7 @@ import Widget from '../../common/widget';
 import { useSelector } from 'react-redux';
 import { getCategoryById } from '../../../store/categories';
 import { getIconById } from '../../../store/icons';
-import { operationPropType } from '../../../../../types/propTypes';
+import { operationPropType } from '../../../../types/propTypes';
 import StatisticPlate from '../../common/statisticsPlate';
 
 export default function WidgetBiggestOperations({ operations }) {

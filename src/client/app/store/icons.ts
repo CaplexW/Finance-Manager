@@ -1,4 +1,4 @@
-import { Icon } from "../../../types/types";
+import { Icon } from "../../types/types.ts";
 import iconsService from "../services/icons.service.ts";
 import { createCRUDFunctions, createCRUDGetters, createCRUDSlice } from "./crudReducers.ts";
 

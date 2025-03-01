@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { getUserBalance } from '../../store/user';
-import showElement from '../../../../utils/console/showElement';
+import showElement from '../../../../server/utils/console/showElement';
 import { isNumber } from 'lodash';
 
 export default function UserBalance() {

@@ -6,10 +6,10 @@ import SelectInputWithCreate from '../common/form/selectInputWithCreate';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCategoriesList } from '../../store/categories';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../../utils/console/showElement';
+import showElement from '../../../../server/utils/console/showElement';
 import { updateOperation } from '../../store/operations';
 import { updateUserBalance } from '../../store/user';
-import capitalize from '../../../../utils/capitalize';
+import capitalize from '../../../../server/utils/capitalize';
 
 const emptyObject = {};
 

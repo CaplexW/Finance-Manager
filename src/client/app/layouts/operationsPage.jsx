@@ -4,13 +4,13 @@ import { getUserDataStatus } from '../store/user';
 import { getOperationsList, getOperationsLoadStatus } from '../store/operations';
 import { getCategoriesLoadStatus } from '../store/categories';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../utils/console/showElement';
+import showElement from '../../../server/utils/console/showElement';
 import CategoriesList from '../components/UI/categoriesList';
 import OperationTable from '../components/UI/operationTable';
 import { orderBy } from 'lodash';
 import OperationsChart from '../components/UI/operationsChart';
 import ContentBoard from '../components/common/contentBoard';
-import { getInputDate, todayInput } from '../../../utils/formatDate';
+import { getInputDate, todayInput } from '../../../server/utils/formatDate';
 
 // TODO 1. Реализовать создание и редактирование категорий.
 // TODO 4. Реализовать фильтрацию и сортировку.

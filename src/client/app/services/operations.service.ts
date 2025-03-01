@@ -1,6 +1,6 @@
-import { Operation } from "../../../types/types";
+import { Operation } from "../../types/types";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from "../../../utils/console/showElement";
+import showElement from "../../../server/utils/console/showElement";
 import displayError from "../utils/errors/onClient/displayError";
 import { createCRUDServiceFunctions } from "./crud.service";
 import httpService from "./http.service";

@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { yellowColor } from "../../constants/colors.ts";
+import { yellowColor } from "../../../client/app/constants/colors.ts";
 
 export function greenLog(message:unknown) {
   console.log(chalk.green(message));

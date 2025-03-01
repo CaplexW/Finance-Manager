@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import SVGIcon from './svgIcon';
-import { iconPropType } from '../../../../types/propTypes';
+import { iconPropType } from '../../../types/propTypes';
 
 export default function ButtonWithIcon({ icon, onClick, size = 16 }) {
   const styles = { margin: '.5rem' };

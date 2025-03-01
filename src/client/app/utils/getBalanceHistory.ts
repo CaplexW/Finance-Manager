@@ -1,5 +1,5 @@
-import { Operation } from "../../../types/types.ts";
-import { getInputDate } from "../../../utils/formatDate.ts";
+import { Operation } from "../../types/types.ts";
+import { getInputDate } from "../../../server/utils/formatDate.ts";
 
 export default function getBalanceHistory(
   daysRange: number,

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import FieldInput from '../common/form/fieldInput';
 import Form, { Checkbox } from '../common/form';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../../utils/console/showElement';
+import showElement from '../../../../server/utils/console/showElement';
 import IconPicker from '../common/form/iconPicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIconsList } from '../../store/icons';

@@ -6,7 +6,7 @@ import displayError from '../../../utils/errors/onClient/displayError';
 import { arrowLeftIcon, arrowRightIcon } from '../../../../assets/icons';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../utils/console/showElement';
-import { iconPropType } from '../../../../../types/propTypes';
+import { iconPropType } from '../../../../types/propTypes';
 
 export default function IconPicker({
   value = undefined,

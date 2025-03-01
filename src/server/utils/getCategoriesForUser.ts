@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 import { ObjectId } from "mongodb";
-import User from "../db/models/User.ts";
+import User from "../../db/models/User.ts";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from "./console/showElement.ts";
 

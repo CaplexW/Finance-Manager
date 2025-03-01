@@ -1,12 +1,12 @@
 import { Dispatch, PayloadAction, createSlice } from "@reduxjs/toolkit";
-import showError from "../../../utils/console/showError";
-import { Credentials, ErrorMessage, GlobalState, RegisterPayload, User, UserState } from "../../../types/types";
+import showError from "../../../server/utils/console/showError";
+import { Credentials, ErrorMessage, GlobalState, RegisterPayload, User, UserState } from "../../types/types";
 import authService from "../services/auth.service";
 import { getAccessToken, getUserId, removeAuthData, setTokens } from "../services/storage.service";
 import userService from "../services/user.service";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from "../../../utils/console/showElement";
-import roundToHundredths from "../../../utils/math/roundToHundredths";
+import showElement from "../../../server/utils/console/showElement";
+import roundToHundredths from "../../../server/utils/math/roundToHundredths";
 
 const initialState = initState();
 const sliceConfig = {

@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
-import showError from '../../utils/console/showError.ts';
+import showError from '../utils/console/showError.ts';
 import Icon from '../../db/models/Icon.ts';
-import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound.ts';
-import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
-import showElement from '../../utils/console/showElement.ts';
+import { sendNotFound } from '../utils/errors/fromServerToClient/sendNotFound.ts';
+import serverError from '../utils/errors/fromServerToClient/serverError.ts';
+import showElement from '../utils/console/showElement.ts';
 
 const router = express.Router({ mergeParams: true });
 

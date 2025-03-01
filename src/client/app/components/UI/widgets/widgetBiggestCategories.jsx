@@ -4,9 +4,9 @@ import Widget from '../../common/widget';
 import { useSelector } from 'react-redux';
 import { getCategoriesList } from '../../../store/categories';
 import { getIconsList } from '../../../store/icons';
-import { operationPropType } from '../../../../../types/propTypes';
+import { operationPropType } from '../../../../types/propTypes';
 import StatisticPlate from '../../common/statisticsPlate';
-import roundToHundredths from '../../../../../utils/math/roundToHundredths';
+import roundToHundredths from '../../../../../server/utils/math/roundToHundredths';
 
 export default function WidgetBiggestCategories({ operations }) {
   const categories = useSelector(getCategoriesList());

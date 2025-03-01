@@ -1,18 +1,18 @@
 import express, { Response } from 'express';
 import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
-import showError from '../../utils/console/showError.ts';
+import showError from '../utils/console/showError.ts';
 import User from '../../db/models/User.ts';
 import Category, { ICategory } from '../../db/models/Category.ts';
-import getCategoriesForUser from '../../utils/getCategoriesForUser.ts';
-import capitalize from '../../utils/capitalize.ts';
-import checkRequest from '../../utils/checkRequest.ts';
-import sendAuthError from '../../utils/errors/fromServerToClient/sendAuthError.ts';
-import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound.ts';
-import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
-import sendBadRequest from '../../utils/errors/fromServerToClient/sendBadRequest.ts';
-import { sendAlreadyExists } from '../../utils/errors/fromServerToClient/sendAlreadyExists.ts';
+import getCategoriesForUser from '../utils/getCategoriesForUser.ts';
+import capitalize from '../utils/capitalize.ts';
+import checkRequest from '../utils/checkRequest.ts';
+import sendAuthError from '../utils/errors/fromServerToClient/sendAuthError.ts';
+import { sendNotFound } from '../utils/errors/fromServerToClient/sendNotFound.ts';
+import serverError from '../utils/errors/fromServerToClient/serverError.ts';
+import sendBadRequest from '../utils/errors/fromServerToClient/sendBadRequest.ts';
+import { sendAlreadyExists } from '../utils/errors/fromServerToClient/sendAlreadyExists.ts';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../utils/console/showElement.ts';
+import showElement from '../utils/console/showElement.ts';
 
 const router = express.Router({ mergeParams: true });
 

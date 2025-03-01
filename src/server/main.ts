@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import cors from 'cors';
 import initDatabase from "./startUp/initDatabase.ts";
 import startUp from "./startUp/startUp.ts";
-import { greenLog, redLog, yellowLog } from "../utils/console/coloredLogs.ts";
+import { greenLog, redLog, yellowLog } from "./utils/console/coloredLogs.ts";
 import routes from "./routes/index.ts";
 
 const { PORT, MONGO_SERVER } = config;

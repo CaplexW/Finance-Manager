@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import showElement from '../../../../../utils/console/showElement';
+import showElement from '../../../../../server/utils/console/showElement';
 
 export default function SizeTestComponent() {
   const container = useRef();

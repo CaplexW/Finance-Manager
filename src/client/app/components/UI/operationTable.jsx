@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import Table from '../common/table/table';
-import { operationPropType } from '../../../../types/propTypes';
+import { operationPropType } from '../../../types/propTypes';
 import ModalWindow from '../common/modalWindow';
 import CreateOperationForm from './createOperationForm';
 import { useDispatch } from 'react-redux';

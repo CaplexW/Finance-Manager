@@ -1,4 +1,4 @@
-import { Category } from "../../../types/types";
+import { Category } from "../../types/types.ts";
 import categoriesService from "../services/categories.service";
 import { createCRUDFunctions, createCRUDGetters, createCRUDSlice } from "./crudReducers.ts";
 

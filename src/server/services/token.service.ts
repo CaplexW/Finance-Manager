@@ -2,7 +2,7 @@ import jsonwebtoken, { JwtPayload } from "jsonwebtoken";
 import { Document, Types } from "mongoose";
 import config from "../../config/config.ts";
 import Token, { IToken } from "../../db/models/Token.ts";
-import showError from "../../utils/console/showError.ts";
+import showError from "../utils/console/showError.ts";
 
 const { ACCESS_KEY, REFRESH_KEY } = config;
 

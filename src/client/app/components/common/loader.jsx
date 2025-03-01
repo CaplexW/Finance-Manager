@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import config from '../../../../config/config';
-import showElement from '../../../../utils/console/showElement';
+import showElement from '../../../../server/utils/console/showElement';
 
 export default function Loader({ min = null, max = null, reason = null }) {
   if (reason && !config.IN_PRODUCTION) showElement(reason, 'reason of loader');
