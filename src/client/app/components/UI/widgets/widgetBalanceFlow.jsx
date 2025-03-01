@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Widget from '../../common/widget';
-import { operationPropType } from '../../../../../types/propTypes';
+import { operationPropType } from '../../../../types/propTypes';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../../../utils/console/showElement';
-import { formatDisplayDateFromInput } from '../../../../../utils/formatDate';
+import showElement from '../../../utils/console/showElement';
+import { formatDisplayDateFromInput } from '../../../utils/formatDate';
 import { useSelector } from 'react-redux';
 import { getUserBalance } from '../../../store/user';
-import formChartData from '../../../../../utils/formChartData';
-import { greenColor, redColor } from '../../../../../constants/colors';
+import formChartData from '../../../utils/formChartData';
+import { greenColor, redColor } from '../../../constants/colors';
 import Chart from '../../common/charts/chart';
-import getBalanceHistory from '../../../../../utils/getBalanceHistory';
+import getBalanceHistory from '../../../utils/getBalanceHistory';
 
 export default function WidgetBalanceFlow({ operations, dateRange }) {
   const userBalance = useSelector(getUserBalance());

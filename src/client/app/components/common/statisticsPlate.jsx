@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SVGIcon from './svgIcon';
-import { iconPropType } from '../../../../types/propTypes';
+import { iconPropType } from '../../../types/propTypes';
 
 export default function StatisticPlate({ amount, name, icon }) {
   return (

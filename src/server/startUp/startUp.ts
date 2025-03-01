@@ -1,5 +1,5 @@
 import config from "../../config/config.ts";
-import { cyanLog, yellowLog } from "../../utils/console/coloredLogs.ts";
+import { cyanLog, yellowLog } from "../utils/console/coloredLogs.ts";
 
 const { PORT, URL, IN_PRODUCTION } = config;
 

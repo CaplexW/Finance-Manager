@@ -13,7 +13,7 @@ import { getLoginStatus, getUserDataStatus, loadUserData } from "./store/user";
 import { getOperationsLoadStatus, loadOperations } from "./store/operations";
 import { getCategoriesLoadStatus, loadCategories } from "./store/categories";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from "../../utils/console/showElement";
+import showElement from "../../server/utils/console/showElement";
 import ProtectedRoute from "./components/routes/protectedRoute";
 import AnalyticsPage from "./layouts/analyticsPage";
 

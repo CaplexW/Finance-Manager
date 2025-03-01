@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { getCategoriesList } from '../../store/categories';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../../utils/console/showElement';
-import { operationPropType } from '../../../../types/propTypes';
+import showElement from '../../../../server/utils/console/showElement';
+import { operationPropType } from '../../../types/propTypes';
 import { getIconsList } from '../../store/icons';
 import SVGIcon from '../common/svgIcon';
-import { clrTransWhite600 } from '../../../../constants/colors';
+import { clrTransWhite600 } from '../../constants/colors';
 
 export default function CategoriesList({ onClick, operations }) {
   const [filteredList, setFilteredList] = useState([]);

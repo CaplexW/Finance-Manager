@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { nodesPropType } from '../../../../types/propTypes';
+import { nodesPropType } from '../../../types/propTypes';
 
 export default function ContentBoard({ children = '', header = 'Заголовок' }) {
 

@@ -2,20 +2,20 @@ import express, { Response } from 'express';
 import User from '../../db/models/User.ts';
 import tokenService from '../services/token.service.ts';
 import { AuthedRequest, checkAuth } from '../middleware/auth.middleware.ts';
-import showError from '../../utils/console/showError.ts';
+import showError from '../utils/console/showError.ts';
 import Operation from '../../db/models/Operation.ts';
 import Category from '../../db/models/Category.ts';
 import Account from '../../db/models/Account.ts';
 import Goal from '../../db/models/Goal.ts';
-import sendAuthError from '../../utils/errors/fromServerToClient/sendAuthError.ts';
-import sendForbidden from '../../utils/errors/fromServerToClient/sendForbidden.ts';
-import { sendNotFound } from '../../utils/errors/fromServerToClient/sendNotFound.ts';
-import serverError from '../../utils/errors/fromServerToClient/serverError.ts';
+import sendAuthError from '../utils/errors/fromServerToClient/sendAuthError.ts';
+import sendForbidden from '../utils/errors/fromServerToClient/sendForbidden.ts';
+import { sendNotFound } from '../utils/errors/fromServerToClient/sendNotFound.ts';
+import serverError from '../utils/errors/fromServerToClient/serverError.ts';
 import cryptService from '../services/crypt.service.ts';
-import sendCredentialsError from '../../utils/errors/fromServerToClient/sendCredentialsError.ts';
-import { cyanLog } from '../../utils/console/coloredLogs.ts';
+import sendCredentialsError from '../utils/errors/fromServerToClient/sendCredentialsError.ts';
+import { cyanLog } from '../utils/console/coloredLogs.ts';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../utils/console/showElement.ts';
+import showElement from '../utils/console/showElement.ts';
 
 const router = express.Router({ mergeParams: true });
 

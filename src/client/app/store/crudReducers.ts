@@ -1,8 +1,8 @@
 import { Dispatch, PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { ErrorMessage, CRUDState, CRUDActions, CRUDService, GlobalState, CRUDObject, CRUDStateMap } from "../../../types/types.ts";
+import { ErrorMessage, CRUDState, CRUDActions, CRUDService, GlobalState, CRUDObject, CRUDStateMap } from "../../types/types.ts";
 import { Draft, WritableDraft } from 'immer';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from "../../../utils/console/showElement.ts";
+import showElement from "../../../server/utils/console/showElement.ts";
 
 export function createCRUDSlice<CRUDEntity extends CRUDObject>(sliceName: string, config = { emptyEntityIsValid: true }) {
   const initialState: CRUDState<CRUDEntity> = {

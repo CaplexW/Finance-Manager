@@ -1,6 +1,6 @@
-import { RemoveResult } from "../../../types/types";
+import { RemoveResult } from "../../../server/types/types";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from "../../../utils/console/showElement";
+import showElement from "../../../server/utils/console/showElement";
 import httpService from "./http.service";
 
 export function createCRUDServiceFunctions<CRUDEntity>(endpoint: string) {

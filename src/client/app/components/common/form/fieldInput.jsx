@@ -2,10 +2,10 @@ import React, { memo, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { eyeOpenIcon, eyeShutIcon } from '../../../../assets/icons';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../../../utils/console/showElement';
-import flashInvalidInputs from '../../../../../utils/flashInvalidInputs';
-import flashOffInvalidInputs from '../../../../../utils/flashOffInvalidInputs';
-import { getInputDate } from '../../../../../utils/formatDate';
+import showElement from '../../../utils/console/showElement';
+import flashInvalidInputs from '../../../utils/validation/flashInvalidInputs';
+import flashOffInvalidInputs from '../../../utils/validation/flashOffInvalidInputs';
+import { getInputDate } from '../../../utils/formatDate';
 
 function FieldInput({
   value = '',

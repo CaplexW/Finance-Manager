@@ -1,34 +1,32 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import Table from '../common/table/table';
-import { operationPropType } from '../../../../types/propTypes';
+import { operationPropType } from '../../../types/propTypes';
 import ModalWindow from '../common/modalWindow';
-import openModalById from '../../../../utils/modals/openModalById';
 import CreateOperationForm from './createOperationForm';
-import { useDispatch, useSelector } from 'react-redux';
-import { addOperations, createOperation, deleteOperation } from '../../store/operations';
+import { useDispatch } from 'react-redux';
+import { addOperations, deleteOperation } from '../../store/operations';
 import DeleteButton from '../common/deleteButton';
 import EditButton from '../common/editButton';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../../utils/console/showElement';
+import showElement from '../../utils/console/showElement';
 import EditOperationForm from './editOperationForm';
 import CategoryLabel from './categoryLabel';
 import OperationAmount from './operationAmount';
 import operationsService from '../../services/operations.service';
-import displayError from '../../../../utils/errors/onClient/displayError';
+import displayError from '../../utils/errors/onClient/displayError';
 import CreateCategoryForm from './CreateCategoryForm';
-import closeModalWindow from '../../../../utils/modals/closeModalWindow';
-import { getUserBalance, updateUserBalance } from '../../store/user';
-import { formatDisplayDateFromInput } from '../../../../utils/formatDate';
+import closeModalWindow from '../../utils/modals/closeModalWindow';
+import { updateUserBalance } from '../../store/user';
+import { formatDisplayDateFromInput } from '../../utils/formatDate';
 import { alfaIcon, uploadIcon } from '../../../assets/icons';
 import T_BANK_ICON from '../../../assets/static_icons/tBankIcon.png';
+import openModalById from '../../utils/modals/openModalById';
 import DateRangeInput from '../common/form/dateRangeInput';
 import ContentBoard from '../common/contentBoard';
-import roundToHundredths from '../../../../utils/math/roundToHundredths';
-import displayLoading from '../../../../utils/errors/onClient/displayLoading';
-import displaySuccess from '../../../../utils/errors/onClient/displaySuccess';
+import roundToHundredths from '../../utils/math/roundToHundredths';
+import displaySuccess from '../../utils/errors/onClient/displaySuccess';
 import { toast } from 'react-toastify';
-import showError from '../../../../utils/console/showError';
 
 // TODO 1. Реализовать условный рендеринг модальных окон
 

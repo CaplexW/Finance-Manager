@@ -1,15 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Widget from '../../common/widget';
-import { greenColor, redColor } from '../../../../../constants/colors';
-import showElement from '../../../../../utils/console/showElement';
 import { useSelector } from 'react-redux';
-import { getCategoriesList, getCategoryById } from '../../../store/categories';
-import { getIconById, getIconsList } from '../../../store/icons';
-import SVGIcon from '../../common/svgIcon';
-import { operationPropType } from '../../../../../types/propTypes';
+import { getCategoriesList } from '../../../store/categories';
+import { getIconsList } from '../../../store/icons';
+import { operationPropType } from '../../../../types/propTypes';
 import StatisticPlate from '../../common/statisticsPlate';
-import roundToHundredths from '../../../../../utils/math/roundToHundredths';
+import roundToHundredths from '../../../../../server/utils/math/roundToHundredths';
 
 export default function WidgetBiggestCategories({ operations }) {
   const categories = useSelector(getCategoriesList());

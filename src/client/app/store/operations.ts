@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Operation } from "../../../types/types.ts";
-import showElement from "../../../utils/console/showElement";
+import { Operation } from "../../types/types.ts";
+import showElement from "../../../server/utils/console/showElement.ts";
 import operationsService from "../services/operations.service";
 import { createCRUDFunctions, createCRUDGetters, createCRUDSlice } from "./crudReducers.ts";
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import showElement from '../../../utils/console/showElement';
+import showElement from '../../../server/utils/console/showElement';
 import operationsService from '../services/operations.service';
 import ActivityBoard from '../components/UI/activityBoard';
 import SizeTestComponent from '../components/common/test/sizeTestComponent';

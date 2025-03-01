@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { clrTransWhite500 } from '../../../../constants/colors';
-import { nodesPropType } from '../../../../types/propTypes';
+import { clrTransWhite500 } from '../../constants/colors';
+import { nodesPropType } from '../../../types/propTypes';
 
 export default function Widget({ children, name = 'Widget name' }) {
   const widgetStyles = {

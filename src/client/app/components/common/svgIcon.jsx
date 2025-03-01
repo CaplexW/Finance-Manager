@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../../utils/console/showElement';
-import { iconPropType } from '../../../../types/propTypes';
+import showElement from '../../../../server/utils/console/showElement';
+import { iconPropType } from '../../../types/propTypes';
 
 export default function SVGIcon({
   source,

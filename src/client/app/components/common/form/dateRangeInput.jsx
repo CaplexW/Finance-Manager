@@ -1,12 +1,12 @@
 import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
-import { formatDisplayDateFromInput } from '../../../../../utils/formatDate';
-import getWeekBorders from '../../../../../utils/date/getWeekBorders';
-import getLastMonthsBorders from '../../../../../utils/date/getLastMonthsBorders';
+import { formatDisplayDateFromInput } from '../../../utils/formatDate';
+import getWeekBorders from '../../../utils/date/getWeekBorders';
+import getLastMonthsBorders from '../../../utils/date/getLastMonthsBorders';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../../../utils/console/showElement';
+import showElement from '../../../utils/console/showElement';
 import { arrowLeftIcon, arrowRightIcon } from '../../../../assets/icons';
-import getTodayDate from '../../../../../utils/date/getTodayDate';
+import getTodayDate from '../../../utils/date/getTodayDate';
 
 const months = [
   'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',

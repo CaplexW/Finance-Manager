@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { getLoginStatus } from '../../store/user';
 import NavProfile from './navProfile';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../../utils/console/showElement';
+import showElement from '../../../../server/utils/console/showElement';
 import UserBalance from './userBalance';
 
 export default function NavBar() {

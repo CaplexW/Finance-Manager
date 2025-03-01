@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import ButtonWithIcon from '../buttonWithIcon';
-import showError from '../../../../../utils/console/showError';
-import displayError from '../../../../../utils/errors/onClient/displayError';
+import showError from '../../../utils/console/showError';
+import displayError from '../../../utils/errors/onClient/displayError';
 import { arrowLeftIcon, arrowRightIcon } from '../../../../assets/icons';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../../../utils/console/showElement';
-import { iconPropType } from '../../../../../types/propTypes';
+import showElement from '../../../utils/console/showElement';
+import { iconPropType } from '../../../../types/propTypes';
 
 export default function IconPicker({
   value = undefined,

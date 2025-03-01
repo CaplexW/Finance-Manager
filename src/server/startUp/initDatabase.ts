@@ -1,13 +1,13 @@
 import defaultCategories from "../../db/initialData/defaultCategories.ts";
 import { Document, Mongoose } from "mongoose";
-import { redLog } from "../../utils/console/coloredLogs.ts";
-import catchError from "../../utils/errors/catchError.ts";
+import { redLog } from "../utils/console/coloredLogs.ts";
+import catchError from "../utils/errors/catchError.ts";
 import Icon, { TIcon } from "../../db/models/Icon.ts";
 import defaultIcons from "../../db/initialData/defaultIcons.tsx";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from "../../utils/console/showElement.ts";
+import showElement from "../utils/console/showElement.ts";
 import DefaultCategory, { TDefaultCategory } from "../../db/models/DefaultCategory.ts";
-import forEachAsync from "../../utils/iterators/forEachAsync.ts";
+import forEachAsync from "../utils/iterators/forEachAsync.ts";
 import MCC, { TMcc } from "../../db/models/Mcc.ts";
 import mccCatalog from "../../db/initialData/mccCatalog.ts";
 
