@@ -7,14 +7,23 @@ import initDatabase from "./startUp/initDatabase.ts";
 import startUp from "./startUp/startUp.ts";
 import { greenLog, redLog, yellowLog } from "./utils/console/coloredLogs.ts";
 import routes from "./routes/index.ts";
+import path from "path";
 
-const { PORT, MONGO_SERVER } = config;
+const { PORT, MONGO_SERVER, IN_PRODUCTION } = config;
 const app = express();
 
 app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(cors());
 app.use('/api', routes);
+
+if (IN_PRODUCTION) {
+  const buildPath = path.join(import.meta.dirname, 'build');
+  const indexPath = path.join(buildPath, 'index.html');
+
+  app.use('/', express.static(buildPath));
+  app.get('*', (req, res) => res.sendFile(indexPath));
+}
 
 startServer();
 

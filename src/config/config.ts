@@ -1,5 +1,5 @@
 const isProd = (process.env.NODE_ENV === 'production');
-const externalUrl: string = '192.168.1.101';
+const externalUrl: string = 'localhost';
 const localUrl: string = 'localhost';
 
 const URL: string = getUrl();
