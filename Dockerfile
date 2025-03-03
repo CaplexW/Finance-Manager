@@ -14,6 +14,8 @@ WORKDIR /app/client
 
 RUN npm build
 
+WORKDIR /app
+
 COPY /app/client/dist /app/server/build
 
 EXPOSE 80
