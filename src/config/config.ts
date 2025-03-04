@@ -27,7 +27,9 @@ function getPort(): number {
   return isProd ? 80 : 80;
 }
 function getMongoServer(): string {
-  return `mongodb://${URL}:27017/FinanceManager`;
+  const username = 'admin';
+  const passowrd = 'VjqCegthG@h0km';
+  return `mongodb://${username}:${passowrd}@${URL}:27017/FinanceManager`;
 }
 function getUrl(): string {
   return isProd ? externalUrl : localUrl;
