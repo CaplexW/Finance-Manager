@@ -1,6 +1,7 @@
 const isProd = (process.env.NODE_ENV === 'production');
 const externalUrl: string = '37.18.102.39';
 const localUrl: string = 'localhost';
+const dbName = isProd ? 'WatchMoney' : 'FinanceManager';
 
 const URL: string = getUrl();
 const PORT: number = getPort();
@@ -27,9 +28,10 @@ function getPort(): number {
   return isProd ? 80 : 80;
 }
 function getMongoServer(): string {
-  const username = 'admin';
-  const passowrd = 'VjqCegthG%40h0km';
-  return `mongodb://${username}:${passowrd}@${URL}:27017/FinanceManager`;
+  const username = 'watcher';
+  const passowrd = 'watcherG%40h0km';
+  
+  return `mongodb://${username}:${passowrd}@${URL}:27017/${dbName}?authSource=${dbName}`;
 }
 function getUrl(): string {
   return isProd ? externalUrl : localUrl;
