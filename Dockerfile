@@ -1,23 +1,26 @@
-FROM node:20
+# Этап сборки
+FROM node:20 AS builder
 
 WORKDIR /app
 
-COPY /package.json /app
-COPY /src/client /app/client
-COPY /src/config/ /app/config
-COPY /src/db/ /app/db
-COPY /src/server/ /app/server
-
+COPY package*.json ./
 RUN npm install
 
-WORKDIR /app/client
+COPY . ./
+RUN npm run build
 
-RUN npm build
+# Этап выполнения (чистый контейнер)
+FROM node:20 AS runtime
 
 WORKDIR /app
 
-COPY /app/client/dist /app/server/build
+# Копируем package.json и устанавливаем только прод-зависимости
+COPY package*.json ./
+COPY . ./
+RUN npm install --omit=dev
+
+# Копируем только билд
+COPY --from=builder /app/dist ./src/server/build
 
 EXPOSE 80
-
-CMD [ "npm", "start" ]
+CMD ["npm", "start"]
