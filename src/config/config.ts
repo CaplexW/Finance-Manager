@@ -28,7 +28,7 @@ function getPort(): number {
 }
 function getMongoServer(): string {
   const username = 'admin';
-  const passowrd = 'VjqCegthG@h0km';
+  const passowrd = 'VjqCegthG%40h0km';
   return `mongodb://${username}:${passowrd}@${URL}:27017/FinanceManager`;
 }
 function getUrl(): string {
