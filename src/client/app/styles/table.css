@@ -59,8 +59,8 @@
 }
 
 
-@media (max-width: 1000px) {
+/* @media (max-width: 1000px) {
   td:not(:first-of-type) {
     min-width: 12.1rem;
   }
-}
+} */

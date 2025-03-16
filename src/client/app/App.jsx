@@ -45,7 +45,7 @@ export default function App() {
   }
   if (!dataIsLoaded && isLoggedIn) return;
   return (
-    <div className="App" style={{ height: '100vh' }}>
+    <div className="App" style={{ minHeight: '100vh' }}>
       <ToastContainer />
       <NavBar />
       <Routes>

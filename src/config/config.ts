@@ -31,7 +31,8 @@ function getMongoServer(): string {
   const username = 'watcher';
   const passowrd = 'watcherG%40h0km';
   
-  return `mongodb://${username}:${passowrd}@${URL}:27017/${dbName}?authSource=${dbName}`;
+  if (isProd) return `mongodb://${username}:${passowrd}@${URL}:27017/${dbName}?authSource=${dbName}`;
+  return `mongodb://${URL}:27017/${dbName}`;
 }
 function getUrl(): string {
   return isProd ? externalUrl : localUrl;
