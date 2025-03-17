@@ -31,3 +31,10 @@ nav {
   display: flex;
   justify-content: end;
 }
+
+@media (hover: none) and (pointer: coarse) {
+  .navbar {
+    order: 1;
+    position: sticky;
+  }
+}
