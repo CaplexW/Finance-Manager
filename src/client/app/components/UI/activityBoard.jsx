@@ -13,7 +13,7 @@ import { getLoginStatus } from '../../store/user';
 
 export default function ActivityBoard() {
   const [activityRange, setActivityRange] = useState(30);
-  const userIsLogged = useSelector(getLoginStatus());8
+  const userIsLogged = useSelector(getLoginStatus());8;
   const operations = useSelector(getOperationsList());
 
   if (!userIsLogged) return;
@@ -47,7 +47,7 @@ export default function ActivityBoard() {
     <h4 className="">
       Ваши финансы за последние
       {' '}
-      <select onChange={handleChange} style={selectStyles} value={activityRange} >
+      <select className='activity-board__select' onChange={handleChange} value={activityRange} >
         <option>30</option>
         <option>60</option>
         <option>90</option>
@@ -60,17 +60,17 @@ export default function ActivityBoard() {
   );
 
   const containerStyles = {
-    display: 'grid',
-    gridAutoFlow: 'column',
-    gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)',
-    gap: '1rem',
-    alignItems: 'center',
-    height: '100%',
+    // display: 'grid',
+    // gridAutoFlow: 'column',
+    // gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)',
+    // gap: '1rem',
+    // alignItems: 'center',
+    // height: '100%',
   };
 
   return (
     <ContentBoard header={header}>
-      <div className="widgets-container" style={containerStyles}>
+      <div className="activity-board__widgets-container" style={containerStyles}>
         <WidgetIncomeOutcome operations={relevantOperations} prevOperations={prevOperations} />
         <WidgetBalanceFlow dateRange={activityRange} operations={relevantOperations} />
         <WidgetBiggestOperations operations={relevantOperations} />

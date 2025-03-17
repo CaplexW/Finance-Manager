@@ -1,0 +1,29 @@
+.activity-board__select {
+  background: rgba(255, 255, 255, 0);
+  border: none;
+  border-radius: 8px;
+  appearance: none;
+  padding: .5rem;
+  font-weight: 600;
+}
+
+.activity-board__widgets-container {
+  display: grid;
+  /* grid-auto-flow: column; */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  height: 100%;
+}
+
+@media (max-aspect-ratio: 1/1) {
+  .activity-board__widgets-container {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+@media (max-aspect-ratio: 4/7) {
+  .activity-board__widgets-container {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

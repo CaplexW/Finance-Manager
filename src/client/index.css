@@ -14,6 +14,7 @@
 @import './app/styles/widgets/widgetBiggestOperations.css';
 @import './app/styles/widgets/widgetBiggestCategories.css';
 @import './app/styles/navbar.css';
+@import './app/styles/activityBoard.css';
 
 /* --mainColor #93bbca */
 *,

@@ -1,6 +1,9 @@
+@import '../activityBoard.css';
+
 .main-page {
   display: grid;
   padding-inline: 2rem;
+  padding-block: 5%;
 
   height: 89%;
 }
