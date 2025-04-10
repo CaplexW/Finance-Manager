@@ -8,10 +8,10 @@ nav {
 
   display: grid;
   grid-auto-flow: column;
-  justify-content: space-between;
+  /* justify-content: space-between;
   align-items: center;
 
-  width: 100%;
+  width: 100%; */
 }
 
 .nav-list {
@@ -29,12 +29,22 @@ nav {
 
 .user-panel {
   display: flex;
-  justify-content: end;
+  /* justify-content: end; */
 }
 
 @media (hover: none) and (pointer: coarse) {
   .navbar {
     order: 1;
     position: sticky;
+  }
+}
+
+@media (max-width: 600px) {
+  nav {
+    display: none;
+  }
+  .user-panel {
+    min-width: 100%;
+    justify-content: space-between; /* //TODO разобраться почему не работает центрирование */
   }
 }

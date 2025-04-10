@@ -3,7 +3,7 @@
 .main-page {
   display: grid;
   padding-inline: 2rem;
-  padding-block: 5%;
+  padding-block: 3%;
 
   height: 89%;
 }

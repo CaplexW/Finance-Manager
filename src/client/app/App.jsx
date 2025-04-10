@@ -43,9 +43,12 @@ export default function App() {
     if (!iconsIsLoaded) dispatch(loadIcons());
     if (!userDataIsLoaded) dispatch(loadUserData());
   }
+
+  const appStyles = { minHeight: '100vh', minWidth: '375px' };
+  
   if (!dataIsLoaded && isLoggedIn) return;
   return (
-    <div className="App" style={{ minHeight: '100vh' }}>
+    <div className="App" style={appStyles}>
       <ToastContainer />
       <NavBar />
       <Routes>
