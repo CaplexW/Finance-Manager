@@ -16,6 +16,7 @@ import { getCategoriesLoadStatus, loadCategories } from "./store/categories";
 import showElement from "../../server/utils/console/showElement";
 import ProtectedRoute from "./components/routes/protectedRoute";
 import AnalyticsPage from "./layouts/analyticsPage";
+import BottomNavbar from "./components/UI/bottomNavbar";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -44,8 +45,8 @@ export default function App() {
     if (!userDataIsLoaded) dispatch(loadUserData());
   }
 
-  const appStyles = { minHeight: '100vh', minWidth: '375px' };
-  
+  const appStyles = { minWidth: '375px' };
+
   if (!dataIsLoaded && isLoggedIn) return;
   return (
     <div className="App" style={appStyles}>
@@ -62,6 +63,7 @@ export default function App() {
         </Route>
         <Route Component={LogOut} path="/logout" />
       </Routes>
+      <BottomNavbar />
     </div>
   );
 };
