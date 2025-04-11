@@ -54,6 +54,6 @@ nav {
   }
   .user-panel {
     min-width: 100%;
-    justify-content: space-between; /* //TODO разобраться почему не работает центрирование */
+    justify-content: space-around; /* //TODO разобраться почему не работает центрирование */
   }
 }
