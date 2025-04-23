@@ -20,7 +20,7 @@ nav {
 
 .nav-list {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   gap: 1rem;
   list-style: none;
@@ -28,13 +28,8 @@ nav {
   width: 100%;
 }
 
-.nav-item.login {
-  margin-inline-start: auto;
-}
-
 .user-panel {
   display: flex;
-  /* justify-content: end; */
 }
 
 @media (hover: none) and (pointer: coarse) {
@@ -50,7 +45,7 @@ nav {
   }
   .navlist--bottom {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
   }
   .user-panel {
     min-width: 100%;
