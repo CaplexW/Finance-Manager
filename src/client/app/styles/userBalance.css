@@ -1,0 +1,9 @@
+.user-balance-plate {
+    background: rgb(255, 255, 255, .6);
+    border-radius: 8px;
+    padding: .4em 1em;
+
+    display: flex;
+    align-items: center;
+  };
+  

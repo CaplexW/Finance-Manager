@@ -6,14 +6,10 @@ export default async function extractDataFromCSV(file: Express.Multer.File): Pro
   return new Promise((resolve, reject) => {
     const records: string[][] = [];
     createReadStream(file.path)
-    .pipe(iconv.decodeStream('win1251'))
+    .pipe(iconv.decodeStream('UTF-8'))
     .pipe(parse({ delimiter: ";" }))
     .on('data', (record) => records.push(record))
     .on('end', () => resolve(records))
     .on('error', (err) => reject(err));
-
-    function addRecord(record: string[]) { records.push(record); }
-    function resolvePromise(records: string[][]) { resolve(records); }
-    function rejectPromise(err: unknown) { reject(err); }
   });
 }

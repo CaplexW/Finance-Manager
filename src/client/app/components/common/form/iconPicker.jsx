@@ -93,11 +93,11 @@ export default function IconPicker({
       <label htmlFor="icon-picker">{label}</label>
       <div className="picker-container" style={containerSyles} >
         <div className="picker--closed button" style={{ ...pickerStyles, ...closedPickerStyles }} >
-          <ButtonWithIcon color='black' icon={selectedOption} onClick={toggleIconPage} size={24} />
+          <ButtonWithIcon color='black' icon={selectedOption} onClick={toggleIconPage} size={1.5} />
         </div>
         <div className="picker--open" hidden ref={openedPicker} style={{ ...pickerStyles, ...openPickerStyles }}>
           <div className="picker__page" style={pickerPageStyles} >
-            {displayedIcons.map((option) => <ButtonWithIcon icon={option} key={option._id} onClick={handleChoice} size={24} />)}
+            {displayedIcons.map((option) => <ButtonWithIcon icon={option} key={option._id} onClick={handleChoice} size={1.5} />)}
           </div>
           <div className="picker__paginator" style={paginatorStyles}>
             {onlyPage ||

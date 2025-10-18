@@ -45,11 +45,9 @@ export default function App() {
     if (!userDataIsLoaded) dispatch(loadUserData());
   }
 
-  const appStyles = { minWidth: '375px' };
-
   if (!dataIsLoaded && isLoggedIn) return;
   return (
-    <div className="App" style={appStyles}>
+    <div className="App">
       <ToastContainer />
       <NavBar />
       <Routes>

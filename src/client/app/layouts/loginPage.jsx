@@ -6,7 +6,7 @@ import RegisterForm from '../components/UI/rgisterForm';
 export default function LoginPage() {
   const { register } = useParams();
   return (
-    <div className="container d-flex justify-content-center mt-3" id="loginPageContainer" style={{ maxWidth: '300px' }}>
+    <div className="login-page container d-flex justify-content-center mt-3" id="loginPageContainer" style={{ maxWidth: '300px' }}>
       {!register ? <LoginForm /> : <RegisterForm />}
     </div>
   );

@@ -35,8 +35,7 @@
   overflow: auto;
   display: flex;
   flex-direction: column;
-
-  padding-inline: 1rem;
+  scrollbar-gutter: stable;
 }
 .content-board_body::-webkit-scrollbar {
   width: 0;
@@ -47,4 +46,14 @@
   border-radius: .15rem;
   background-color: #d1d9defe;
   visibility: visible;
+}
+
+@media(orientation: portrait) {
+  .content-board_container {
+  height: 75vh;
+  width: 100%;
+  }
+  .content-board_body{
+    padding: 1rem 0;
+  }
 }

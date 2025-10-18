@@ -2,8 +2,14 @@
 
 .main-page {
   display: grid;
-  padding-inline: 2rem;
-  padding-block: 3%;
+  padding-inline: 1.5rem;
+  /* padding-top: 2%; */
 
-  height: 89%;
+  block-size: 89vh;
+}
+
+@media(orientation: portrait) {
+  .main-page {
+    block-size: 82vh;
+  }
 }

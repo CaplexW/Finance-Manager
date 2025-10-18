@@ -26,3 +26,11 @@ a {
 .icon-button:hover {
   background: none;
 }
+
+.colored-text--red {
+  color: red;
+}
+
+.colored-text--green {
+  color: green;
+}

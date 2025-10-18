@@ -8,53 +8,66 @@ import { operationPropType } from '../../../types/propTypes';
 import { getIconsList } from '../../store/icons';
 import SVGIcon from '../common/svgIcon';
 import { clrTransWhite600 } from '../../constants/colors';
+import sortOperationsByAmount from '../../utils/sortOperationsByAmount';
+import { caretDownFilledIcon } from '../../../assets/icons';
 
-export default function CategoriesList({ onClick, operations }) {
+export default function CategoriesList({ onClick, operations, numberOfDisplayedCategories = 5 }) {
   const [filteredList, setFilteredList] = useState([]);
+  const [isDisplayLimited, setDisplayLimited] = useState(true);
 
   useEffect(() => { onClick(filteredList); }, [filteredList]);
 
   const categories = useSelector(getCategoriesList());
   const icons = useSelector(getIconsList());
 
+  const restIcon = caretDownFilledIcon;
+
   if (!operations?.length || !categories?.length || !icons?.length) return;
 
-  const includedCategoriesIds = operations.map((s) => s.category);
-  const includedCategories = categories.filter((cat) => includedCategoriesIds.includes(cat._id));
+  const groupedOperations = groupOperationsByCategory(operations);
+  showElement(groupedOperations, 'groupedOperations');
+  const includedCategoriesIds = groupedOperations.map((s) => s[0].category);
 
+  const includedCategories = categories.filter((cat) => includedCategoriesIds.includes(cat._id));
   const includedIconsIds = includedCategories.map((cat) => cat.icon);
   const includedIcons = icons.filter((icon) => includedIconsIds.includes(icon._id));
 
-  const coloredIcons = includedCategories.map((category) => {
-    const icon = includedIcons.find((i) => category.icon === i._id);
-    if (!icon?._id) {
-      const report = {
-        operations,
-        icons,
-        includedIconsIds,
-        includedIcons,
-        icon,
-        categories,
-        includedCategoriesIds,
-        includedCategories,
-        category,
-      };
-      showElement(report, 'report');
-    }
-    return {
-      icon,
-      category,
-      filtered: filteredList.includes(category._id),
-    };
-  });
+  const coloredIcons = isDisplayLimited
+    ? includedCategories.slice(0, numberOfDisplayedCategories).map((category) => {
+      const icon = includedIcons.find((i) => category.icon === i._id);
+      if (!icon?._id) return
 
-  const defaultLimit = 15; // TODO сделать скролл
+      return {
+        icon,
+        category,
+        filtered: filteredList.includes(category._id),
+      };
+    })
+    : includedCategories.map((category) => {
+      const icon = includedIcons.find((i) => category.icon === i._id);
+      if (!icon?._id) return
+
+      return {
+        icon,
+        category,
+        filtered: filteredList.includes(category._id),
+      };
+    });
 
   const containerSyles = {
     background: clrTransWhite600,
     borderRadius: '8px',
-    // maxWidth: '90%',
-    padding: '1rem .5rem 1rem .8rem'
+    padding: '1rem 1rem',
+  };
+
+  const restIconStyles = {
+    borderRadius: '8px',
+    boxShadow: `1px 1px .2em rgba(0, 0, 0, 0.5)`,
+    padding: '.5em .5em',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
   };
 
   function setSpanStyles({ category, filtered }) {
@@ -63,15 +76,35 @@ export default function CategoriesList({ onClick, operations }) {
       opacity: filtered ? '.3' : '1',
       borderRadius: '8px',
       boxShadow: `${filtered ? 'inset' : ''} 1px 1px .2em rgba(0, 0, 0, 0.5)`,
-      margin: '.3rem',
+      padding: '.5em .5em',
       display: 'flex',
-      padding: '0 .1rem',
       alignItems: 'center',
       justifyContent: 'center',
       cursor: 'pointer',
-      width: '2rem',
-      height: '2.2rem',
     };
+  }
+
+  function groupOperationsByCategory(operations) {
+    const groupedOperations = [];
+    let numberOfGroups = groupedOperations.length;
+
+    operations.forEach((op) => {
+      let groupsLeftToCheck = numberOfGroups;
+
+      if (groupsLeftToCheck != 0) {
+        if (op.category === groupedOperations[groupsLeftToCheck - 1][0]?.category) {
+          groupedOperations[groupsLeftToCheck - 1].push(op);
+        } else {
+          groupsLeftToCheck -= 1;
+        }
+      } else {
+        const newGroup = [op];
+        groupedOperations.push(newGroup);
+        numberOfGroups += 1;
+      }
+    });
+
+    return groupedOperations;
   }
 
   function handleClick(item) {
@@ -93,8 +126,8 @@ export default function CategoriesList({ onClick, operations }) {
   }
 
   return (
-    <div className='d-flex justify-contetn-center' style={containerSyles}>
-      <div className="d-flex flex-wrap">
+    <div className='' style={containerSyles}>
+      <div className="categories-list">
         {coloredIcons.map((i) => (
           <span
             key={`${i.category.name}+${i.icon._id}`}
@@ -102,10 +135,15 @@ export default function CategoriesList({ onClick, operations }) {
             style={setSpanStyles(i)}
           >
             <SVGIcon
+              size={1.5}
               source={i.icon}
             />
           </span>
         ))}
+        {isDisplayLimited && <span
+          key={`restOfOperations`}
+          style={restIconStyles}
+        >{restIcon}</span>}
       </div>
     </div>
   );

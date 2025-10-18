@@ -28,6 +28,7 @@
   opacity: .3;
   transition: .6s ease-in-out;
   visibility: hidden;
+  /* display: none; */
 }
 .opened-display.opened {
   opacity: 1;
@@ -82,4 +83,10 @@
 }
 .date-range-input .date-cell:hover {
   background: #93bbca;
+}
+
+@media(max-width: 800px) {
+  .date-range-input .date-cell {
+    padding: 0;
+  }
 }

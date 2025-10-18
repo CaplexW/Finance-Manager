@@ -82,7 +82,7 @@ export default function OperationsPage() {
 
   if (isLoaded) return (
     <div className='operations-page' id="operation-layout">
-      <section className='' id="side">
+      <section className='side' id="side">
         <ContentBoard header={<h4>Соотношение категорий</h4>}>
           <div className="side-container">
             <CategoriesList onClick={handleCategoryFilter} operations={filteredByTypeOperations} />
@@ -90,7 +90,7 @@ export default function OperationsPage() {
           </div>
         </ContentBoard>
       </section>
-      <section className='' id="main">
+      <section className='main' id="main">
         <OperationTable
           dateRange={dateRange}
           displayedOperations={displayedOperations}

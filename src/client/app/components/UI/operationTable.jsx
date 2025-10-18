@@ -51,6 +51,11 @@ export default function OperationTable({
       path: 'name',
       name: 'Название',
     },
+    date: {
+      path: 'date',
+      name: 'Дата',
+      component: renderDisplayDate,
+    },
     amount: {
       name: 'Сумма',
       path: 'amount',
@@ -61,11 +66,7 @@ export default function OperationTable({
       path: 'category',
       component: renderCategoryLabel,
     },
-    date: {
-      path: 'date',
-      name: 'Дата',
-      component: renderDisplayDate,
-    },
+
     editButton: { component: renderEditButton },
     deleteButton: { component: renderDeleteButton },
   };
@@ -168,7 +169,7 @@ export default function OperationTable({
   const tableHeader = (
     <section className='operations__table-header__container'>
       <div className="operations__table-header__title">
-        <h4 className='me-2 mb-1'>Операции за</h4>
+        <h4 className='me-2 mb-1 desktop-only'>Операции за</h4>
         <DateRangeInput onPick={onDateFilter} pickValue={dateRange} />
       </div>
       <div className='operations__table-header__button-group'>
@@ -183,7 +184,10 @@ export default function OperationTable({
             {/* <input accept=".xlsx" hidden id='alfa' name="alfa" onChange={handleImport} type="file" /> */}
           </div>
         </div>
-        <button className="operations__table-header__button-group__button" onClick={handleOpenCreateModal} type="button">Добавить</button>
+        <button className="operations__table-header__button-group__button" onClick={handleOpenCreateModal} type="button">
+          <span className='desktop-only'>Добавить</span>
+          <span className='mobile-only'>+</span>
+        </button>
       </div>
     </section >
   );
@@ -193,7 +197,7 @@ export default function OperationTable({
       <ContentBoard header={tableHeader}>
         <Table
           columns={columns}
-          data={displayedOperations} 
+          data={displayedOperations}
           dateRange={dateRange}
           onAdd={handleOpenCreateModal}
           onDateFilter={onDateFilter}

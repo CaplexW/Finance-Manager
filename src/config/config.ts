@@ -1,6 +1,6 @@
 const isProd = (process.env.NODE_ENV === 'production');
 const externalUrl: string = '37.18.102.39';
-const localUrl: string = 'localhost';
+const localUrl: string = '192.168.2.3';
 const dbName = isProd ? 'WatchMoney' : 'FinanceManager';
 
 const URL: string = getUrl();
@@ -30,16 +30,23 @@ function getPort(): number {
 function getMongoServer(): string {
   const username = 'watcher';
   const passowrd = 'watcherG%40h0km';
-  
-  if (isProd) return `mongodb://${username}:${passowrd}@${URL}:27017/${dbName}?authSource=${dbName}`;
-  return `mongodb://${URL}:27017/${dbName}`;
+  const externalServer = `mongodb://${username}:${passowrd}@${URL}:27017/${dbName}?authSource=${dbName}`;
+  const localServer = `mongodb://localhost:27017/${dbName}`;
+
+  if (isProd) {
+    return externalServer;
+  } else {
+    return localServer;
+  }
 }
 function getUrl(): string {
-  return isProd ? externalUrl : localUrl;
+  if (isProd) {
+    return externalUrl;
+  } else {
+    return localUrl;
+  }
 }
-function getProtocol(): string {
-  return 'http';
-}
+function getProtocol(): string { return 'http'; }
 
 type connectionConfig = {
   API_ENDPOINT: string; // TODO сделать типизацию через regex

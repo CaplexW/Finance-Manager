@@ -16,7 +16,6 @@ export default function ModalWindow({
 }) {
   // TODO придумать как перенести механизм откытия в сам компонент
 
-  // const [isOpen, setOpen] = useState(false);
   const modal = useRef();
 
   useEffect(toggleModal, [isOpen]);
@@ -29,15 +28,12 @@ export default function ModalWindow({
   }
 
   function handleOpen() { if(modal.current) openModal(modal.current); }
-  const handleClose = useCallback(() => { 
-    closeModalWindow(modal.current, onClose);
-  });
+  const handleClose = useCallback(() => { closeModalWindow(modal.current, onClose); });
 
-  if(isOpen) return (
-    <dialog className="dialog" ref={modal}>
+  if(isOpen) return <dialog className="dialog" ref={modal}>
       <div className="dialog-content" id="dialogContent">
         <div className="container modal-header">
-          <h4 className='me-5'>{headTitle}</h4>
+          <h4 className=''>{headTitle}</h4>
           <button
             aria-label="Close"
             className="close-button"
@@ -67,7 +63,6 @@ export default function ModalWindow({
         ) : ''}
       </div>
     </dialog>
-  );
 }
 
 ModalWindow.propTypes = {
