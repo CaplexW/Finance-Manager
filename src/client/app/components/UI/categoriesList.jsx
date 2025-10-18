@@ -86,21 +86,26 @@ export default function CategoriesList({ onClick, operations, numberOfDisplayedC
 
   function groupOperationsByCategory(operations) {
     const groupedOperations = [];
-    let numberOfGroups = groupedOperations.length;
 
     operations.forEach((op) => {
+      let numberOfGroups = groupedOperations.length;
       let groupsLeftToCheck = numberOfGroups;
 
-      if (groupsLeftToCheck != 0) {
-        if (op.category === groupedOperations[groupsLeftToCheck - 1][0]?.category) {
+      while (groupsLeftToCheck >= 0) {
+        if (groupsLeftToCheck === 0) {
+          const newGroup = [op];
+          groupedOperations.push(newGroup);
+          numberOfGroups += 1;
+          break;
+        }
+        
+        if (groupedOperations.length && op.category === groupedOperations[groupsLeftToCheck - 1][0]?.category) {
           groupedOperations[groupsLeftToCheck - 1].push(op);
+          break;
         } else {
           groupsLeftToCheck -= 1;
         }
-      } else {
-        const newGroup = [op];
-        groupedOperations.push(newGroup);
-        numberOfGroups += 1;
+
       }
     });
 
