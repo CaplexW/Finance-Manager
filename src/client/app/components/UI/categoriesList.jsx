@@ -20,9 +20,9 @@ export default function CategoriesList({ onClick, operations, numberOfDisplayedC
   const categories = useSelector(getCategoriesList());
   const icons = useSelector(getIconsList());
 
-  const restIcon = caretDownFilledIcon;
-
   if (!operations?.length || !categories?.length || !icons?.length) return;
+
+  const restIcon = caretDownFilledIcon;
 
   const groupedOperations = groupOperationsByCategory(operations);
   showElement(groupedOperations, 'groupedOperations');
@@ -85,31 +85,17 @@ export default function CategoriesList({ onClick, operations, numberOfDisplayedC
   }
 
   function groupOperationsByCategory(operations) {
-    const groupedOperations = [];
+    const groups = {};
 
-    operations.forEach((op) => {
-      let numberOfGroups = groupedOperations.length;
-      let groupsLeftToCheck = numberOfGroups;
-
-      while (groupsLeftToCheck >= 0) {
-        if (groupsLeftToCheck === 0) {
-          const newGroup = [op];
-          groupedOperations.push(newGroup);
-          numberOfGroups += 1;
-          break;
-        }
-        
-        if (groupedOperations.length && op.category === groupedOperations[groupsLeftToCheck - 1][0]?.category) {
-          groupedOperations[groupsLeftToCheck - 1].push(op);
-          break;
-        } else {
-          groupsLeftToCheck -= 1;
-        }
-
+    for (const op of operations) {
+      if (groups[op.category]) {
+        groups[op.category].push(op);
+      } else {
+        groups[op.category] = [op];
       }
-    });
+    }
 
-    return groupedOperations;
+    return Object.values(groups);
   }
 
   function handleClick(item) {
