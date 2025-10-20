@@ -25,25 +25,15 @@ export default function CategoriesList({ onClick, operations, numberOfDisplayedC
   const restIcon = caretDownFilledIcon;
 
   const groupedOperations = groupOperationsByCategory(operations);
-  showElement(groupedOperations, 'groupedOperations');
-  const includedCategoriesIds = groupedOperations.map((s) => s[0].category);
-
-  const includedCategories = categories.filter((cat) => includedCategoriesIds.includes(cat._id));
-  const includedIconsIds = includedCategories.map((cat) => cat.icon);
+  const sortedOperationGroups = sortOperationGroupsByAmount(groupedOperations);
+  const includedCategoriesIds = isDisplayLimited
+    ? sortedOperationGroups.slice(0, (numberOfDisplayedCategories + 1 >= sortedOperationGroups.length ? numberOfDisplayedCategories + 1 : numberOfDisplayedCategories)).map((s) => s[0].category)
+    : sortedOperationGroups.map((s) => s[0].category);
+  const sortedCategories = includedCategoriesIds.map((id) => categories.find((cat) => cat._id === id)); // find вместо filter чтобы категории находились в порядке, который отсортироваан в sortedOperationGroups
+  const includedIconsIds = sortedCategories.map((cat) => cat.icon);
   const includedIcons = icons.filter((icon) => includedIconsIds.includes(icon._id));
 
-  const coloredIcons = isDisplayLimited
-    ? includedCategories.slice(0, numberOfDisplayedCategories).map((category) => {
-      const icon = includedIcons.find((i) => category.icon === i._id);
-      if (!icon?._id) return
-
-      return {
-        icon,
-        category,
-        filtered: filteredList.includes(category._id),
-      };
-    })
-    : includedCategories.map((category) => {
+  const coloredIcons = sortedCategories.map((category) => {
       const icon = includedIcons.find((i) => category.icon === i._id);
       if (!icon?._id) return
 
@@ -97,6 +87,15 @@ export default function CategoriesList({ onClick, operations, numberOfDisplayedC
 
     return Object.values(groups);
   }
+  function sortOperationGroupsByAmount(operationGroups) {
+    const copyArr = [...operationGroups];
+
+    copyArr.sort((a, b) =>
+      b.reduce((totalAmount, op) => totalAmount += Math.abs(op.amount), 0)
+      - a.reduce((totalAmount, op) => totalAmount += Math.abs(op.amount), 0));
+
+    return copyArr;
+  }
 
   function handleClick(item) {
     setFilteredList((prevState) => {
@@ -131,7 +130,7 @@ export default function CategoriesList({ onClick, operations, numberOfDisplayedC
             />
           </span>
         ))}
-        {isDisplayLimited && <span
+        {isDisplayLimited && numberOfDisplayedCategories + 1 < sortedOperationGroups.length && <span
           key={`restOfOperations`}
           style={restIconStyles}
         >{restIcon}</span>}
