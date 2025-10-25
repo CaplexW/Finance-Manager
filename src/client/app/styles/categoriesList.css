@@ -1,7 +1,23 @@
 .categories-list {
   display: grid;
-  grid-template-columns: auto; 
-  gap: 1em;
 
-  border: 1px solid red;
+  grid-auto-flow: row dense;
+  grid-template-columns: repeat(auto-fit, minmax(12.5%, 1fr));
+  gap: .5em;
+}
+
+.category-button {
+    border-radius: 8px;
+    box-shadow: 1px 1px .2em rgba(0, 0, 0, 0.5);
+    padding: .5em .5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.filtered {
+  opacity: .3;
+
+  box-shadow: inset 1px 1px .2em rgba(0, 0, 0, 0.5);
 }

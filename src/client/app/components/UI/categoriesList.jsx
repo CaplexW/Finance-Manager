@@ -9,7 +9,8 @@ import { getIconsList } from '../../store/icons';
 import SVGIcon from '../common/svgIcon';
 import { clrTransWhite600 } from '../../constants/colors';
 import sortOperationsByAmount from '../../utils/sortOperationsByAmount';
-import { caretDownFilledIcon } from '../../../assets/icons';
+import { caretDownFilledIcon, caretUpFilledIcon } from '../../../assets/icons';
+import ButtonWithIcon from '../common/buttonWithIcon';
 
 export default function CategoriesList({ onClick, operations, numberOfDisplayedCategories = 5 }) {
   const [filteredList, setFilteredList] = useState([]);
@@ -23,6 +24,7 @@ export default function CategoriesList({ onClick, operations, numberOfDisplayedC
   if (!operations?.length || !categories?.length || !icons?.length) return;
 
   const restIcon = caretDownFilledIcon;
+  const lessIcon = caretUpFilledIcon;
 
   const groupedOperations = groupOperationsByCategory(operations);
   const sortedOperationGroups = sortOperationGroupsByAmount(groupedOperations);
@@ -40,7 +42,6 @@ export default function CategoriesList({ onClick, operations, numberOfDisplayedC
       return {
         icon,
         category,
-        filtered: filteredList.includes(category._id),
       };
     });
 
@@ -59,20 +60,6 @@ export default function CategoriesList({ onClick, operations, numberOfDisplayedC
     justifyContent: 'center',
     cursor: 'pointer',
   };
-
-  function setSpanStyles({ category, filtered }) {
-    return {
-      color: category.color,
-      opacity: filtered ? '.3' : '1',
-      borderRadius: '8px',
-      boxShadow: `${filtered ? 'inset' : ''} 1px 1px .2em rgba(0, 0, 0, 0.5)`,
-      padding: '.5em .5em',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-    };
-  }
 
   function groupOperationsByCategory(operations) {
     const groups = {};
@@ -97,22 +84,24 @@ export default function CategoriesList({ onClick, operations, numberOfDisplayedC
     return copyArr;
   }
 
-  function handleClick(item) {
+  function handleCategoryClick(item) {
     setFilteredList((prevState) => {
       if (prevState.includes(item.category._id)) {
         const newState = prevState.filter((i) => i !== item.category._id);
-        // onClick(newState);
 
         return newState;
       }
       else {
         const newState = prevState.map(i => i);
         newState.push(item.category._id);
-        // onClick(newState);
 
         return newState;
       }
     });
+  }
+  function handleClickRest() {
+    console.log('clicked Rest');
+    setDisplayLimited((prev) => !prev);
   }
 
   return (
@@ -120,20 +109,23 @@ export default function CategoriesList({ onClick, operations, numberOfDisplayedC
       <div className="categories-list">
         {coloredIcons.map((i) => (
           <span
+            className='category-button'
             key={`${i.category.name}+${i.icon._id}`}
-            onClick={handleClick.bind(null, i)}
-            style={setSpanStyles(i)}
+            onClick={() => handleCategoryClick(i)}
           >
             <SVGIcon
+              color={i.category.color}
               size={1.5}
               source={i.icon}
             />
           </span>
         ))}
-        {isDisplayLimited && numberOfDisplayedCategories + 1 < sortedOperationGroups.length && <span
+        {numberOfDisplayedCategories + 1 < sortedOperationGroups.length && <span
+          className='category-button'
           key={`restOfOperations`}
           style={restIconStyles}
-        >{restIcon}</span>}
+          onClick={handleClickRest}
+        >{isDisplayLimited ? restIcon : lessIcon}</span>}
       </div>
     </div>
   );

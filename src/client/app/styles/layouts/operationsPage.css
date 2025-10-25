@@ -23,13 +23,7 @@
   gap: 1rem;
 }
 
-.categories-list {
-  display: grid;
-  grid-auto-flow: row dense;
-  grid-template-columns: repeat(auto-fit, minmax(12.5%, 1fr));
-  gap: .5em;
-}
-в
+
 .icon-in-list {
   /* display: flex;
   align-items: center;
