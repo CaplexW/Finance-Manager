@@ -16,8 +16,6 @@ export default function CategoriesList({ onClick, operations, numberOfDisplayedC
   const [filteredList, setFilteredList] = useState([]);
   const [isDisplayLimited, setDisplayLimited] = useState(true);
 
-  useEffect(() => { onClick(filteredList); }, [filteredList]);
-
   const categories = useSelector(getCategoriesList());
   const icons = useSelector(getIconsList());
 
@@ -89,12 +87,14 @@ export default function CategoriesList({ onClick, operations, numberOfDisplayedC
       if (prevState.includes(item.category._id)) {
         const newState = prevState.filter((i) => i !== item.category._id);
 
+        onClick(newState);
         return newState;
       }
       else {
         const newState = prevState.map(i => i);
         newState.push(item.category._id);
 
+        onClick(newState);
         return newState;
       }
     });

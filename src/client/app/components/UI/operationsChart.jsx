@@ -100,9 +100,7 @@ export default function OperationsChart({ operations, switchPosition = null, typ
 
   return (
     <div className="" style={containerSyles}>
-      {/* <div className="sub-container" style={subStyles}> */}
       <Chart data={data} options={options} type={type} />
-      {/* </div> */}
     </div>
   );
 };

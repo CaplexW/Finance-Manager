@@ -11,6 +11,7 @@ import { orderBy } from 'lodash';
 import OperationsChart from '../components/UI/operationsChart';
 import ContentBoard from '../components/common/contentBoard';
 import { getInputDate, todayInput } from '../../../server/utils/formatDate';
+import ChartBar from '../components/UI/chartBar';
 
 // TODO 1. Реализовать создание и редактирование категорий.
 // TODO 4. Реализовать фильтрацию и сортировку.
@@ -49,17 +50,17 @@ export default function OperationsPage() {
     return result;
   }
   function filterOperationsByType(operations) {
+    // здесь доходы будут отделяться от расходов
     let result = operations.map(o => o);
 
     return result;
   }
   function filterOperationsByCategory(operations) {
-    let result = operations.map(_ => _);
-    if (filter.category) result = result.filter((op) => (
-      !(filter.category.includes(op.category)))
-    );
-
-    return result;
+    if (filter.category) {
+      return operations.filter((op) => !(filter.category.includes(op.category)));
+    } else {
+      return operations;
+    }
   }
 
   function handleCategoryFilter(list) {
@@ -100,7 +101,5 @@ export default function OperationsPage() {
         />
       </section>
     </div>
-
-    // Кнопка "Показать больше"
   );
 };
