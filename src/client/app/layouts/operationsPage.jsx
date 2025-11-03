@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getUserDataStatus } from '../store/user';
 import { getOperationsList, getOperationsLoadStatus } from '../store/operations';
-import { getCategoriesLoadStatus } from '../store/categories';
+import { getCategoriesList, getCategoriesLoadStatus } from '../store/categories';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../server/utils/console/showElement';
 import CategoriesList from '../components/UI/categoriesList';
 import OperationTable from '../components/UI/operationTable';
 import { orderBy } from 'lodash';
@@ -12,9 +11,13 @@ import OperationsChart from '../components/UI/operationsChart';
 import ContentBoard from '../components/common/contentBoard';
 import { getInputDate, todayInput } from '../../../server/utils/formatDate';
 import ChartBar from '../components/UI/chartBar';
+import { getIconsList, getIconsLoadStatus } from '../store/icons';
 
-// TODO 1. Реализовать создание и редактирование категорий.
-// TODO 4. Реализовать фильтрацию и сортировку.
+// TODO Реализовать фильтрацию и сортировку.
+//  1) Сортировку по всем столбцам - ГОТОВО!
+//  2) Фильтрацию по категории - ГОТОВО!
+//  3) Фильтрация по дате - ГОТОВО!
+//  4) Фильтрация по типу (доход/расход) - В ОЧЕРЕДИ.
 
 export default function OperationsPage() {
   const [switchPosition, setSwitchPosition] = useState('both');
@@ -22,32 +25,48 @@ export default function OperationsPage() {
   const [filter, setFilter] = useState({ category: null, type: null, date: null });
   const [sort, setSort] = useState({ path: 'date', order: 'desc' });
 
+  const categories = useSelector(getCategoriesList());
+  const operations = useSelector(getOperationsList());
+  const icons = useSelector(getIconsList());
+
   const operationsIsLoaded = useSelector(getOperationsLoadStatus());
   const categoriesIsLoaded = useSelector(getCategoriesLoadStatus());
+  const iconsIsLoaded = useSelector(getIconsLoadStatus());
   const userIsLoaded = useSelector(getUserDataStatus());
-  const operations = useSelector(getOperationsList());
 
   const isLoaded = (
     operationsIsLoaded
     && categoriesIsLoaded
     && userIsLoaded
-    // && iconsIsLoaded
+    && iconsIsLoaded
   );
 
   const filteredByDateOperations = filterOperationsByDate(operations) || [];
   const filteredByTypeOperations = filterOperationsByType(filteredByDateOperations);
   const filteredByCategoryOperations = filterOperationsByCategory(filteredByTypeOperations);
 
-  const sortedOperations = orderBy(filteredByCategoryOperations, [sort.path], [sort.order]);
+  const groupedOperations = groupOperationsByCategory(filteredByTypeOperations);
+  const categoriesInfo = groupedOperations.map((group) => {
+    const category = categories.find((c) => c._id === group[0].category);
+    const icon = icons.find((i) => i._id === category.icon);
+    const amount = group.reduce((totalAmount, operation) => totalAmount += operation.amount, 0);
+    const isFiltered = filter.category?.includes(category._id);
 
-  const displayedOperations = sortedOperations;
+    return {
+      category,
+      icon,
+      amount,
+      isFiltered,
+    };
+  });
+  categoriesInfo.sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount));
+
+  const displayedOperations = orderBy(filteredByCategoryOperations, [sort.path], [sort.order]);
 
   function filterOperationsByDate(operations) {
-    let result = operations.filter((o) => (
+    return operations.filter((o) => (
       o.date >= dateRange.start && o.date <= dateRange.end
     ));
-
-    return result;
   }
   function filterOperationsByType(operations) {
     // здесь доходы будут отделяться от расходов
@@ -61,6 +80,20 @@ export default function OperationsPage() {
     } else {
       return operations;
     }
+  }
+
+  function groupOperationsByCategory(operations) {
+    const groups = {};
+
+    for (const op of operations) {
+      if (groups[op.category]) {
+        groups[op.category].push(op);
+      } else {
+        groups[op.category] = [op];
+      }
+    }
+
+    return Object.values(groups);
   }
 
   function handleCategoryFilter(list) {
@@ -86,7 +119,7 @@ export default function OperationsPage() {
       <section className='side' id="side">
         <ContentBoard header={<h4>Соотношение категорий</h4>}>
           <div className="side-container">
-            <CategoriesList onClick={handleCategoryFilter} operations={filteredByTypeOperations} />
+            <CategoriesList onClick={handleCategoryFilter} categories={categoriesInfo} />
             <OperationsChart operations={filteredByCategoryOperations} />
           </div>
         </ContentBoard>

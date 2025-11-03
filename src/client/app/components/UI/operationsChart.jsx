@@ -9,7 +9,7 @@ import { operationPropType } from '../../../types/propTypes';
 import { clrTransWhite600, greenColor, redColor } from '../../constants/colors';
 import Chart from '../common/charts/chart';
 
-export default function OperationsChart({ operations, switchPosition = null, type = 'doughnut' }) {
+export default function OperationsChart({ operations, categoriesInfo, switchPosition = null, type = 'doughnut' }) {
   const allCategories = useSelector(getCategoriesList());
 
   if (!operations?.length || !allCategories?.length) return;
@@ -88,12 +88,6 @@ export default function OperationsChart({ operations, switchPosition = null, typ
     display: 'flex',
     flexGrow: '1',
     minHeight: '0',
-    justifyContent: 'center',
-    alignItems: 'center',
-  };
-  const subStyles = {
-    padding: '1rem 2.3rem',
-    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   };
