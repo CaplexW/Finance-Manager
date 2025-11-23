@@ -7,7 +7,7 @@ export default function ChartBar({ operations, onClick }) {
     <ContentBoard header={<h4>Соотношение категорий</h4>}>
       <div className="side-container">
         <CategoriesList onClick={onClick} operations={operations} />
-        <OperationsChart operations={filteredByCategoryOperations} />
+        <OperationsChart operations={operations} />
       </div>
     </ContentBoard>
   );
