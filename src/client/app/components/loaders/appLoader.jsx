@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import forbidExtraProps from 'prop-types-exact';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from 'react-redux';
 import { getLoginStatus, getUsersDataStatus, loadUsers } from '../../../store/users';
 import { loadQualities } from '../../../store/qualities';
 import { loadProfessions } from '../../../store/professions';
@@ -9,10 +9,10 @@ import Loader from '../../common/loader';
 import { nodesPropType } from '../../../types/propTypes';
 
 export default function AppLoader({ children }) {
-  // const isLogged = useSelector(getLoginStatus());
+  // const isLogged = useAppSelector(getLoginStatus());
   const isLogged = true;
-  // const isUsersLoaded = useSelector(getUsersDataStatus());
-  const dispatch = useDispatch();
+  // const isUsersLoaded = useAppSelector(getUsersDataStatus());
+  const dispatch = useAppDispatch();
 
   useEffect(loadData, [isLogged]);
   function loadData() {

@@ -1,6 +1,6 @@
-import { RemoveResult } from "../../../server/types/types";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from "../../../server/utils/console/showElement";
+import { RemoveResult } from "../../types/types";
 import httpService from "./http.service";
 
 export function createCRUDServiceFunctions<CRUDEntity>(endpoint: string) {
@@ -12,7 +12,7 @@ export function createCRUDServiceFunctions<CRUDEntity>(endpoint: string) {
     const { data } = await httpService.patch(endpoint, payload);
     return data;
   }
-  async function create(payload: CRUDEntity): Promise<CRUDEntity> {
+  async function create(payload: Omit<CRUDEntity, '_id'>): Promise<CRUDEntity> {
     const { data } = await httpService.post(endpoint, payload);
     return data;
   }
@@ -22,7 +22,7 @@ export function createCRUDServiceFunctions<CRUDEntity>(endpoint: string) {
   }
   // Метод назван remove т.к. delete зарезервированное слово в JS,
   // однако при определении в объекте сервиса, следует задать delete: remove,
-  // для соблюдения косистентности и однородности с Axios.
+  // для соблюдения консистентности и однородности с Axios.
 
   return { getList, update, create, remove };
 }

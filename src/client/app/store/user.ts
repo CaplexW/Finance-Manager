@@ -1,6 +1,6 @@
 import { Dispatch, PayloadAction, createSlice } from "@reduxjs/toolkit";
 import showError from "../../../server/utils/console/showError";
-import { Credentials, ErrorMessage, GlobalState, RegisterPayload, User, UserState } from "../../types/types";
+import { Credentials, ErrorMessage, RootState, RegisterPayload, User, UserState } from "../../types/types";
 import authService from "../services/auth.service";
 import { getAccessToken, getUserId, removeAuthData, setTokens } from "../services/storage.service";
 import userService from "../services/user.service";
@@ -140,17 +140,17 @@ export function logOut() {
   };
 }
 export function getUser() {
-  return function findUser({ user }: GlobalState): User | null {
+  return function findUser({ user }: RootState): User | null {
     return user.userData;
   };
 }
 export function getUserBalance() {
-  return function findUser({ user }: GlobalState): number | undefined {
+  return function findUser({ user }: RootState): number | undefined {
     return user.userData?.currentBalance;
   };
 }
-export function getLoginStatus() { return (s: GlobalState): boolean => s.user.isLogged; }
-export function getUserDataStatus() { return (s: GlobalState): boolean => s.user.dataLoaded; }
+export function getLoginStatus() { return (s: RootState): boolean => s.user.isLogged; }
+export function getUserDataStatus() { return (s: RootState): boolean => s.user.dataLoaded; }
 
 function initState(): UserState {
   let state: UserState;

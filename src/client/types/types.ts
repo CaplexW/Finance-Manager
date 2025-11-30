@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { ActionCreatorWithNonInferrablePayload, ActionCreatorWithPayload, ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
 import { ReactElement } from "react";
+import { RootState } from "../app/store/createStore";
 
 export type Credentials = { email: string, password: string };
 export type RegisterPayload = { email: string, password: string, name: string };
@@ -10,36 +11,27 @@ export type RemoveResult = {
   newBalance: number
 };
 
-export type GlobalState = {
-  user: UserState,
-  operations: CRUDState<Operation>,
-  categories: CRUDState<Category>,
-  accounts: CRUDState<Account>,
-  goals: CRUDState<Goal>,
-  icons: CRUDState<Icon>,
-};
-export type CRUDGlobalState = Omit<GlobalState, 'user'>;
+export type CRUDRootState = Omit<RootState, 'user'>;
 
-export interface CommonState {
+export type UserState = {
   error: unknown | null;
-  isLoaded: boolean;
-};
-export interface UserState extends Omit<CommonState, 'isLoaded'> {
   auth: string | null;
   userData: User | null;
   isLogged: boolean;
   dataLoaded: boolean;
 };
-export interface CRUDState<CRUDEntity> extends CommonState {
+export type CRUDState<CRUDEntity> = {
   entities: CRUDEntity[] | null;
+  error: unknown | null;
+  isLoaded: boolean;
 };
 
 export type CRUDStateMap = {
-  operations: Operation,
-  categories: Category,
-  accounts: Account,
-  goals: Goal,
-  icons: Icon,
+  operations: CRUDState<Operation>,
+  categories: CRUDState<Category>,
+  accounts: CRUDState<Account>,
+  goals: CRUDState<Goal>,
+  icons: CRUDState<Icon>,
 };
 
 export type CRUDActions<CRUDEntity> = {
@@ -64,10 +56,10 @@ export type CRUDActions<CRUDEntity> = {
   updateStateFailed: ActionCreatorWithNonInferrablePayload<`${string}/updateStateFailed`>,
 };
 
-export interface CRUDService<CRUDEntity>  {
+export interface CRUDService<CRUDEntity> {
   getList: () => Promise<CRUDEntity[]>,
   update: (payload: CRUDEntity) => Promise<CRUDEntity>,
-  create: (payload: CRUDEntity) => Promise<CRUDEntity>,
+  create: (payload: Omit<CRUDEntity, '_id'>) => Promise<CRUDEntity>,
   delete: (id: string) => Promise<RemoveResult>,
 };
 
@@ -93,7 +85,7 @@ export interface Category extends CRUDObject {
   name: string;
   color: string;
   isIncome: boolean;
-  icon: ReactElement //TODO изменить на _id когда изменю бд
+  icon: string
 };
 export interface Account extends CRUDObject {
   name: string;
@@ -118,4 +110,4 @@ export interface CRUDObject {
   _id: string,
 }
 
-export type GetStateFuncion = () => GlobalState;
+export type GetStateFuncion = () => RootState;

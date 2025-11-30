@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Widget from '../../common/widget';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from 'react-redux';
 import { getCategoriesList } from '../../../store/categories';
 import { getIconsList } from '../../../store/icons';
 import { operationPropType } from '../../../../types/propTypes';
@@ -9,8 +9,8 @@ import StatisticPlate from '../../common/statisticsPlate';
 import roundToHundredths from '../../../../../server/utils/math/roundToHundredths';
 
 export default function WidgetBiggestCategories({ operations }) {
-  const categories = useSelector(getCategoriesList());
-  const icons = useSelector(getIconsList());
+  const categories = useAppSelector(getCategoriesList());
+  const icons = useAppSelector(getIconsList());
 
   if (!operations.length) return;
 

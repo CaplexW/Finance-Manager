@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import showElement from '../../utils/console/showElement';
 import ContentBoard from '../common/contentBoard';
 import WidgetIncomeOutcome from './widgets/widgetIncomeOutcome';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from 'react-redux';
 import { getOperationsList } from '../../store/operations';
 import WidgetBiggestOperations from './widgets/widgetBiggestOperations';
 import WidgetBalanceFlow from './widgets/widgetBalanceFlow';
@@ -13,8 +13,8 @@ import { getLoginStatus } from '../../store/user';
 
 export default function ActivityBoard() {
   const [activityRange, setActivityRange] = useState(30);
-  const userIsLogged = useSelector(getLoginStatus());8;
-  const operations = useSelector(getOperationsList());
+  const userIsLogged = useAppSelector(getLoginStatus());8;
+  const operations = useAppSelector(getOperationsList());
 
   if (!userIsLogged) return;
 

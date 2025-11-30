@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from 'react-redux';
 import { nodesType } from '../../../mockData/propTypesScheme';
 import { getUsersDataStatus, loadUsers } from '../../../store/users';
 import Loader from '../../common/loader';
 
 export default function UsersLoader({ children }) {
-  const usersIsLoaded = useSelector(getUsersDataStatus());
-  const dispatch = useDispatch();
+  const usersIsLoaded = useAppSelector(getUsersDataStatus());
+  const dispatch = useAppDispatch();
 
   useEffect(() => { loadData(); }, []);
   function loadData() {

@@ -19,6 +19,6 @@ export const {
 export const {
   getList: getOperationsList,
   getLoadStatus: getOperationsLoadStatus,
-} = createCRUDGetters(storeName);
+} = createCRUDGetters<Operation>(storeName);
 
 export default operationsReducer;

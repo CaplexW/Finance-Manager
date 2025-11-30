@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Widget from '../../common/widget';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from 'react-redux';
 import { getCategoryById } from '../../../store/categories';
 import { getIconById } from '../../../store/icons';
 import { operationPropType } from '../../../../types/propTypes';
@@ -14,12 +14,12 @@ export default function WidgetBiggestOperations({ operations }) {
   const sortedOperations = sortOperationsByAmount(operations, 'desc');
 
   const biggestIncome = sortedOperations[0];
-  const incomeCategory = useSelector(getCategoryById(biggestIncome.category));
-  const incomeIcon = useSelector(getIconById(incomeCategory.icon));
+  const incomeCategory = useAppSelector(getCategoryById(biggestIncome.category));
+  const incomeIcon = useAppSelector(getIconById(incomeCategory.icon));
 
   const biggestExpense = sortedOperations[sortedOperations.length - 1];
-  const expenseCategory = useSelector(getCategoryById(biggestExpense.category));
-  const expenseIcon = useSelector(getIconById(expenseCategory.icon));
+  const expenseCategory = useAppSelector(getCategoryById(biggestExpense.category));
+  const expenseIcon = useAppSelector(getIconById(expenseCategory.icon));
 
   return (
     <div className="widget">

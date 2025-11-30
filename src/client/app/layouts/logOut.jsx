@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from 'react-redux';
 import Loader from '../components/common/loader';
 import { logOut } from '../store/user';
 
 export default function LogOut() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const redirectTo = useNavigate();
 
   useEffect(() => { loggingOut(); }, []);
