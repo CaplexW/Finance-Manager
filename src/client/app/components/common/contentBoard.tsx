@@ -24,5 +24,3 @@ export default function ContentBoard({ children = '', header = 'Заголово
 
 
 
-
-

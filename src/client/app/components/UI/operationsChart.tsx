@@ -108,5 +108,3 @@ export default function OperationsChart({ operations, switchPosition = null, typ
 
 
 
-
-

@@ -20,5 +20,3 @@ export default function Loader({ min = null, max = null, reason = null }: Loader
 
 
 
-
-

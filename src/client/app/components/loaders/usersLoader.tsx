@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'react-redux';
 import { nodesType } from '../../../mockData/propTypesScheme';
 import { getUsersDataStatus, loadUsers } from '../../../store/users';
 import Loader from '../../common/loader';
 
-export default function UsersLoader({ children }) {
+export default function UsersLoader({ children } : { children: ReactElement}) {
   const usersIsLoaded = useAppSelector(getUsersDataStatus());
   const dispatch = useAppDispatch();
 

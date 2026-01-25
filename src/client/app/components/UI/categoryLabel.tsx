@@ -12,7 +12,7 @@ interface CategoryLabelProps {
 
 export default function CategoryLabel({ categoryId }: CategoryLabelProps) {
   const category = useSelector(getCategoryById(categoryId));
-  const icon = useSelector(getIconById(category?.icon));
+  const icon = useSelector(getIconById(category.icon));
 
   const { name, color } = category;
 

@@ -24,5 +24,3 @@ export default function UserAvatar({ source = null, size = 40 }: UserAvatarProps
 
 
 
-
-

@@ -16,5 +16,3 @@ export default function OperationAmount({ operation }: OperationAmountProps) {
 
 
 
-
-

@@ -16,5 +16,3 @@ export default function ButtonWithIcon({ icon, onClick, size = 1 }: ButtonWithIc
 
 
 
-
-

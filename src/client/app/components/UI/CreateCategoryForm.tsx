@@ -7,8 +7,7 @@ import IconPicker from '../common/form/iconPicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIconsList } from '../../store/icons';
 import { createCategory } from '../../store/categories';
-import useAppDispatch from '../../hooks/useAppDispatch';
-import { Category } from '../../../types/types';
+import { Icon } from '../../types/types';
 
 interface CreateCategoryFormProps {
   enteredName?: string | null;
@@ -16,9 +15,9 @@ interface CreateCategoryFormProps {
 }
 
 export default function CreateCategoryForm({ enteredName = null, onClose }: CreateCategoryFormProps) {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
-  const icons = useSelector(getIconsList());
+  const icons = useSelector(getIconsList) as Icon[];
   const existingData = { name: enteredName || '', color: "#fff", income: false, icon: '' };
   const validatorConfig = {};
 
@@ -47,4 +46,5 @@ export default function CreateCategoryForm({ enteredName = null, onClose }: Crea
     </Form>
   );
 }
+
 

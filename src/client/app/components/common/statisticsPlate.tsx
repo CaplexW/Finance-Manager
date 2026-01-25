@@ -24,5 +24,3 @@ export default function StatisticPlate({ amount, name, icon }: StatisticPlatePro
 
 
 
-
-

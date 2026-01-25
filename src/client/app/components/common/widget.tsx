@@ -31,5 +31,3 @@ export default function Widget({ children, name = 'Widget name' }: WidgetProps) 
 
 
 
-
-
