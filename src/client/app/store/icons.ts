@@ -17,6 +17,6 @@ export const {
   getList: getIconsList,
   getLoadStatus: getIconsLoadStatus,
   getElementById: getIconById,
-} = createCRUDGetters(storeName);
+} = createCRUDGetters<Icon>(storeName);
 
 export default iconsReducer;

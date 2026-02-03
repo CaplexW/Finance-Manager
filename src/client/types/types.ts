@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { ActionCreatorWithNonInferrablePayload, ActionCreatorWithPayload, ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
 import { ReactElement } from "react";
+import { RootState } from "../app/store/createStore";
 
 export type Credentials = { email: string, password: string };
 export type RegisterPayload = { email: string, password: string, name: string };
@@ -18,7 +19,8 @@ export type GlobalState = {
   goals: CRUDState<Goal>,
   icons: CRUDState<Icon>,
 };
-export type CRUDGlobalState = Omit<GlobalState, 'user'>;
+export type StoreName = keyof Omit<RootState, "user">;
+export type CRUDGlobalState = Omit<RootState, 'user'>;
 
 export interface CommonState {
   error: unknown | null;
@@ -30,6 +32,7 @@ export interface UserState extends Omit<CommonState, 'isLoaded'> {
   isLogged: boolean;
   dataLoaded: boolean;
 };
+export type CRUDRootState = Omit<RootState, "user">;
 export interface CRUDState<CRUDEntity> extends CommonState {
   entities: CRUDEntity[] | null;
 };

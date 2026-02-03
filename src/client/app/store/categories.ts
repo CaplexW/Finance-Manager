@@ -17,6 +17,6 @@ export const {
   getList: getCategoriesList,
   getLoadStatus: getCategoriesLoadStatus,
   getElementById: getCategoryById,
-} = createCRUDGetters(storeName);
+} = createCRUDGetters<Category>(storeName);
 
 export default categoriesReducer;

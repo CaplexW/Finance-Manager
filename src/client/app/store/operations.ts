@@ -15,10 +15,10 @@ export const {
   updateData: updateOperation,
   deleteData: deleteOperation,
   updateState: addOperations,
-} = createCRUDFunctions(actions, operationsService);
+} = createCRUDFunctions<Operation>(actions, operationsService);
 export const {
   getList: getOperationsList,
   getLoadStatus: getOperationsLoadStatus,
-} = createCRUDGetters(storeName);
+} = createCRUDGetters<Operation>(storeName);
 
 export default operationsReducer;
