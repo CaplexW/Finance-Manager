@@ -5,7 +5,7 @@ import SVGIcon from '../common/svgIcon.jsx'
 export default function CategoryButton({ data, onClick }) {
   return <span
     className='category-button'
-    key={`${i.category.name}+${i.icon._id}`}
+    key={`${data.category.name}+${data.icon._id}`}
     onClick={onClick}
   >
     <SVGIcon
