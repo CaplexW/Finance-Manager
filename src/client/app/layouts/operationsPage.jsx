@@ -12,6 +12,7 @@ import ContentBoard from '../components/common/contentBoard';
 import { getInputDate, todayInput } from '../../../server/utils/formatDate';
 import ChartBar from '../components/UI/chartBar';
 import { getIconsList, getIconsLoadStatus } from '../store/icons';
+import showElement from '../utils/console/showElement';
 
 // TODO Реализовать фильтрацию и сортировку.
 //  1) Сортировку по всем столбцам - ГОТОВО!
@@ -60,6 +61,7 @@ export default function OperationsPage() {
     };
   });
   categoriesInfo.sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount));
+  showElement(categoriesInfo, 'categoriesInfo');
 
   const displayedOperations = orderBy(filteredByCategoryOperations, [sort.path], [sort.order]);
 
