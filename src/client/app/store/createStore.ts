@@ -20,6 +20,11 @@ const storeConfig = {
   devTools: !config.IN_PRODUCTION,
 };
 
-export default function createStore() {
+function createStore() {
   return configureStore(storeConfig);
 }
+
+export const store = createStore();
+
+const RootState = store.getState();
+export type RootState = typeof RootState;

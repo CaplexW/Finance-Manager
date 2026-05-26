@@ -20,7 +20,7 @@ export default function WidgetBalanceFlow({ operations, dateRange }) {
 
   const dateMap = getBalanceHistory(dateRange, operations, userBalance);
 
-  const labelDates = [...dateMap.keys()].map((d) => formatDisplayDateFromInput(d));
+  const labelDates = [...dateMap.keys()].map((d) => formatDisplayDateFromInput(d)).reverse();
   const chartPoints = [...dateMap.values()].reverse();
   const charColor = chartPoints[0] < chartPoints[chartPoints.length - 1] ? greenColor : redColor;
   const chartOptions = {

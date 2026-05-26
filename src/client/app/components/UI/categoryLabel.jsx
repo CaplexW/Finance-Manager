@@ -14,8 +14,9 @@ export default function CategoryLabel({ categoryId }) {
   const { name, color } = category;
 
   return (
-    <div className="category-label disply-flex align-items-center">
-      <SVGIcon classes="category-icon me-2" color={color} size={16} source={icon} />
+    <div className="category-label">
+      <SVGIcon color={color} source={icon} />
+      {' '}
       <span>{name}</span>
     </div>
   );

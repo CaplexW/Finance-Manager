@@ -5,10 +5,13 @@
   margin-inline: auto;
   border-radius: 9px;
   overflow: auto;
+
 }
 
 .table__content{
   width: 100%;
+    scrollbar-gutter: stable;
+  scrollbar-color: transparent transparent;
 }
 .table__content td, th{
   border-collapse: collapse;
@@ -45,22 +48,16 @@
 }
 
 .table__contanier::-webkit-scrollbar {
-  width: 0;
-  visibility: hidden;
+  width: .3rem;
+  /* visibility: hidden; */
   transition: .5s;
 }
 .table__contanier:hover::-webkit-scrollbar {
-  width: .25rem;
+  /* width: .25rem; */
 }
-.table__contanier:hover::-webkit-scrollbar-thumb {
-  border-radius: 3px;
+.table__contanier::-webkit-scrollbar-thumb {
+  border-radius: 8px;
   background-color: #d1d9defe;
-  visibility: visible;
-}
-
-
-@media (max-width: 1000px) {
-  td:not(:first-of-type) {
-    min-width: 12.1rem;
-  }
+  /* visibility: visible; */
+  /* scrollbar-gutter: stable; */
 }

@@ -1,16 +1,15 @@
 .dialog {
-  /* display: grid; */
-  max-width: 45rem;
-  /* min-width: 23rem; */
+  width: 95vw;
+  max-width: 25rem;
   background: #ffffff00;
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 0 1rem rgba(21, 21, 21, 0.377);
   color: #222;
   border: none;
   border-radius: 0.5rem;
   position: relative;
   margin: 0 auto;
-  padding-block-end: 1rem;
   overflow: hidden;
 }
 .dialog input {
@@ -22,7 +21,7 @@
   padding: .5em .7em
 }
 .modal-body .form .css-b62m3t-container .css-13cymwt-control { 
-  /* It's a style of ReactSelect component */
+  /* Стили библиотечного компонента ReactSelect */
   background: rgba(255, 255, 255, 0.503);
   border-radius: .375rem;
 }
@@ -42,13 +41,14 @@
   padding: .7rem 1.3rem 0 1.1rem;
 }
 .modal-body {
-  padding: .5rem 3rem 1.5rem 3rem;
+  padding: 5% 7%;
 }
 
 .modal-header .close-button.close-button {
   background-color: #22222200;
 }
 
+/* Анимации */
 @keyframes fade-in {
   0% {
     opacity: 0;

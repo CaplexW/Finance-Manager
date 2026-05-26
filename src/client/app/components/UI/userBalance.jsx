@@ -6,18 +6,14 @@ import { isNumber } from 'lodash';
 
 export default function UserBalance() {
   const balance = useSelector(getUserBalance());
-  if(typeof balance !== 'number' && !balance) return;
+  if (typeof balance !== 'number' && !balance) return;
 
+  const currency = '₽';
   const balanceIsPositive = balance > 0;
-  const balanceStyles = {
-    background: 'rgba(255, 255, 255, 0.6)',
-    borderRadius: '8px',
-    padding: '.4em 1em',
+  const digitsColor = balanceIsPositive ? 'green' : 'red';
 
-    display: 'flex',
-    alignItems: 'center',
-  };
-  const digitsStyles = { marginInlineStart: '.5rem', color: balanceIsPositive ? 'green' : 'red' };
-
-  return <div style={balanceStyles}>Ваш баланс:<span style={digitsStyles}>{balance}</span></div>;
+  return <div className='user-balance-plate'>
+    <span className='desktop-only'>Ваш баланс:&nbsp;</span>
+    <span className={`colored-text--${digitsColor}`}>{balance} {currency}</span>
+  </div>;
 };

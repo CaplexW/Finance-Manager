@@ -114,7 +114,7 @@ async function importCSVTinkoff(req: AuthedRequest, res: Response) {
           await hostUser.operations.push(newOperation._id);
           balanceChange = roundToHundredths(balanceChange + newOperation.amount);
         });
-        await hostUser.updateOne({ currentBalance: hostUser.currentBalance + balanceChange });
+        await hostUser.updateOne({ currentBalance: roundToHundredths(hostUser.currentBalance + balanceChange) });
         await hostUser.save();
       }
     }
@@ -127,6 +127,7 @@ async function importCSVTinkoff(req: AuthedRequest, res: Response) {
   }
 }
 async function update(req: AuthedRequest, res: Response) {
+  // HINT
   // request = {
   //   _id: string,
   //   user: string,

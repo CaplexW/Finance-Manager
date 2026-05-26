@@ -1,111 +1,68 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
-import { getCategoriesList } from '../../store/categories';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../../server/utils/console/showElement';
-import { operationPropType } from '../../../types/propTypes';
-import { getIconsList } from '../../store/icons';
 import SVGIcon from '../common/svgIcon';
-import { clrTransWhite600 } from '../../constants/colors';
+import { caretDownFilledIcon, caretUpFilledIcon } from '../../../assets/icons';
 
-export default function CategoriesList({ onClick, operations }) {
+export default function CategoriesList({ onClick, categories, filteredCategories = [], numberOfDisplayedCategories = 5 }) {
   const [filteredList, setFilteredList] = useState([]);
+  const [isDisplayLimited, setDisplayLimited] = useState(true);
 
-  useEffect(() => { onClick(filteredList); }, [filteredList]);
+  useEffect(() => { onClick(filteredList) }, [filteredList]);
 
-  const categories = useSelector(getCategoriesList());
-  const icons = useSelector(getIconsList());
+  if (!categories?.length) return;
 
-  if (!operations?.length || !categories?.length || !icons?.length) return;
+  const restIcon = caretDownFilledIcon;
+  const lessIcon = caretUpFilledIcon;
 
-  const includedCategoriesIds = operations.map((s) => s.category);
-  const includedCategories = categories.filter((cat) => includedCategoriesIds.includes(cat._id));
+  const displayedIcons = isDisplayLimited ? [...categories].slice(0, numberOfDisplayedCategories) : [...categories];
 
-  const includedIconsIds = includedCategories.map((cat) => cat.icon);
-  const includedIcons = icons.filter((icon) => includedIconsIds.includes(icon._id));
-
-  const coloredIcons = includedCategories.map((category) => {
-    const icon = includedIcons.find((i) => category.icon === i._id);
-    if (!icon?._id) {
-      const report = {
-        operations,
-        icons,
-        includedIconsIds,
-        includedIcons,
-        icon,
-        categories,
-        includedCategoriesIds,
-        includedCategories,
-        category,
-      };
-      showElement(report, 'report');
-    }
-    return {
-      icon,
-      category,
-      filtered: filteredList.includes(category._id),
-    };
-  });
-
-  const defaultLimit = 15; // TODO сделать скролл
-
-  const containerSyles = {
-    background: clrTransWhite600,
+  const restIconStyles = {
     borderRadius: '8px',
-    // maxWidth: '90%',
-    padding: '1rem .5rem 1rem .8rem'
+    boxShadow: `1px 1px .2em rgba(0, 0, 0, 0.5)`,
+    padding: '.5em .5em',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
   };
 
-  function setSpanStyles({ category, filtered }) {
-    return {
-      color: category.color,
-      opacity: filtered ? '.3' : '1',
-      borderRadius: '8px',
-      boxShadow: `${filtered ? 'inset' : ''} 1px 1px .2em rgba(0, 0, 0, 0.5)`,
-      margin: '.3rem',
-      display: 'flex',
-      padding: '0 .1rem',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-      width: '2rem',
-      height: '2.2rem',
-    };
-  }
-
-  function handleClick(item) {
+  function handleCategoryClick(item) {
     setFilteredList((prevState) => {
       if (prevState.includes(item.category._id)) {
         const newState = prevState.filter((i) => i !== item.category._id);
-        // onClick(newState);
-
         return newState;
       }
       else {
-        const newState = prevState.map(i => i);
+        const newState = [...prevState];
         newState.push(item.category._id);
-        // onClick(newState);
-
         return newState;
       }
     });
   }
+  function handleClickRest() { setDisplayLimited((prev) => !prev); }
 
   return (
-    <div className='d-flex justify-contetn-center' style={containerSyles}>
-      <div className="d-flex flex-wrap">
-        {coloredIcons.map((i) => (
+    <div className='categories-list-container'>
+      <div className="categories-list">
+        {displayedIcons.map((i) => (
           <span
+            className={`category-button ${i.isFiltered ? 'filtered' : ''}`}
             key={`${i.category.name}+${i.icon._id}`}
-            onClick={handleClick.bind(null, i)}
-            style={setSpanStyles(i)}
+            onClick={() => handleCategoryClick(i)}
           >
             <SVGIcon
+              color={i.category.color}
+              size={1.5}
               source={i.icon}
             />
           </span>
         ))}
+        {numberOfDisplayedCategories + 1 < categories.length && <span
+          className='category-button'
+          key={`restOfOperations`}
+          style={restIconStyles}
+          onClick={handleClickRest}
+        >{isDisplayLimited ? restIcon : lessIcon}</span>}
       </div>
     </div>
   );
@@ -113,5 +70,5 @@ export default function CategoriesList({ onClick, operations }) {
 
 CategoriesList.propTypes = {
   onClick: PropTypes.func,
-  operations: PropTypes.arrayOf(PropTypes.shape(operationPropType)).isRequired,
+  // operations: PropTypes.arrayOf(PropTypes.shape(operationPropType)).isRequired,
 };

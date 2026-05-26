@@ -1,0 +1,33 @@
+.categories-list-container {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 8px;
+    padding: 1rem 1rem;
+}
+
+.categories-list {
+  display: grid;
+
+  grid-auto-flow: row dense;
+  grid-template-columns: repeat(auto-fit, minmax(12.5%, 1fr));
+  gap: .5em;
+}
+
+.category-button {
+    border-radius: 8px;
+    box-shadow: 1px 1px .2em rgba(0, 0, 0, 0.5);
+    padding: .5em .5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.category-button.deactivated {
+  opacity: .3;
+  box-shadow: inset;
+}
+
+.filtered {
+  opacity: .3;
+
+  box-shadow: inset 1px 1px .2em rgba(0, 0, 0, 0.5);
+}

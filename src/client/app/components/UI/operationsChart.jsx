@@ -4,6 +4,7 @@ import { getCategoriesList } from '../../store/categories';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../../server/utils/console/showElement';
+import sortOperationsByAmount from '../../utils/sortOperationsByAmount';
 import { operationPropType } from '../../../types/propTypes';
 import { clrTransWhite600, greenColor, redColor } from '../../constants/colors';
 import Chart from '../common/charts/chart';
@@ -13,7 +14,7 @@ export default function OperationsChart({ operations, switchPosition = null, typ
 
   if (!operations?.length || !allCategories?.length) return;
 
-  const sortedOperations = operations.toSorted((a, b) => a.amount - b.amount);
+  const sortedOperations = sortOperationsByAmount(operations);
 
   function createDataForChart(operations, categories) {
     const dataObject = {
@@ -53,7 +54,7 @@ export default function OperationsChart({ operations, switchPosition = null, typ
       color: dataObject.datasets[0].backgroundColor[index],
       name: dataObject.labels[index],
     }));
-    const sortedObjects = categoryObjects.toSorted((a, b) => b.amount - a.amount);
+    const sortedObjects = sortOperationsByAmount(categoryObjects, 'desc');
 
     dataObject.labels = [];
     dataObject.datasets[0].data = [];
@@ -90,18 +91,10 @@ export default function OperationsChart({ operations, switchPosition = null, typ
     justifyContent: 'center',
     alignItems: 'center',
   };
-  const subStyles = {
-    padding: '1rem 2.3rem',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  };
 
   return (
     <div className="" style={containerSyles}>
-      {/* <div className="sub-container" style={subStyles}> */}
       <Chart data={data} options={options} type={type} />
-      {/* </div> */}
     </div>
   );
 };

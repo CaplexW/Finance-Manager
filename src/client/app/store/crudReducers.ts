@@ -1,8 +1,9 @@
 import { Dispatch, PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { ErrorMessage, CRUDState, CRUDActions, CRUDService, GlobalState, CRUDObject, CRUDStateMap } from "../../types/types.ts";
+import { ErrorMessage, CRUDState, CRUDActions, CRUDService, GlobalState, CRUDObject, CRUDStateMap, StoreName, CRUDGlobalState } from "../../types/types.ts";
 import { Draft, WritableDraft } from 'immer';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from "../../../server/utils/console/showElement.ts";
+import { RootState } from "./createStore.ts";
 
 export function createCRUDSlice<CRUDEntity extends CRUDObject>(sliceName: string, config = { emptyEntityIsValid: true }) {
   const initialState: CRUDState<CRUDEntity> = {
@@ -21,7 +22,7 @@ export function createCRUDSlice<CRUDEntity extends CRUDObject>(sliceName: string
           const payloadData = Array.isArray(action.payload) ? action.payload as Draft<CRUDEntity[]> : null;
           state.entities = payloadData;
           if (emptyEntityIsValid) {
-            state.isLoaded = Boolean(action.payload);  
+            state.isLoaded = Boolean(action.payload);
           }
           else {
             state.isLoaded = Boolean(action.payload?.length);
@@ -86,10 +87,10 @@ export function createCRUDFunctions<CRUDEntity>(actions: CRUDActions<CRUDEntity>
 
   return { loadData, createData, updateData, deleteData, updateState };
 }
-export function createCRUDGetters<StoreName extends keyof CRUDStateMap>(storeName: StoreName) {
+export function createCRUDGetters<CRUDEntity extends CRUDObject>(storeName: StoreName) {
   const getList = createGetListFunction<StoreName>(storeName);
   const getLoadStatus = createGetLoadStatusFunction<StoreName>(storeName);
-  const getElementById = createGetElementById<StoreName>(storeName);
+  const getElementById = createGetElementById<CRUDEntity>(storeName);
 
   return { getList, getLoadStatus, getElementById };
 }
@@ -188,11 +189,11 @@ function createGetLoadStatusFunction<StoreName extends keyof CRUDStateMap>(store
     return (s: GlobalState): boolean => s[storeName].isLoaded;
   };
 };
-function createGetElementById<StoreName extends keyof CRUDStateMap>(storeName: StoreName) {
+function createGetElementById<CRUDEntity>(storeName: StoreName) {
   return function getElementById(id: string) {
-    return (s: GlobalState): CRUDStateMap[StoreName] | undefined => {
-      const crudState = s[storeName] as CRUDState<CRUDStateMap[StoreName]>;
-      return crudState.entities?.find((elem) => elem?._id === id);
+    return (s: RootState) => {
+      const crudState = s[storeName];
+      return crudState.entities?.find((elem) => elem?._id === id) as CRUDEntity;
     };
   };
 }

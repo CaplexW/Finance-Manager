@@ -6,11 +6,12 @@ import { getCategoryById } from '../../../store/categories';
 import { getIconById } from '../../../store/icons';
 import { operationPropType } from '../../../../types/propTypes';
 import StatisticPlate from '../../common/statisticsPlate';
+import sortOperationsByAmount from '../../../utils/sortOperationsByAmount';
 
 export default function WidgetBiggestOperations({ operations }) {
   if (!operations.length) return;
 
-  const sortedOperations = operations.toSorted((a, b) => b.amount - a.amount);
+  const sortedOperations = sortOperationsByAmount(operations, 'desc');
 
   const biggestIncome = sortedOperations[0];
   const incomeCategory = useSelector(getCategoryById(biggestIncome.category));

@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import showElement from '../../../../server/utils/console/showElement';
-import { iconPropType } from '../../../types/propTypes';
+import showElement from '../../../../server/utils/console/showElement.ts';
+import { iconPropType } from '../../../types/propTypes.js';
 
 export default function SVGIcon({
   source,
-  classes = '',
-  size = 16,
+  size = 1,
   color = 'currentColor'
 }) {
   const iconObject = source?.src;
@@ -16,8 +15,9 @@ export default function SVGIcon({
 
   const iconConfig = {
     ...iconObject.props,
-    width: size,
-    height: size,
+    className: 'icon-in-list',
+    width: `${size}em`,
+    height: `${size}em`,
     color: color || '#fff',
   };
 
@@ -64,11 +64,10 @@ export default function SVGIcon({
 
   const icon = createSVGFromObject(iconObject, color);
 
-  return <span className={classes}>{icon}</span>;
+  return <>{icon}</>;
 };
 
 SVGIcon.propTypes = {
-  classes: PropTypes.string,
   color: PropTypes.string,
   size: PropTypes.number,
   source: PropTypes.shape(iconPropType).isRequired,

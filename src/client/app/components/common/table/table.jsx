@@ -52,6 +52,7 @@ export default function Table({
           <tr>
             {Object.keys(columns).map((column) => (
               <th
+                className={columns[column].path || 'button'}
                 key={column}
                 onClick={
                   columns[column].path
@@ -69,14 +70,14 @@ export default function Table({
         <tbody className='table__rows'>
           {displayedData.map(
             (
-              item, // item - объект одного пользователя
+              item,
             ) => (
               <tr key={item._id}>
                 {Object.keys(columns).map(
                   (
-                    column, // columns - объект с информацией для отображения и сортировки
+                    column,
                   ) => (
-                    <td key={column}>
+                    <td className={column || 'button'} key={column}>
                       {renderContent(item, column)}
                     </td>
                   ),

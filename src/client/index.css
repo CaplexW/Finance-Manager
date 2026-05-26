@@ -1,3 +1,4 @@
+@import './app/styles/App.css';
 @import './app/styles/table.css';
 @import './app/styles/navbar.css';
 @import './app/styles/contentBoard.css';
@@ -6,22 +7,25 @@
 @import './app/styles/input.css';
 @import './app/styles/dateRangeInput.css';
 @import './app/styles/operationTable.css';
-@import './app/styles/layouts/operationsPage.css';
+@import './app/styles/categoriesList.css';
 @import './app/styles/layouts/mainPage.css';
+@import './app/styles/layouts/loginPage.css';
+@import './app/styles/layouts/operationsPage.css';
 @import './app/styles/widgets/widget.css';
 @import './app/styles/widgets/widgetBalanceFlow.css';
 @import './app/styles/statisticsPlate.css';
 @import './app/styles/widgets/widgetBiggestOperations.css';
 @import './app/styles/widgets/widgetBiggestCategories.css';
 @import './app/styles/navbar.css';
+@import './app/styles/activityBoard.css';
+@import './app/styles/userBalance.css';
 
-/* --mainColor #93bbca */
 *,
 *::before,
 *::after {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  /* box-sizing: border-box; */
 }
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
@@ -30,17 +34,50 @@ ol, ul, dl {
   margin: 0;
   padding: 0;
 }
+html {
+  font-size: 1.0625rem;
+}
 body {
   background: url(./assets/background.png);
   background-size: cover;
   background-repeat: no-repeat;
   backdrop-filter: blur(10px);
+
+  min-height: 100vh;
 }
 body::-webkit-scrollbar {
-  width: .6rem;
-  height: .6rem;
+  width: .1rem;
+  height: .1rem;
 }
 body::-webkit-scrollbar-thumb{
-  border-radius: .4rem;
+  border-radius: .1rem;
   background-color: #0003;
+}
+
+.svg--small {
+  height: 1em;
+}
+.svg--mid {
+  height: 1.5em;
+}
+.svg--big {
+  height: 2em;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media(orientation: portrait) {
+  body {
+    /* font-size: .8rem; */
+  }
+
+  .mobile-only {
+    display: unset;
+  }
+
+  .desktop-only {
+    display: none;
+  }
 }
