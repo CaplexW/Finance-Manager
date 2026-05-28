@@ -29,6 +29,19 @@ const operationsService = {
     const { data } = await httpService.post(URL, payload);
     return data;
   },
+
+  /**
+   * Обновляет категорию для всех операций с заданным именем
+   * @param {string} name - Имя операции
+   * @param {string} newCategoryId - ID новой категории
+   * @returns {Promise<any>} - Результат запроса
+   */
+  async updateCategoryByName(name: string, newCategoryId: string) {
+    const URL = operationEndpoint + 'update-category-by-name';
+    const { data } = await httpService.patch(URL, { name, newCategoryId });
+    return data;
+  },
 };
+
 
 export default operationsService;
