@@ -27,6 +27,7 @@ const upload = multer({ dest: './src/server/uploads' });
 router.get('/', checkAuth, sendList);
 router.post('/', checkAuth, create);
 router.patch('/', checkAuth, update);
+router.patch('/update-category-by-name', checkAuth, updateCategoryByName);
 router.delete('/:operationId', checkAuth, remove);
 router.post('/upload/csv/tinkoff', checkAuth, upload.single('file'), importCSVTinkoff);
 
@@ -42,6 +43,7 @@ async function sendList(req: AuthedRequest, res: Response) {
     serverError(res, thisPlace);
   }
 }
+
 async function create(req: AuthedRequest, res: Response) {
   // request = {
   //   name: string,
@@ -79,6 +81,7 @@ async function create(req: AuthedRequest, res: Response) {
     serverError(res, thisPlace);
   }
 }
+
 async function importCSVTinkoff(req: AuthedRequest, res: Response) {
   const thisPlace = 'operation/import/csv/tinkoff';
 
@@ -101,6 +104,7 @@ async function importCSVTinkoff(req: AuthedRequest, res: Response) {
       return !result;
     });
     
+
     const operations = await Promise.all(uniqOperationsData.map(async (operationData) => {
       operationData.user = authedUser;
       const operation = await Operation.create(operationData);
@@ -126,6 +130,7 @@ async function importCSVTinkoff(req: AuthedRequest, res: Response) {
     serverError(res, 'operation/import');
   }
 }
+
 async function update(req: AuthedRequest, res: Response) {
   // HINT
   // request = {
@@ -164,6 +169,92 @@ async function update(req: AuthedRequest, res: Response) {
   }
 
 }
+
+/**
+ * Обновляет категорию для всех операций с заданным именем
+ * PATCH /operations/update-category-by-name
+ * Тело запроса: { name: string, newCategoryId: string }
+ */
+async function updateCategoryByName(req: AuthedRequest, res: Response) {
+  const thisPlace = 'operation/update-category-by-name';
+  const { name, newCategoryId } = req.body;
+
+  try {
+    // Проверка авторизации
+    if (!req.user) return sendAuthError(res, thisPlace);
+    
+    // Валидация входных данных
+    if (!name || !newCategoryId) {
+      return sendBadRequest(res, 'Отсутствует имя операции или ID новой категории', thisPlace);
+    }
+
+    const userId = req.user._id;
+
+    // 1. Проверяем, существует ли новая категория
+    const newCategory = await findCategoryById(newCategoryId);
+    if (!newCategory) {
+      return sendNotFound(res, 'category', newCategoryId);
+    }
+
+    // 2. Находим все операции пользователя с указанным именем
+    const operations = await Operation.find({
+      user: userId,
+      name: name,
+    });
+
+    if (!operations.length) {
+      return sendNotFound(res, 'operations with this name', name);
+    }
+
+    // 3. Получаем старую категорию (для первой операции)
+    const oldCategory = await findCategoryById(operations[0].category);
+    if (!oldCategory) {
+      return sendNotFound(res, 'old category', operations[0].category);
+    }
+
+    // 4. Массовое обновление категорий через bulkWrite (эффективно)
+    const bulkOps = operations.map((op) => ({
+      updateOne: {
+        filter: { _id: op._id },
+        update: { category: newCategoryId },
+      },
+    }));
+
+    await Operation.bulkWrite(bulkOps);
+
+    // 5. Корректируем баланс пользователя, если изменился тип категории (доход ↔ расход)
+    if (oldCategory.isIncome !== newCategory.isIncome) {
+      const hostUser = await User.findById(userId);
+      if (!hostUser) {
+        return sendNotFound(res, 'user', userId);
+      }
+
+      // Сумма всех операций с данным именем
+      const totalAmount = operations.reduce((sum, op) => roundToHundredths(sum + op.amount), 0);
+
+      // Если старая категория была доходом, а новая — расходом (или наоборот),
+      // нужно скорректировать баланс на удвоенную сумму
+      const balanceChange = newCategory.isIncome
+        ? totalAmount * 2  // Было -totalAmount, стало +totalAmount → разница +2*totalAmount
+        : -totalAmount * 2; // Было +totalAmount, стало -totalAmount → разница -2*totalAmount
+
+      await hostUser.updateOne({
+        currentBalance: roundToHundredths(hostUser.currentBalance + balanceChange),
+      });
+      await hostUser.save();
+    }
+
+    res.status(200).send({ 
+      success: true, 
+      updatedCount: operations.length,
+      message: `Категория обновлена для ${operations.length} операций`
+    });
+  } catch (err) {
+    showError(err);
+    serverError(res, thisPlace);
+  }
+}
+
 async function remove(req: AuthedRequest, res: Response) {
   const thisPlace = 'operation/remove';
   const { operationId } = req.params;
@@ -190,10 +281,12 @@ async function remove(req: AuthedRequest, res: Response) {
   }
 }
 
+
 function sendNotFound(response: Response, object: string, id: string = '') {
   const message: string = id ? `${object} with id ${id} not found` : `${object} not found`;
   response.status(404).send({ message });
 }
+
 
 async function findCategoryById(categoryId: string) {
   const defaultCategory = await DefaultCategory.findById(categoryId);
@@ -204,6 +297,7 @@ async function findCategoryById(categoryId: string) {
 
   return null;
 }
+
 function isOperationDuplicate(newOperation: OperationData, existingOperations: OperationDocument) {
   return (
     newOperation.date === existingOperations.date
@@ -211,5 +305,6 @@ function isOperationDuplicate(newOperation: OperationData, existingOperations: O
     && newOperation.amount === existingOperations.amount
   );
 }
+
 
 export default router;
