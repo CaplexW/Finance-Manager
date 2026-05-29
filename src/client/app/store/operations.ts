@@ -29,7 +29,7 @@ const {
  * @param {string} newCategoryId - ID новой категории
  * @returns {Function} - Thunk action
  */
-export const updateOperationsCategoryByName = (name: string, newCategoryId: string) => async (dispatch: any) => {
+const updateOperationsCategoryByName = (name: string, newCategoryId: string) => async (dispatch: any) => {
   try {
     const response = await operationsService.updateCategoryByName(name, newCategoryId);
     

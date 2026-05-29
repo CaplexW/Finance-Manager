@@ -1,6 +1,6 @@
 .dialog {
   width: 95vw;
-  max-width: 25rem;
+  max-width: 30rem;
   background: #ffffff00;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -11,6 +11,9 @@
   position: relative;
   margin: 0 auto;
   overflow: hidden;
+}
+.dialog-content {
+  padding: 5% 7%;
 }
 .dialog input {
   background: rgba(255, 255, 255, 0.503);
@@ -38,10 +41,10 @@
 .modal-header{
   display: flex;
   justify-content: space-between;
-  padding: .7rem 1.3rem 0 1.1rem;
+  /* padding: .7rem 1.3rem 0 1.1rem; */
 }
 .modal-body {
-  padding: 5% 7%;
+  /* padding: 5% 7%; */
 }
 
 .modal-header .close-button.close-button {

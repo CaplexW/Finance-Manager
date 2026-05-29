@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Form from '../common/form';
+import Form, { Checkbox } from '../common/form';
 import FieldInput from '../common/form/fieldInput';
 import SelectInputWithCreate from '../common/form/selectInputWithCreate';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,7 +20,7 @@ export default function EditOperationForm({ onClose = null, existingData = empty
   const categories = useSelector(getCategoriesList());
   const oldCategory = categories.find((c) => c._id === existingData.category);
   const categoryName = oldCategory?.name || '';
-  
+
   // Состояния для чекбокса массового обновления
   const [applyToAllWithSameName, setApplyToAllWithSameName] = useState(false);
   const [showCheckbox, setShowCheckbox] = useState(false);
@@ -58,22 +58,19 @@ export default function EditOperationForm({ onClose = null, existingData = empty
 
     // Обновляем текущую операцию
     const updateResult = await dispatch(updateOperation(normalizedData));
-    
+
     if (!updateResult) {
       return;
     }
 
     // Если нужно применить ко всем операциям с таким же именем
-    if (applyToAllWithSameName && normalizedData.name) {
-      const bulkUpdateResult = await dispatch(
-        updateOperationsCategoryByName(normalizedData.name, normalizedData.category)
-      );
+    if (inputValue.bulk) {
+      const bulkUpdateResult = await dispatch(updateOperationsCategoryByName(normalizedData.name, normalizedData.category));
       if (!bulkUpdateResult) {
         console.error('Не удалось обновить категории для всех операций');
       }
     }
 
-    // Обновляем баланс пользователя
     const oldAmount = existingData.amount;
     const newCategory = categories.find((cat) => cat._id === normalizedData.category);
     const newAmount = newCategory?.isIncome ? normalizedData.amount : -normalizedData.amount;
@@ -112,20 +109,17 @@ export default function EditOperationForm({ onClose = null, existingData = empty
       <FieldInput autoFocus label="Название" name="name" />
       <FieldInput label="Сумма" minimumValue={0.01} name="amount" type="number" />
       <FieldInput label="Дата" name="date" type="date" />
-
-      {/* Чекбокс для массового обновления */}
-      {showCheckbox && (
-        <div className="checkbox-container">
-          <label>
-            <input
-              type="checkbox"
-              checked={applyToAllWithSameName}
-              onChange={(e) => setApplyToAllWithSameName(e.target.checked)}
-            />
-            Изменить категорию для всех операций с этим названием
-          </label>
-        </div>
-      )}
+      <Checkbox label="Изменить категорию для одноимённых" name='bulk' />
+      {/* <div className="checkbox-container">
+        <label>
+          <input
+            type="checkbox"
+            checked={applyToAllWithSameName}
+            onChange={(e) => setApplyToAllWithSameName(e.target.checked)}
+          />
+          Изменить категорию для всех операций с этим названием
+        </label>
+      </div> */}
 
       <div className="button-container">
         <button className='submit-btn' type='submit'>Изменить</button>
