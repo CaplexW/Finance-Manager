@@ -63,9 +63,13 @@ export default function EditOperationForm({ onClose = null, existingData = empty
       return;
     }
 
-    // Если нужно применить ко всем операциям с таким же именем
+    // Если нужно применить ко всем операциям с таким же именем и изначальной категорией
     if (inputValue.bulk) {
-      const bulkUpdateResult = await dispatch(updateOperationsCategoryByName(normalizedData.name, normalizedData.category));
+      const bulkUpdateResult = await dispatch(updateOperationsCategoryByName(
+        normalizedData.name, 
+        normalizedData.category, 
+        existingData.category
+      ));
       if (!bulkUpdateResult) {
         console.error('Не удалось обновить категории для всех операций');
       }
