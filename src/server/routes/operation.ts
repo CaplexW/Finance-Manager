@@ -171,21 +171,21 @@ async function update(req: AuthedRequest, res: Response) {
 }
 
 /**
- * Обновляет категорию для всех операций с заданным именем
+ * Обновляет категорию для операций с заданным именем и изначальной категорией
  * PATCH /operations/update-category-by-name
- * Тело запроса: { name: string, newCategoryId: string }
+ * Тело запроса: { name: string, newCategoryId: string, initialCategoryId: string }
  */
 async function updateCategoryByName(req: AuthedRequest, res: Response) {
   const thisPlace = 'operation/update-category-by-name';
-  const { name, newCategoryId } = req.body;
+  const { name, newCategoryId, initialCategoryId } = req.body;
 
   try {
     // Проверка авторизации
     if (!req.user) return sendAuthError(res, thisPlace);
     
     // Валидация входных данных
-    if (!name || !newCategoryId) {
-      return sendBadRequest(res, 'Отсутствует имя операции или ID новой категории', thisPlace);
+    if (!name || !newCategoryId || !initialCategoryId) {
+      return sendBadRequest(res, 'Отсутствует имя операции, ID новой категории или ID изначальной категории', thisPlace);
     }
 
     const userId = req.user._id;
@@ -196,20 +196,21 @@ async function updateCategoryByName(req: AuthedRequest, res: Response) {
       return sendNotFound(res, 'category', newCategoryId);
     }
 
-    // 2. Находим все операции пользователя с указанным именем
+    // 2. Проверяем, существует ли изначальная категория
+    const initialCategory = await findCategoryById(initialCategoryId);
+    if (!initialCategory) {
+      return sendNotFound(res, 'initial category', initialCategoryId);
+    }
+
+    // 3. Находим все операции пользователя с указанным именем И изначальной категорией
     const operations = await Operation.find({
       user: userId,
       name: name,
+      category: initialCategoryId,
     });
 
     if (!operations.length) {
-      return sendNotFound(res, 'operations with this name', name);
-    }
-
-    // 3. Получаем старую категорию (для первой операции)
-    const oldCategory = await findCategoryById(operations[0].category);
-    if (!oldCategory) {
-      return sendNotFound(res, 'old category', operations[0].category);
+      return sendNotFound(res, 'operations with this name and initial category', name);
     }
 
     // 4. Массовое обновление категорий через bulkWrite (эффективно)
@@ -223,13 +224,13 @@ async function updateCategoryByName(req: AuthedRequest, res: Response) {
     await Operation.bulkWrite(bulkOps);
 
     // 5. Корректируем баланс пользователя, если изменился тип категории (доход ↔ расход)
-    if (oldCategory.isIncome !== newCategory.isIncome) {
+    if (initialCategory.isIncome !== newCategory.isIncome) {
       const hostUser = await User.findById(userId);
       if (!hostUser) {
         return sendNotFound(res, 'user', userId);
       }
 
-      // Сумма всех операций с данным именем
+      // Сумма всех операций с данным именем и изначальной категорией
       const totalAmount = operations.reduce((sum, op) => roundToHundredths(sum + op.amount), 0);
 
       // Если старая категория была доходом, а новая — расходом (или наоборот),
