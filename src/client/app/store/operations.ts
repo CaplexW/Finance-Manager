@@ -24,14 +24,15 @@ const {
 } = createCRUDGetters<Operation>(storeName);
 
 /**
- * Action для массового обновления категории операций по имени
+ * Action для массового обновления категории операций по имени и изначальной категории
  * @param {string} name - Имя операции
  * @param {string} newCategoryId - ID новой категории
+ * @param {string} initialCategoryId - ID изначальной категории
  * @returns {Function} - Thunk action
  */
-const updateOperationsCategoryByName = (name: string, newCategoryId: string) => async (dispatch: any) => {
+const updateOperationsCategoryByName = (name: string, newCategoryId: string, initialCategoryId: string) => async (dispatch: any) => {
   try {
-    const response = await operationsService.updateCategoryByName(name, newCategoryId);
+    const response = await operationsService.updateCategoryByName(name, newCategoryId, initialCategoryId);
     
     if (response.success && response.updatedCount > 0) {
       // Перезагружаем операции, чтобы UI обновился
