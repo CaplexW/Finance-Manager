@@ -31,14 +31,15 @@ const operationsService = {
   },
 
   /**
-   * Обновляет категорию для всех операций с заданным именем
+   * Обновляет категорию для операций с заданным именем и изначальной категорией
    * @param {string} name - Имя операции
    * @param {string} newCategoryId - ID новой категории
+   * @param {string} initialCategoryId - ID изначальной категории
    * @returns {Promise<any>} - Результат запроса
    */
-  async updateCategoryByName(name: string, newCategoryId: string) {
+  async updateCategoryByName(name: string, newCategoryId: string, initialCategoryId: string) {
     const URL = operationEndpoint + 'update-category-by-name';
-    const { data } = await httpService.patch(URL, { name, newCategoryId });
+    const { data } = await httpService.patch(URL, { name, newCategoryId, initialCategoryId });
     return data;
   },
 };
