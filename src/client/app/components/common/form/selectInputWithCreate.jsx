@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 import CreatableSelect from 'react-select/creatable';
 import flashInvalidInputs from '../../../utils/validation/flashInvalidInputs';
 import flashOffInvalidInputs from '../../../utils/validation/flashOffInvalidInputs';
+import showElement from '../../../utils/console/showElement';
 
 export default function SelectInputWithCreate({
   data,
+  onValueChange,
   label = null,
   onCreate = noCreateWarning,
   name,
@@ -42,12 +44,13 @@ export default function SelectInputWithCreate({
       name: 'category',
       value: inputValue,
     };
+    onValueChange(result);
     onChange(result);
   }
   async function handleCreate(inputValue) {
     await onCreate(inputValue);
   };
-  
+
   return (
     <div>
       <label className="label-control" htmlFor={name}>

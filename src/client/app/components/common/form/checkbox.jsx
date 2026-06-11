@@ -6,8 +6,12 @@ export default function Checkbox({
   name,
   value = false,
   onChange = undefined,
+  hidden = false,
 }) {
   const inputClass = `form-check-input me-3`;
+  const containerClass = `mt-3 ${hidden ? 'hidden' : ''}`;
+
+  if (hidden) value = false;
 
   function handleChange() {
     const result = {
@@ -16,8 +20,9 @@ export default function Checkbox({
     };
     onChange(result);
   }
+
   return (
-    <div className="mt-3">
+    <div className={containerClass}>
       <input
         checked={value}
         className={inputClass}
@@ -34,4 +39,5 @@ Checkbox.propTypes = {
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func,
   value: PropTypes.bool,
+  hidden: PropTypes.bool,
 };

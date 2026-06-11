@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Form, { Checkbox } from '../common/form';
+import Form from '../common/form';
+import Checkbox from '../common/form/checkbox';
 import FieldInput from '../common/form/fieldInput';
 import SelectInputWithCreate from '../common/form/selectInputWithCreate';
 import { useDispatch, useSelector } from 'react-redux';
@@ -66,8 +67,8 @@ export default function EditOperationForm({ onClose = null, existingData = empty
     // Если нужно применить ко всем операциям с таким же именем и изначальной категорией
     if (inputValue.bulk) {
       const bulkUpdateResult = await dispatch(updateOperationsCategoryByName(
-        normalizedData.name, 
-        normalizedData.category, 
+        normalizedData.name,
+        normalizedData.category,
         existingData.category
       ));
       if (!bulkUpdateResult) {
@@ -93,7 +94,7 @@ export default function EditOperationForm({ onClose = null, existingData = empty
   }
 
   function handleCategoryChange(selectedOption) {
-    if (selectedOption && selectedOption.value !== initialCategoryId) {
+    if (selectedOption && selectedOption.value.value !== initialCategoryId) {
       setShowCheckbox(true);
     } else {
       setShowCheckbox(false);
@@ -107,23 +108,13 @@ export default function EditOperationForm({ onClose = null, existingData = empty
         data={categories}
         label="Категория"
         name="category"
-        onChange={handleCategoryChange}
+        onValueChange={handleCategoryChange}
         onCreate={handleCreateCategory}
       />
       <FieldInput autoFocus label="Название" name="name" />
       <FieldInput label="Сумма" minimumValue={0.01} name="amount" type="number" />
       <FieldInput label="Дата" name="date" type="date" />
-      <Checkbox label="Изменить категорию для одноимённых" name='bulk' />
-      {/* <div className="checkbox-container">
-        <label>
-          <input
-            type="checkbox"
-            checked={applyToAllWithSameName}
-            onChange={(e) => setApplyToAllWithSameName(e.target.checked)}
-          />
-          Изменить категорию для всех операций с этим названием
-        </label>
-      </div> */}
+      <Checkbox label="Изменить категорию одноименных" name='bulk' hidden={!showCheckbox} />
 
       <div className="button-container">
         <button className='submit-btn' type='submit'>Изменить</button>
