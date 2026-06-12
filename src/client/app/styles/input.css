@@ -20,3 +20,6 @@
   border-radius: .4rem;
   border:solid .05rem red;
 }
+.hidden {
+  display: none;
+}
