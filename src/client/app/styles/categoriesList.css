@@ -19,8 +19,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-}
+    cursor: url('../../assets/icons/two-fingers-pointer-icon.svg') 20 10, auto;
+} 
 .category-button.deactivated {
   opacity: .3;
   box-shadow: inset;

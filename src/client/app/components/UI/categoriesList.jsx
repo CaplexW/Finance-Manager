@@ -26,17 +26,22 @@ export default function CategoriesList({ onClick, categories, filteredCategories
     cursor: 'pointer',
   };
 
-  function handleCategoryClick(item) {
+  function handleCategoryRightClick(item, e) {
+    e.preventDefault();
     setFilteredList((prevState) => {
       if (prevState.includes(item.category._id)) {
-        const newState = prevState.filter((i) => i !== item.category._id);
-        return newState;
+        return prevState.filter((i) => i !== item.category._id);
       }
-      else {
-        const newState = [...prevState];
-        newState.push(item.category._id);
-        return newState;
-      }
+      return [...prevState, item.category._id];
+    });
+  }
+  function handleCategoryLeftClick(item) {
+    const allCategoryIds = categories.map((c) => c.category._id);
+    setFilteredList((prevState) => {
+      const isCurrentlyOnlyThisCategory =
+        prevState.length === allCategoryIds.length - 1 &&
+        !prevState.includes(item.category._id);
+      return isCurrentlyOnlyThisCategory ? [] : allCategoryIds.filter((id) => id !== item.category._id);
     });
   }
   function handleClickRest() { setDisplayLimited((prev) => !prev); }
@@ -48,7 +53,8 @@ export default function CategoriesList({ onClick, categories, filteredCategories
           <span
             className={`category-button ${i.isFiltered ? 'filtered' : ''}`}
             key={`${i.category.name}+${i.icon._id}`}
-            onClick={() => handleCategoryClick(i)}
+            onClick={() => handleCategoryLeftClick(i)}
+            onContextMenu={(e) => handleCategoryRightClick(i, e)}
           >
             <SVGIcon
               color={i.category.color}
