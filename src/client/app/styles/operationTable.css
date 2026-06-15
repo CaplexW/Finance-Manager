@@ -50,6 +50,10 @@
 
   z-index: 100;
 }
+
+.operations-table__container .table__row {
+  cursor: pointer;
+}
 .file-section .closed {
   clip-path: inset(0 0 100% 0);
   opacity: .3;
