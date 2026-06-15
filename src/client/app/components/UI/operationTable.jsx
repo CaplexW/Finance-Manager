@@ -7,7 +7,6 @@ import CreateOperationForm from './createOperationForm';
 import { useDispatch } from 'react-redux';
 import { addOperations, deleteOperation } from '../../store/operations';
 import DeleteButton from '../common/deleteButton';
-import EditButton from '../common/editButton';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../utils/console/showElement';
 import EditOperationForm from './editOperationForm';
@@ -66,8 +65,6 @@ export default function OperationTable({
       path: 'category',
       component: renderCategoryLabel,
     },
-
-    editButton: { component: renderEditButton },
     deleteButton: { component: renderDeleteButton },
   };
 
@@ -85,6 +82,8 @@ export default function OperationTable({
     }
   }
   async function handleImport({ target }) {
+    setFileOptionsIsOpen(false);
+
     const file = target.files[0];
     if (!file) return displayError('Произошла ошибка! Файл не загружен!');
 
@@ -111,8 +110,8 @@ export default function OperationTable({
     if (!result) displayError('Некорректный файл');
     // TODO отправить результат в стор.
   }
-  function handleOpenFileOptions({ target }) {
-    setFileOptionsIsOpen(target.checked);
+  function handleOpenFileOptions() {
+    setFileOptionsIsOpen(prev => !prev);
   }
 
   const handleOpenCreateModal = useCallback(() => setOpenCreateModal(true));
@@ -131,10 +130,10 @@ export default function OperationTable({
 
   // TODO пересмотреть методы, подумать о мемоизации
   function renderDeleteButton(operation) {
-    return <DeleteButton onDelete={() => handleDelete(operation._id)} />;
+    return <DeleteButton onDelete={(e) => { e.stopPropagation(); handleDelete(operation._id); }} />;
   }
-  function renderEditButton(operation) {
-    return <EditButton onClick={() => OpenEditModal(operation)} />;
+  function handleRowClick(operation) {
+    OpenEditModal(operation);
   }
   function renderDisplayDate(operation) {
     return <span>{formatDisplayDateFromInput(operation.date)}</span>;
@@ -166,7 +165,7 @@ export default function OperationTable({
   );
   const openState = fileOptionsIsOpen ? 'opened' : 'closed';
 
-  const tableHeader = (
+  const tableControls = (
     <section className='operations__table-header__container'>
       <div className="operations__table-header__title">
         <h4 className='me-2 mb-1 desktop-only'>Операции за</h4>
@@ -175,13 +174,12 @@ export default function OperationTable({
       <div className='operations__table-header__button-group'>
         <div className="file-section">
           <label className='operations__table-header__button-group__button--file' htmlFor="file-input" title='Импортировать файл'>{uploadIcon}</label>
-          <input hidden id="file-input" onChange={handleOpenFileOptions} type="checkbox" />
+          <input hidden id="file-input" value={fileOptionsIsOpen} onChange={handleOpenFileOptions} type="checkbox" />
           <div className={`operations__table-header__file-options ${openState}`}>
             <label className='file-options__title'>Загрузить файл</label>
             <label className='file-options__option' htmlFor="tinkoff">{tinkoffIcon} (csv)</label>
-            <label className='file-options__option' htmlFor="alfa">{alfaIcon} (excel)</label>
+            {/* <label className='file-options__option' htmlFor="alfa">{alfaIcon} (excel)</label> */}
             <input accept=".csv" hidden id='tinkoff' name="tinkoff" onChange={handleImport} type="file" />
-            {/* <input accept=".xlsx" hidden id='alfa' name="alfa" onChange={handleImport} type="file" /> */}
           </div>
         </div>
         <button className="operations__table-header__button-group__button" onClick={handleOpenCreateModal} type="button">
@@ -194,7 +192,7 @@ export default function OperationTable({
 
   return (
     <div className="operations-table__container">
-      <ContentBoard header={tableHeader}>
+      <ContentBoard header={tableControls}>
         <Table
           columns={columns}
           data={displayedOperations}
@@ -204,6 +202,7 @@ export default function OperationTable({
           onDelete={handleDelete}
           onFile={handleImport}
           onSort={onSort}
+          onRowClick={handleRowClick}
           searchBar
           sortConfig={sortConfig}
         />
