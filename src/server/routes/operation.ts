@@ -27,6 +27,7 @@ const upload = multer({ dest: './src/server/uploads' });
 router.get('/', checkAuth, sendList);
 router.post('/', checkAuth, create);
 router.patch('/', checkAuth, update);
+router.patch('/update-category-by-name', checkAuth, updateCategoryByName);
 router.delete('/:operationId', checkAuth, remove);
 router.post('/upload/csv/tinkoff', checkAuth, upload.single('file'), importCSVTinkoff);
 
@@ -42,13 +43,8 @@ async function sendList(req: AuthedRequest, res: Response) {
     serverError(res, thisPlace);
   }
 }
+
 async function create(req: AuthedRequest, res: Response) {
-  // request = {
-  //   name: string,
-  //   amount: number,
-  //   category: string,
-  //   date?: string,
-  // }
   const thisPlace = 'operation/create';
   const requestBody = ['name', 'amount', 'category'];
   const requestIsOk = checkRequest(req, requestBody);
@@ -79,6 +75,7 @@ async function create(req: AuthedRequest, res: Response) {
     serverError(res, thisPlace);
   }
 }
+
 async function importCSVTinkoff(req: AuthedRequest, res: Response) {
   const thisPlace = 'operation/import/csv/tinkoff';
 
@@ -101,6 +98,7 @@ async function importCSVTinkoff(req: AuthedRequest, res: Response) {
       return !result;
     });
     
+
     const operations = await Promise.all(uniqOperationsData.map(async (operationData) => {
       operationData.user = authedUser;
       const operation = await Operation.create(operationData);
@@ -122,19 +120,11 @@ async function importCSVTinkoff(req: AuthedRequest, res: Response) {
     res.status(200).send(operations);
     fs.rm(req.file.path, cyanLog);
   } catch (err) {
-    showElement(err, 'err');
     serverError(res, 'operation/import');
   }
 }
+
 async function update(req: AuthedRequest, res: Response) {
-  // HINT
-  // request = {
-  //   _id: string,
-  //   user: string,
-  //   name?: string,
-  //   amount?: number,
-  //   category?: string,
-  // }
   const thisPlace = 'operation/update';
   const body = ['_id', 'user'];
   const requestIsOk = checkRequest(req, body);
@@ -155,15 +145,101 @@ async function update(req: AuthedRequest, res: Response) {
     const newData = { ...req.body, amount: newAmount };
     const updatedOperation = await Operation.findByIdAndUpdate(req.body._id, newData, { new: true });
     await hostUser.updateOne({ currentBalance: hostUser.currentBalance + balanceDifference });
-    await hostUser.save(); //TODO Проверить надобность строчки.
+    await hostUser.save();
 
     res.status(203).send(updatedOperation);
   } catch (err) {
     showError(err);
     serverError(res, thisPlace);
   }
-
 }
+
+/**
+ * Обновляет категорию для операций с заданным именем и изначальной категорией
+ * PATCH /operations/update-category-by-name
+ * Тело запроса: { name: string, newCategoryId: string, initialCategoryId: string }
+ */
+async function updateCategoryByName(req: AuthedRequest, res: Response) {
+  const thisPlace = 'operation/update-category-by-name';
+  const { name, newCategoryId, initialCategoryId } = req.body;
+
+  try {
+    // Проверка авторизации
+    if (!req.user) return sendAuthError(res, thisPlace);
+    
+    // Валидация входных данных
+    if (!name || !newCategoryId || !initialCategoryId) {
+      return sendBadRequest(res, 'Отсутствует имя операции, ID новой категории или ID изначальной категории', thisPlace);
+    }
+
+    const userId = req.user._id;
+
+    // 1. Проверяем, существует ли новая категория
+    const newCategory = await findCategoryById(newCategoryId);
+    if (!newCategory) {
+      return sendNotFound(res, 'category', newCategoryId);
+    }
+
+    // 2. Проверяем, существует ли изначальная категория
+    const initialCategory = await findCategoryById(initialCategoryId);
+    if (!initialCategory) {
+      return sendNotFound(res, 'initial category', initialCategoryId);
+    }
+
+    // 3. Находим все операции пользователя с указанным именем И изначальной категорией
+    const operations = await Operation.find({
+      user: userId,
+      name: name,
+      category: initialCategoryId,
+    });
+
+    if (!operations.length) {
+      return sendNotFound(res, 'operations with this name and initial category', name);
+    }
+
+    // 4. Массовое обновление категорий через bulkWrite (эффективно)
+    const bulkOps = operations.map((op) => ({
+      updateOne: {
+        filter: { _id: op._id },
+        update: { category: newCategoryId },
+      },
+    }));
+
+    await Operation.bulkWrite(bulkOps);
+
+    // 5. Корректируем баланс пользователя, если изменился тип категории (доход ↔ расход)
+    if (initialCategory.isIncome !== newCategory.isIncome) {
+      const hostUser = await User.findById(userId);
+      if (!hostUser) {
+        return sendNotFound(res, 'user', userId);
+      }
+
+      // Сумма всех операций с данным именем и изначальной категорией
+      const totalAmount = operations.reduce((sum, op) => roundToHundredths(sum + op.amount), 0);
+
+      // Если старая категория была доходом, а новая — расходом (или наоборот),
+      // нужно скорректировать баланс на удвоенную сумму
+      const balanceChange = newCategory.isIncome
+        ? totalAmount * 2  // Было -totalAmount, стало +totalAmount → разница +2*totalAmount
+        : -totalAmount * 2; // Было +totalAmount, стало -totalAmount → разница -2*totalAmount
+
+      await hostUser.updateOne({
+        currentBalance: roundToHundredths(hostUser.currentBalance + balanceChange),
+      });
+      await hostUser.save();
+    }
+
+    res.status(200).send({ 
+      success: true, 
+      updatedCount: operations.length,
+      message: `Категория обновлена для ${operations.length} операций`
+    });
+  } catch (err) {
+    showError(err);
+    serverError(res, thisPlace);
+  }
+}
+
 async function remove(req: AuthedRequest, res: Response) {
   const thisPlace = 'operation/remove';
   const { operationId } = req.params;
@@ -191,7 +267,7 @@ async function remove(req: AuthedRequest, res: Response) {
 }
 
 function sendNotFound(response: Response, object: string, id: string = '') {
-  const message: string = id ? `${object} with id ${id} not found` : `${object} not found`;
+  const message: string = id ? object + ' with id ' + id + ' not found' : object + ' not found';
   response.status(404).send({ message });
 }
 
@@ -204,6 +280,7 @@ async function findCategoryById(categoryId: string) {
 
   return null;
 }
+
 function isOperationDuplicate(newOperation: OperationData, existingOperations: OperationDocument) {
   return (
     newOperation.date === existingOperations.date

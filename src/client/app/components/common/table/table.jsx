@@ -13,6 +13,7 @@ export default function Table({
   data,
   sortConfig = dummySort,
   onSort = dummyFunc,
+  onRowClick = dummyFunc,
   startLimit = 50,
 }) {
   const [displayedLimit, setDisplayedLimit] = useState(startLimit);
@@ -72,7 +73,7 @@ export default function Table({
             (
               item,
             ) => (
-              <tr key={item._id}>
+              <tr key={item._id} onClick={() => onRowClick(item)} className='table__row'>
                 {Object.keys(columns).map(
                   (
                     column,
@@ -101,6 +102,7 @@ Table.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.array.isRequired,
   onSort: PropTypes.func,
+  onRowClick: PropTypes.func,
   sortConfig: PropTypes.shape({
     path: PropTypes.string.isRequired,
     order: PropTypes.string.isRequired,

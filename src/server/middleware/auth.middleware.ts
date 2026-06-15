@@ -17,7 +17,6 @@ export function checkAuth(req: AuthedRequest, res: Response, next: NextFunction)
         next();
     } catch (e) {
         authCheckError('something and fallen to "catch"');
-        showElement(e, 'e');
         showError(e);
     }
 

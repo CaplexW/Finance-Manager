@@ -61,7 +61,6 @@ export default function OperationsPage() {
     };
   });
   categoriesInfo.sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount));
-  showElement(categoriesInfo, 'categoriesInfo');
 
   const displayedOperations = orderBy(filteredByCategoryOperations, [sort.path], [sort.order]);
 
