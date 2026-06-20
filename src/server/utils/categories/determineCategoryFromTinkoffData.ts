@@ -23,7 +23,7 @@ type OperationData = {
   date: string,
   cardNumber: string,
   status: string,
-  amount: number,
+  amount: number, 
   currency: string,
   category: string,
   mcc: number,
