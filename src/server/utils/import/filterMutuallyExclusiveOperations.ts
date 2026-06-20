@@ -1,16 +1,7 @@
 import { OperationData } from "./createOperationFromTinkoffData.ts";
 
-/**
- * Фильтрует взаимоисключающие операции из массива
- * Взаимоисключающие операции - это операции с:
- * - одинаковым названием
- * - одинаковой датой
- * - противоположной суммой (зеркальные суммы)
- */
 export default function filterMutuallyExclusiveOperations(operations: OperationData[]): OperationData[] {
   const toExclude = new Set<OperationData>();
-
-  // Группируем ВСЕ операции по name + date (независимо от категории)
   const groups = new Map<string, OperationData[]>();
   
   operations.forEach(op => {
@@ -21,7 +12,6 @@ export default function filterMutuallyExclusiveOperations(operations: OperationD
     groups.get(key)!.push(op);
   });
 
-  // Находим взаимноисключающие пары
   for (const ops of groups.values()) {
     for (let i = 0; i < ops.length; i++) {
       for (let j = i + 1; j < ops.length; j++) {
@@ -35,7 +25,5 @@ export default function filterMutuallyExclusiveOperations(operations: OperationD
       }
     }
   }
-
-  // Фильтруем исходный массив, исключая взаимноисключающие операции
   return operations.filter(op => !toExclude.has(op));
 }
