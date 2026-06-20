@@ -16,7 +16,6 @@ import sendAuthError from '../utils/errors/fromServerToClient/sendAuthError.ts';
 import showElement from '../utils/console/showElement.ts';
 import extractDataFromCSV from '../utils/import/extractDataFromCSV.ts';
 import createOperationFromTinkoffData, { OperationData } from '../utils/import/createOperationFromTinkoffData.ts';
-import filterMutuallyExclusiveOperations from '../utils/import/filterMutuallyExclusiveOperations.ts';
 import DefaultCategory from '../../db/models/DefaultCategory.ts';
 import forEachAsync from '../utils/iterators/forEachAsync.ts';
 import { cyanLog } from '../utils/console/coloredLogs.ts';
@@ -90,21 +89,19 @@ async function importCSVTinkoff(req: AuthedRequest, res: Response) {
 
     rawData.shift();
     const operationsData = await createOperationFromTinkoffData(rawData);
-    const filteredOperationsData = filterMutuallyExclusiveOperations(operationsData);
     const existingOperations = await Operation.find({
       user: authedUser,
       time: { $exists: true }
     });
-    const uniqOperationsData = filteredOperationsData.filter((newOperation) => {
+    const uniqOperationsData = operationsData.filter((newOperation) => {
       const result = existingOperations.some((operation: OperationDocument) => isOperationDuplicate(newOperation, operation));
       return !result;
     });
     
 
     const operations = await Promise.all(uniqOperationsData.map(async (operationData) => {
-      const { originalCategory, ...operationDataWithoutOriginal } = operationData;
-      operationDataWithoutOriginal.user = authedUser;
-      const operation = await Operation.create(operationDataWithoutOriginal);
+      operationData.user = authedUser;
+      const operation = await Operation.create(operationData);
       return operation;
     }));
     if (operations) {

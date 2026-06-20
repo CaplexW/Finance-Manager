@@ -17,14 +17,12 @@ export default async function createOperationFromTinkoffData(rawCSV: string[][])
     };
 
     if (operationData.status === 'FAILED') return null;
-    
     const operation = {
       date: formatInputDateFromDisplay(operationData.date),
       time: operationData.time,
       amount: operationData.amount,
       name: operationData.name,
       category: await determineCategoryFromTinkoffData(operationData),
-      originalCategory: operationData.category,
     };
     return operation;
   })
@@ -39,6 +37,5 @@ export type OperationData = {
   amount: number,
   name: string,
   category: Types.ObjectId,
-  user?: Types.ObjectId | string,
-  originalCategory?: string
+  user?: Types.ObjectId | string
 };
