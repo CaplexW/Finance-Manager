@@ -32,7 +32,6 @@ export default function Table({
     }
     return lod.get(item, columns[column].path);
   }
-
   function handleSort(item) {
     if (sortConfig.path === item && sortConfig.order === 'asc') {
       onSort({ path: item, order: 'desc', caret: 'down' });
@@ -45,7 +44,7 @@ export default function Table({
   }
 
   if (!data || !columns) return noRequiredDataError();
-
+  
   if (displayedData.length) return (
     <section className='table__contanier'>
       <table className='table__content'>

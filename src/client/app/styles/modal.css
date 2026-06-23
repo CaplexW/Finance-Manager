@@ -2,13 +2,13 @@
   width: 95vw;
   max-width: 30rem;
   background: #ffffff00;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 0 1rem rgba(21, 21, 21, 0.377);
   color: #222;
   border: none;
   border-radius: 0.5rem;
-  position: relative;
+  /* position: relative; */
   margin: 0 auto;
   overflow: hidden;
 }
@@ -41,10 +41,6 @@
 .modal-header{
   display: flex;
   justify-content: space-between;
-  /* padding: .7rem 1.3rem 0 1.1rem; */
-}
-.modal-body {
-  /* padding: 5% 7%; */
 }
 
 .modal-header .close-button.close-button {
@@ -73,7 +69,7 @@
     transform: translateY(-325%);
   }
   100% {
-    transform: translateY(15%);
+    transform: translateY(35%);
   }
 }
 @keyframes slide-up {
