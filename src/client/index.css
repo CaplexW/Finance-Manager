@@ -19,6 +19,7 @@
 @import './app/styles/navbar.css';
 @import './app/styles/activityBoard.css';
 @import './app/styles/userBalance.css';
+@import './app/styles/operationCard.css';
 
 *,
 *::before,

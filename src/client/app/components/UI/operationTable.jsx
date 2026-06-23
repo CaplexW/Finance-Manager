@@ -15,6 +15,7 @@ import OperationAmount from './operationAmount';
 import operationsService from '../../services/operations.service';
 import displayError from '../../utils/errors/onClient/displayError';
 import CreateCategoryForm from './CreateCategoryForm';
+import OperationCard from './operationCard';
 import closeModalWindow from '../../utils/modals/closeModalWindow';
 import { updateUserBalance } from '../../store/user';
 import { formatDisplayDateFromInput } from '../../utils/formatDate';
@@ -41,6 +42,8 @@ export default function OperationTable({
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openCategoryModal, setOpenCategoryModal] = useState(false);
+  const [openOperationCard, setOpenOperationCard] = useState(false);
+  const [selectedOperation, setSelectedOperation] = useState(null);
   const [fileOptionsIsOpen, setFileOptionsIsOpen] = useState(false);
 
   const dispatch = useDispatch();
@@ -65,7 +68,7 @@ export default function OperationTable({
       path: 'category',
       component: renderCategoryLabel,
     },
-    deleteButton: { component: renderDeleteButton },
+
   };
 
   async function handleDelete(id) {
@@ -123,6 +126,16 @@ export default function OperationTable({
   const handleOpenCategoryModal = useCallback(() => setOpenCategoryModal(true));
   const handleCloseCategoryModal = useCallback(() => setOpenCategoryModal(false));
 
+  const handleOpenOperationCard = useCallback((operation) => {
+    setSelectedOperation(operation);
+    setOpenOperationCard(true);
+  }, []);
+
+  const handleCloseOperationCard = useCallback(() => {
+    setOpenOperationCard(false);
+    setSelectedOperation(null);
+  }, []);
+
   function OpenEditModal(operation) {
     handleOpenEditModal(true);
     setEditingData({ ...operation });
@@ -133,7 +146,7 @@ export default function OperationTable({
     return <DeleteButton onDelete={(e) => { e.stopPropagation(); handleDelete(operation._id); }} />;
   }
   function handleRowClick(operation) {
-    OpenEditModal(operation);
+    handleOpenOperationCard(operation);
   }
   function renderDisplayDate(operation) {
     return <span>{formatDisplayDateFromInput(operation.date)}</span>;
@@ -214,6 +227,13 @@ export default function OperationTable({
         </ModalWindow>
         <ModalWindow headTitle="Создайте категорию" isOpen={openCategoryModal} onClose={handleCloseCategoryModal} >
           <CreateCategoryForm enteredName={newCategoryName} />
+        </ModalWindow>
+        <ModalWindow headTitle={selectedOperation?.name} isOpen={openOperationCard} onClose={handleCloseOperationCard}>
+          <OperationCard
+            operation={selectedOperation}
+            onEdit={OpenEditModal}
+            onDelete={handleDelete}
+          />
         </ModalWindow>
       </ContentBoard>
     </div>

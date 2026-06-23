@@ -1,0 +1,57 @@
+.operation-card {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.operation-card__details {
+  background-color: rgba(255, 255, 255, 0.39);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  margin-block: 1.5rem;
+}
+
+.operation-card__details p {
+  margin: 0;
+  font-size: 1.3em;
+  color: #666;
+  padding: 5px 0;
+}
+
+.operation-card__actions {
+  display: flex;
+  justify-content: space-between;
+
+  margin-bottom: .5rem;
+}
+
+.operation-card__actions button {
+  padding: .5rem 1rem;
+  cursor: pointer;
+  font-size: 1em;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.operation-card__edit-button {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.operation-card__delete-button {
+  background-color: #f0f0f0;
+  color: #ff0000;
+}
+
+.operation-card__delete-button:hover {
+  background-color: #ff0000;
+  color: #f0f0f0;
+}
+
+.operation-card__actions button:hover {
+  opacity: 0.8;
+}
