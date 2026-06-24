@@ -45,7 +45,10 @@
 
 .modal-header .close-button.close-button {
   background-color: #22222200;
+  outline: none;
 }
+
+
 
 /* Анимации */
 @keyframes fade-in {

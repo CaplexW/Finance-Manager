@@ -7,6 +7,7 @@
 @import './app/styles/input.css';
 @import './app/styles/dateRangeInput.css';
 @import './app/styles/operationTable.css';
+@import './app/styles/searchBar.css';
 @import './app/styles/categoriesList.css';
 @import './app/styles/layouts/mainPage.css';
 @import './app/styles/layouts/loginPage.css';
@@ -53,6 +54,14 @@ body::-webkit-scrollbar {
 body::-webkit-scrollbar-thumb{
   border-radius: .1rem;
   background-color: #0003;
+}
+
+div {
+  caret-color: transparent;
+}
+
+input {
+  caret-color: auto;
 }
 
 .svg--small {

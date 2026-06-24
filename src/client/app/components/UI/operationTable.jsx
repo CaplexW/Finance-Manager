@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Table from '../common/table/table';
 import { operationPropType } from '../../../types/propTypes';
@@ -27,6 +27,7 @@ import ContentBoard from '../common/contentBoard';
 import roundToHundredths from '../../utils/math/roundToHundredths';
 import displaySuccess from '../../utils/errors/onClient/displaySuccess';
 import { toast } from 'react-toastify';
+import SearchBar from '../common/searchBar';
 
 // TODO 1. Реализовать условный рендеринг модальных окон
 
@@ -45,6 +46,7 @@ export default function OperationTable({
   const [openOperationCard, setOpenOperationCard] = useState(false);
   const [selectedOperation, setSelectedOperation] = useState(null);
   const [fileOptionsIsOpen, setFileOptionsIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const dispatch = useDispatch();
 
@@ -178,11 +180,24 @@ export default function OperationTable({
   );
   const openState = fileOptionsIsOpen ? 'opened' : 'closed';
 
+  const filteredOperations = useMemo(() => {
+    if (!searchQuery) return displayedOperations;
+    const lowerCaseQuery = searchQuery.toLowerCase();
+    return displayedOperations.filter((operation) =>
+      operation.name.toLowerCase().includes(lowerCaseQuery)
+    );
+  }, [displayedOperations, searchQuery]);
+
+  const handleSearch = useCallback((query) => {
+    setSearchQuery(query);
+  }, []);
+
   const tableControls = (
     <section className='operations__table-header__container'>
       <div className="operations__table-header__title">
-        <h4 className='me-2 mb-1 desktop-only'>Операции за</h4>
+        <h4 className='me-2 desktop-only'>Операции за</h4>
         <DateRangeInput onPick={onDateFilter} pickValue={dateRange} />
+        <SearchBar onSearch={handleSearch} placeholder="Поиск операций..." />
       </div>
       <div className='operations__table-header__button-group'>
         <div className="file-section">
@@ -208,7 +223,7 @@ export default function OperationTable({
       <ContentBoard header={tableControls}>
         <Table
           columns={columns}
-          data={displayedOperations}
+          data={filteredOperations}
           dateRange={dateRange}
           onAdd={handleOpenCreateModal}
           onDateFilter={onDateFilter}
@@ -216,7 +231,6 @@ export default function OperationTable({
           onFile={handleImport}
           onSort={onSort}
           onRowClick={handleRowClick}
-          searchBar
           sortConfig={sortConfig}
         />
         <ModalWindow headTitle="Добавьте операцию" isOpen={openCreateModal} onClose={handleCloseCreateModal} >

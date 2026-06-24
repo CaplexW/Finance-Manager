@@ -263,7 +263,7 @@ export default function DateRangeInput({ pickValue, onPick }) {
         className="closed-display"
         onClick={toggleOpen}
       >
-        {formatDisplayRange()}
+        <span className='desktop-only'>{formatDisplayRange()}</span>
       </div>
       <div className={`opened-display ${inputState.isOpen ? 'opened' : 'closed'}`}>
         <div className="selected-month d-flex justify-content-around">
@@ -282,7 +282,7 @@ export default function DateRangeInput({ pickValue, onPick }) {
             <button className='shortcut-btn' name='infinity' onClick={handleShortcut} type='button'>&#8734;</button>
           </div>
           <div className="end-buttons">
-            <button className='close-btn' onClick={toggleOpen} type='button'>Готово</button>
+            <button className='close-btn' onClick={toggleOpen} type='button'>Ок</button>
           </div>
         </div>
       </div>

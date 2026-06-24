@@ -7,7 +7,7 @@
 
 .operations__table-header__title {
   display: flex;
-  margin-inline-end: 1rem;
+  /* margin-inline-end: 1rem; */
 }
 
 .operations__table-header__button-group {
