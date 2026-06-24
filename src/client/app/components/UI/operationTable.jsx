@@ -28,6 +28,7 @@ import roundToHundredths from '../../utils/math/roundToHundredths';
 import displaySuccess from '../../utils/errors/onClient/displaySuccess';
 import { toast } from 'react-toastify';
 import SearchBar from '../common/searchBar';
+import IncomeOutcomeSwitch from './incomeOutcomeSwitch';
 
 // TODO 1. Реализовать условный рендеринг модальных окон
 
@@ -37,6 +38,8 @@ export default function OperationTable({
   dateRange,
   onSort = null,
   sortConfig = null,
+  switchPosition = 'both',
+  onSwitchChange,
 }) {
   const [editingData, setEditingData] = useState({});
   const [newCategoryName, setNewCategoryName] = useState(null);
@@ -192,6 +195,12 @@ export default function OperationTable({
     setSearchQuery(query);
   }, []);
 
+  const handleSwitchChange = (position) => {
+    if (onSwitchChange) {
+      onSwitchChange(position);
+    }
+  };
+
   const tableControls = (
     <section className='operations__table-header__container'>
       <div className="operations__table-header__title">
@@ -200,6 +209,7 @@ export default function OperationTable({
         <SearchBar onSearch={handleSearch} placeholder="Поиск операций..." />
       </div>
       <div className='operations__table-header__button-group'>
+        <IncomeOutcomeSwitch value={switchPosition} onChange={handleSwitchChange} />
         <div className="file-section">
           <label className='operations__table-header__button-group__button--file' htmlFor="file-input" title='Импортировать файл'>{uploadIcon}</label>
           <input hidden id="file-input" value={fileOptionsIsOpen} onChange={handleOpenFileOptions} type="checkbox" />
@@ -264,5 +274,7 @@ OperationTable.propTypes = {
   sortConfig: PropTypes.shape({
     path: PropTypes.string.isRequired,
     order: PropTypes.string.isRequired,
-  })
+  }),
+  switchPosition: PropTypes.oneOf(['both', 'income', 'outcome']),
+  onSwitchChange: PropTypes.func,
 };

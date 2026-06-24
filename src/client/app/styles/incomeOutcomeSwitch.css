@@ -1,0 +1,32 @@
+.income-outcome-switch {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  padding: 0.25rem;
+  box-shadow: 1px 1px 0.2em rgba(0, 0, 0, 0.5);
+}
+
+.income-outcome-switch__tab {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-size: 0.9rem;
+}
+
+.income-outcome-switch__tab:not(:last-child) {
+  margin-right: 0.25rem;
+}
+
+.income-outcome-switch__tab:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.income-outcome-switch__tab.active {
+  background-color: #93bbca;
+  color: white;
+  box-shadow: 1px 1px 0.2em rgba(0, 0, 0, 0.3);
+}
