@@ -1,36 +1,42 @@
 .search-bar {
   display: flex;
   align-items: center;
-  width: 100%;
-  max-width: 20rem;
+  margin-inline: 1rem;
+  /* max-width: 20rem; */
 }
 
 .search-bar__input {
-  width: 100%;
-  padding: 0.5rem 1rem;
-  border: 1px solid #d1d9de;
-  border-radius: 0.5rem;
-  background-color: #fff;
+  width: 2.5rem;
+  padding: 0.25rem 0.5rem 0.25rem 2rem;
+  border: none;
+  border-radius: 15px;
+  background-color: rgba(255, 255, 255, 0.6);
+
+  background-image: url('../../assets/icons/magnifying-glass.svg');
+  background-repeat: no-repeat;
+  background-position: 0.5rem center;
+  background-size: 1.25rem;
+
   font-size: 1rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: ease-in-out 1s;
 }
 
+.search-bar__input:hover {
+  cursor: pointer;
+}
+.search-bar__input.used,
 .search-bar__input:focus {
   outline: none;
-  border-color: #93bbca;
+  width: 100%;
+  border-radius: 8px;
   box-shadow: 0 0 0.5rem rgba(147, 187, 202, 0.5);
 }
 
+
+
 .search-bar__input::placeholder {
   color: #9ca3af;
-}
-
-.operations__table-header__search-and-buttons {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  width: 100%;
-}
+} 
 
 @media (max-width: 768px) {
   .operations__table-header__search-and-buttons {

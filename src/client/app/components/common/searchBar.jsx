@@ -22,11 +22,13 @@ export default function SearchBar({ onSearch, placeholder = 'Поиск...' }) {
     return () => clearTimeout(timer);
   }, [searchQuery, onSearch]);
 
+  const classes = "search-bar__input" + `${searchQuery ? ' used' : ''}`
+
   return (
     <form className="search-bar" onSubmit={handleSubmit}>
       <input
         type="text"
-        className="search-bar__input"
+        className={classes}
         value={searchQuery}
         onChange={handleInputChange}
         placeholder={placeholder}

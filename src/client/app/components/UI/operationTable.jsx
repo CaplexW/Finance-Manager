@@ -183,7 +183,7 @@ export default function OperationTable({
   const filteredOperations = useMemo(() => {
     if (!searchQuery) return displayedOperations;
     const lowerCaseQuery = searchQuery.toLowerCase();
-    return displayedOperations.filter((operation) => 
+    return displayedOperations.filter((operation) =>
       operation.name.toLowerCase().includes(lowerCaseQuery)
     );
   }, [displayedOperations, searchQuery]);
@@ -195,27 +195,25 @@ export default function OperationTable({
   const tableControls = (
     <section className='operations__table-header__container'>
       <div className="operations__table-header__title">
-        <h4 className='me-2 mb-1 desktop-only'>Операции за</h4>
+        <h4 className='me-2 desktop-only'>Операции за</h4>
         <DateRangeInput onPick={onDateFilter} pickValue={dateRange} />
-      </div>
-      <div className='operations__table-header__search-and-buttons'>
         <SearchBar onSearch={handleSearch} placeholder="Поиск операций..." />
-        <div className='operations__table-header__button-group'>
-          <div className="file-section">
-            <label className='operations__table-header__button-group__button--file' htmlFor="file-input" title='Импортировать файл'>{uploadIcon}</label>
-            <input hidden id="file-input" value={fileOptionsIsOpen} onChange={handleOpenFileOptions} type="checkbox" />
-            <div className={`operations__table-header__file-options ${openState}`}>
-              <label className='file-options__title'>Загрузить файл</label>
-              <label className='file-options__option' htmlFor="tinkoff">{tinkoffIcon} (csv)</label>
-              {/* <label className='file-options__option' htmlFor="alfa">{alfaIcon} (excel)</label> */}
-              <input accept=".csv" hidden id='tinkoff' name="tinkoff" onChange={handleImport} type="file" />
-            </div>
+      </div>
+      <div className='operations__table-header__button-group'>
+        <div className="file-section">
+          <label className='operations__table-header__button-group__button--file' htmlFor="file-input" title='Импортировать файл'>{uploadIcon}</label>
+          <input hidden id="file-input" value={fileOptionsIsOpen} onChange={handleOpenFileOptions} type="checkbox" />
+          <div className={`operations__table-header__file-options ${openState}`}>
+            <label className='file-options__title'>Загрузить файл</label>
+            <label className='file-options__option' htmlFor="tinkoff">{tinkoffIcon} (csv)</label>
+            {/* <label className='file-options__option' htmlFor="alfa">{alfaIcon} (excel)</label> */}
+            <input accept=".csv" hidden id='tinkoff' name="tinkoff" onChange={handleImport} type="file" />
           </div>
-          <button className="operations__table-header__button-group__button" onClick={handleOpenCreateModal} type="button">
-            <span className='desktop-only'>Добавить</span>
-            <span className='mobile-only'>+</span>
-          </button>
         </div>
+        <button className="operations__table-header__button-group__button" onClick={handleOpenCreateModal} type="button">
+          <span className='desktop-only'>Добавить</span>
+          <span className='mobile-only'>+</span>
+        </button>
       </div>
     </section >
   );

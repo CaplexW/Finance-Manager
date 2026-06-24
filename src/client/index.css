@@ -56,6 +56,14 @@ body::-webkit-scrollbar-thumb{
   background-color: #0003;
 }
 
+div {
+  caret-color: transparent;
+}
+
+input {
+  caret-color: auto;
+}
+
 .svg--small {
   height: 1em;
 }
