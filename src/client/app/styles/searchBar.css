@@ -2,7 +2,6 @@
   display: flex;
   align-items: center;
   margin-inline: 1rem;
-  /* max-width: 20rem; */
 }
 
 .search-bar__input {
@@ -18,21 +17,21 @@
   background-size: 1.25rem;
 
   font-size: 1rem;
-  transition: ease-in-out 1s;
+  transition: width ease-in-out 1s;
 }
 
 .search-bar__input:hover {
   cursor: pointer;
 }
+
 .search-bar__input.used,
 .search-bar__input:focus {
   outline: none;
   width: 100%;
+  margin-inline-end: 0;
   border-radius: 8px;
   box-shadow: 0 0 0.5rem rgba(147, 187, 202, 0.5);
 }
-
-
 
 .search-bar__input::placeholder {
   color: #9ca3af;

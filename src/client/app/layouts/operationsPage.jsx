@@ -46,7 +46,7 @@ export default function OperationsPage() {
   const filteredByTypeOperations = filterOperationsByType(filteredByDateOperations);
   const filteredByCategoryOperations = filterOperationsByCategory(filteredByTypeOperations);
 
-  const groupedOperations = groupOperationsByCategory(filteredByTypeOperations);
+  const groupedOperations = groupOperationsByCategory(filteredByCategoryOperations);
   const categoriesInfo = groupedOperations.map((group) => {
     const category = categories.find((c) => c._id === group[0].category);
     const icon = icons.find((i) => i._id === category.icon);
@@ -70,10 +70,21 @@ export default function OperationsPage() {
     ));
   }
   function filterOperationsByType(operations) {
-    // здесь доходы будут отделяться от расходов
-    let result = operations.map(o => o);
-
-    return result;
+    if (switchPosition === 'both') {
+      return operations;
+    }
+    
+    return operations.filter((op) => {
+      const category = categories.find((c) => c._id === op.category);
+      if (!category) return false;
+      
+      if (switchPosition === 'income') {
+        return category.isIncome;
+      } else if (switchPosition === 'outcome') {
+        return !category.isIncome;
+      }
+      return true;
+    });
   }
   function filterOperationsByCategory(operations) {
     if (filter.category) {
@@ -114,6 +125,9 @@ export default function OperationsPage() {
   function handleSort(config) {
     setSort(config);
   }
+  function handleSwitchChange(position) {
+    setSwitchPosition(position);
+  }
 
   if (isLoaded) return (
     <div className='operations-page' id="operation-layout">
@@ -121,7 +135,7 @@ export default function OperationsPage() {
         <ContentBoard header={<h4>Соотношение категорий</h4>}>
           <div className="side-container">
             <CategoriesList onClick={handleCategoryFilter} categories={categoriesInfo} />
-            <OperationsChart operations={filteredByCategoryOperations} />
+            <OperationsChart operations={filteredByCategoryOperations} switchPosition={switchPosition} />
           </div>
         </ContentBoard>
       </section>
@@ -132,6 +146,8 @@ export default function OperationsPage() {
           onDateFilter={handleDateFilter}
           onSort={handleSort}
           sortConfig={sort}
+          switchPosition={switchPosition}
+          onSwitchChange={handleSwitchChange}
         />
       </section>
     </div>

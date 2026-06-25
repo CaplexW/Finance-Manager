@@ -17,18 +17,33 @@ export default function OperationsChart({ operations, switchPosition = null, typ
   const sortedOperations = sortOperationsByAmount(operations);
 
   function createDataForChart(operations, categories) {
-    const dataObject = {
-      labels: [],
-      datasets: [
-        {
-          label: '',
-          data: [],
-          backgroundColor: [],
-          borderColor: [],
-          borderWidth: 0,
-        }
-      ],
-    };
+  const dataObject = {
+    labels: [],
+    datasets: [
+      {
+        label: '',
+        data: [],
+        backgroundColor: [],
+        borderColor: [],
+        borderWidth: 0,
+      }
+    ],
+  };
+  
+  if (switchPosition === 'both') {
+    let incomeData = 0;
+    let expenseData = 0;
+    operations.forEach((op) => {
+      if (op.amount > 0) {
+        incomeData += op.amount;
+      } else {
+        expenseData += Math.abs(op.amount);
+      }
+    });
+    dataObject.labels.push('Доход', 'Расход');
+    dataObject.datasets[0].data.push(incomeData, expenseData);
+    dataObject.datasets[0].backgroundColor.push(greenColor, redColor);
+  } else {
     operations.forEach((op) => {
       const operationCategory = categories.find((c) => c._id === op.category);
       const [dataset] = dataObject.datasets;
@@ -40,15 +55,10 @@ export default function OperationsChart({ operations, switchPosition = null, typ
       else {
         labels.push(operationCategory.name);
         dataset.data.push(Math.abs(op.amount));
-        if (switchPosition === 'both') {
-          const typedColor = op.amount > 0 ? greenColor : redColor;
-          dataset.backgroundColor.push(typedColor);
-        }
-        else {
-          dataset.backgroundColor.push(operationCategory.color);
-        }
+        dataset.backgroundColor.push(operationCategory.color);
       }
     });
+  }
     const categoryObjects = dataObject.datasets[0].data.map((amount, index) => ({
       amount,
       color: dataObject.datasets[0].backgroundColor[index],
