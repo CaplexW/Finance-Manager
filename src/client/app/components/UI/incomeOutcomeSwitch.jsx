@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 export default function IncomeOutcomeSwitch({ value, onChange }) {
   const switchOptions = [
-    { id: 'both', label: 'Оба' },
     { id: 'income', label: 'Доход' },
     { id: 'outcome', label: 'Расход' },
+    { id: 'both', label: 'Всё' },
   ];
 
   const handleClick = (optionId) => {

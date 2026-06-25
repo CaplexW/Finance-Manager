@@ -208,6 +208,7 @@ export default function OperationTable({
         <DateRangeInput onPick={onDateFilter} pickValue={dateRange} />
         <SearchBar onSearch={handleSearch} placeholder="Поиск операций..." />
       </div>
+
       <div className='operations__table-header__button-group'>
         <IncomeOutcomeSwitch value={switchPosition} onChange={handleSwitchChange} />
         <div className="file-section">
