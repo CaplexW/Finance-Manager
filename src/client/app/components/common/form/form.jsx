@@ -13,6 +13,7 @@ export default function Form({
   children,
   validatorConfig = undefined,
   onSubmit = noSubmitWarning,
+  onChange = undefined,
   defaultData = emptyObject,
   dataScheme = '',
 }) {
@@ -52,9 +53,13 @@ export default function Form({
 
   const handleChange = useCallback((target) => {
     if (target.value !== undefined) {
-      setData((prevState) => ({ ...prevState, [target.name]: target.value, }));
+      setData((prevState) => {
+        const newData = { ...prevState, [target.name]: target.value };
+        if (onChange) onChange(newData);
+        return newData;
+      });
     }
-  }, []);
+  }, [onChange]);
   function handleSubmit(event) {
     event.preventDefault();
     if (formIsValidating) {
@@ -118,6 +123,7 @@ Form.propTypes = forbidExtraProps({
   dataScheme: PropTypes.object,
   // eslint-disable-next-line react/forbid-prop-types
   defaultData: PropTypes.object,
+  onChange: PropTypes.func,
   onSubmit: PropTypes.func,
   // eslint-disable-next-line react/forbid-prop-types
   validatorConfig: PropTypes.object,

@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Checkbox from '../common/form/checkbox';
 import Form, { FieldInput } from '../common/form';
 import { signUp } from '../../store/user';
+import displayInfo from '../../utils/errors/onClient/displayInfo';
+import validator from '../../utils/validation/validator';
 
 export default function RegisterForm() {
   const defaultData = {
@@ -47,7 +49,26 @@ export default function RegisterForm() {
       },
     },
   };
+  const [toastId, setToastId] = useState(null);
   const dispatch = useDispatch();
+
+  const passwordValidatorConfig = validatorConfig.password;
+
+  const handleFormChange = (data) => {
+    if (data.password) {
+      const errors = validator({ password: data.password }, { password: passwordValidatorConfig });
+      const hasPasswordError = !!errors.password;
+
+      if (hasPasswordError && !toastId) {
+        displayInfo('Требования к паролю: хотя бы 1 заглавная буква, 1 цифра и минимум 8 символов');
+        setToastId('passwordRequirements');
+      } else if (!hasPasswordError && toastId) {
+        setToastId(null);
+      }
+    } else if (toastId) {
+      setToastId(null);
+    }
+  };
 
   async function handleSubmit(data) {
     const newUser = {
@@ -58,10 +79,11 @@ export default function RegisterForm() {
 
     dispatch(signUp(newUser));
   }
+
   return (
     <div>
       <h2>Регистрация</h2>
-      <Form dataScheme={defaultData} onSubmit={handleSubmit} validatorConfig={validatorConfig}>
+      <Form dataScheme={defaultData} onSubmit={handleSubmit} validatorConfig={validatorConfig} onChange={handleFormChange}>
         <FieldInput
           label="Электронная почта"
           name="email"
