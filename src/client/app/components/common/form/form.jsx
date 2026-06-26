@@ -4,6 +4,7 @@ import React, {
 import PropTypes from 'prop-types';
 import forbidExtraProps from 'prop-types-exact';
 import validator from '../../../utils/validation/validator';
+import displayError from '../../../utils/errors/onClient/displayError';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import showElement from '../../../utils/console/showElement';
 
@@ -14,6 +15,7 @@ export default function Form({
   validatorConfig = undefined,
   onSubmit = noSubmitWarning,
   onChange = undefined,
+  onInvalid = undefined,
   defaultData = emptyObject,
   dataScheme = '',
 }) {
@@ -34,9 +36,7 @@ export default function Form({
 
   const [data, setData] = useState(defaultData);
   const [errors, setErrors] = useState({});
-  const [formIsInvalid, setFormIsInvalid] = useState(Object.keys(errors).length !== 0);
-
-  useEffect(() => setFormIsInvalid(Object.keys(errors).length !== 0), [errors]);
+  const [formIsInvalid, setFormIsInvalid] = useState(false);
 
   const formIsValidating = !!validatorConfig;
   const dataExists = Object.keys(data).length > 0;
@@ -47,9 +47,6 @@ export default function Form({
 
     return Object.keys(errorsObj).length === 0;
   }, [validatorConfig, setData]);
-
-  function validateData() { if (formIsValidating && dataExists) validate(data); }
-  useEffect(validateData, [data]);
 
   const handleChange = useCallback((target) => {
     if (target.value !== undefined) {
@@ -64,8 +61,16 @@ export default function Form({
     event.preventDefault();
     if (formIsValidating) {
       const finalData = { ...dataScheme, ...data };
-      const formIsValid = validate(finalData);
-      if (formIsValid) {
+      const errors = validator(finalData, validatorConfig);
+      
+      if (Object.keys(errors).length > 0) {
+        if (onInvalid) {
+          onInvalid(errors);
+        } else {
+          const firstErrorField = Object.keys(errors)[0];
+          displayError(errors[firstErrorField]);
+        }
+      } else {
         onSubmit(finalData);
         setData(defaultData);
       }
@@ -90,13 +95,13 @@ export default function Form({
     const childType = typeof child.type;
     let props = {};
 
-    if (childType === 'string') {
-      if (child.type === 'button') {
-        if (child.props.type === 'submit' || child.props.type === undefined) {
-          props = { ...child.props, disabled: formIsInvalid };
+      if (childType === 'string') {
+        if (child.type === 'button') {
+          if (child.props.type === 'submit' || child.props.type === undefined) {
+            props = { ...child.props };
+          }
         }
       }
-    }
     if (childType === 'object' || childType === 'function') {
       if (!child.props.name) {
         throw new Error(`name property is required for component ${child.props.label}`);
@@ -127,6 +132,7 @@ Form.propTypes = forbidExtraProps({
   onSubmit: PropTypes.func,
   // eslint-disable-next-line react/forbid-prop-types
   validatorConfig: PropTypes.object,
+  onInvalid: PropTypes.func,
 });
 
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router';
 import LoginForm from '../components/UI/loginForm';
-import RegisterForm from '../components/UI/rgisterForm';
+import RegisterForm from '../components/UI/registerForm';
 
 export default function LoginPage() {
   const { register } = useParams();
