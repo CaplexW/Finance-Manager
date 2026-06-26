@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Checkbox from '../common/form/checkbox';
 import Form, { FieldInput } from '../common/form';
 import { signUp } from '../../store/user';
+import displayInfo from '../../utils/errors/onClient/displayInfo';
+import displayError from '../../utils/errors/onClient/displayError';
+import validator from '../../utils/validation/validator';
 
 export default function RegisterForm() {
   const defaultData = {
@@ -58,10 +61,11 @@ export default function RegisterForm() {
 
     dispatch(signUp(newUser));
   }
+
   return (
     <div>
       <h2>Регистрация</h2>
-      <Form dataScheme={defaultData} onSubmit={handleSubmit} validatorConfig={validatorConfig}>
+        <Form dataScheme={defaultData} onSubmit={handleSubmit} validatorConfig={validatorConfig}>
         <FieldInput
           label="Электронная почта"
           name="email"

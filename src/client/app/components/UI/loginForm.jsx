@@ -24,16 +24,6 @@ export default function LoginForm() {
       isRequired: {
         message: 'Введите пароль',
       },
-      isCapitalSymbol: {
-        message: 'В пароле должна быть хотя бы 1 заглавная буква',
-      },
-      isContainsDigits: {
-        message: 'В пароле должна быть хотя бы 1 цифра',
-      },
-      minLength: {
-        message: 'В пароле должно быть минимум 8 символов',
-        value: 8,
-      },
     },
   };
 
