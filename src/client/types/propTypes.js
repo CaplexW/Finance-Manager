@@ -47,6 +47,23 @@ export const iconPropType = {
   name: PropTypes.string.isRequired,
   src: PropTypes.object.isRequired,
 };
+
+export const importPresetPropType = {
+  _id: PropTypes.string.isRequired,
+  user: PropTypes.string.isRequired,
+  serialNumber: PropTypes.number.isRequired,
+  importConditions: PropTypes.shape({
+    name: PropTypes.string,
+    category: PropTypes.string,
+    amount: PropTypes.number,
+  }).isRequired,
+  assignValues: PropTypes.shape({
+    name: PropTypes.string,
+    category: PropTypes.string,
+    amount: PropTypes.number,
+  }).isRequired,
+};
+
 export const nodesPropType = PropTypes.oneOfType([
   PropTypes.arrayOf(PropTypes.node),
   PropTypes.node,

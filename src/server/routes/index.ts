@@ -7,6 +7,7 @@ import operation from './operation.ts';
 import user from './user.ts';
 import icon from './icon.ts';
 import logs from './logs.ts';
+import importPreset from './importPreset.ts';
 
 const router = express.Router({ mergeParams: true });
 
@@ -18,5 +19,6 @@ router.use('/account', account);
 router.use('/goal', goal);
 router.use('/icon', icon);
 router.use('/log', logs);
+router.use('/import-preset', importPreset);
 
 export default router;

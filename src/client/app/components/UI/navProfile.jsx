@@ -8,18 +8,36 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUserDataStatus, getUser, loadUserData } from '../../store/user';
 import userService from '../../services/user.service';
 import { removeAuthData } from '../../services/storage.service';
+import CreateImportPresetForm from './createImportPresetForm';
+import { loadImportPresets } from '../../store/importPresets';
+import { getCategoriesList } from '../../store/categories';
 
 export default function NavProfile() {
   const isLoaded = useSelector(getUserDataStatus());
   const user = useSelector(getUser());
+  const categories = useSelector(getCategoriesList());
   const [menuIsOpen, setMenuIsOpen] = useState(false);
+  const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const userPagePath = '/user/myProfile';
   const redirectTo = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => { if (!isLoaded) dispatch(loadUserData()); }, [isLoaded]);
+  useEffect(() => { 
+    if (!isLoaded) dispatch(loadUserData()); 
+  }, [isLoaded]);
 
   function toggleMenu() { setMenuIsOpen((prevState) => !prevState); }
+  
+  function openPresetModal() {
+    setMenuIsOpen(false);
+    setIsPresetModalOpen(true);
+    dispatch(loadImportPresets());
+  }
+  
+  function closePresetModal() {
+    setIsPresetModalOpen(false);
+  }
+  
   function handleLogout() {
     const confirmed = confirm('Вы хотите выйти?');
     if (confirmed) redirectTo('/logout');
@@ -35,17 +53,30 @@ export default function NavProfile() {
   }
 
   if (isLoaded) return (
-    <div className="dropdown" onClick={toggleMenu} role="button" tabIndex={0}>
-      <div className="btn dropdown-toggle d-flex align-items-center">
-        <div className="me-2">{user.name}</div>
-        <UserAvatar size={26} source={user.image} />
+    <>
+      <div className="dropdown" onClick={toggleMenu} role="button" tabIndex={0}>
+        <div className="btn dropdown-toggle d-flex align-items-center">
+          <div className="me-2">{user.name}</div>
+          <UserAvatar size={26} source={user.image} />
+        </div>
+        <div className={`w-100 dropdown-menu ps-3 ${menuIsOpen ? 'show' : ''}`}>
+          <Link className="dropdown-item" tabIndex={0} to={userPagePath}>Профиль</Link>
+          <button className="dropdown-item" onClick={openPresetModal} tabIndex={0} type="button">Типовые операции</button>
+          <button className="dropdown-item" onClick={handleLogout} style={{ color: 'orange' }} tabIndex={0} type="button">Выйти</button>
+          <button className="dropdown-item" onClick={handleDeleteAccount} style={{ color: 'red' }} tabIndex={0} type="button">Удалить</button>
+        </div>
       </div>
-      <div className={`w-100 dropdown-menu ps-3 ${menuIsOpen ? 'show' : ''}`}>
-        <Link className="dropdown-item" tabIndex={0} to={userPagePath}>Профиль</Link>
-        <button className="dropdown-item" onClick={handleLogout} style={{ color: 'orange' }} tabIndex={0} type="button">Выйти</button>
-        <button className="dropdown-item" onClick={handleDeleteAccount} style={{ color: 'red' }} tabIndex={0} type="button">Удалить</button>
-      </div>
-    </div>
+      
+      <dialog className="dialog" open={isPresetModalOpen} onClose={closePresetModal}>
+        <div className="modal-header">
+          <h2>Создание типовой операции</h2>
+          <button className="close-button" onClick={closePresetModal} type="button">×</button>
+        </div>
+        <div className="dialog-content">
+          <CreateImportPresetForm onClose={closePresetModal} onCreateCategory={null} />
+        </div>
+      </dialog>
+    </>
   );
 };
 

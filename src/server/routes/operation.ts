@@ -17,6 +17,7 @@ import showElement from '../utils/console/showElement.ts';
 import extractDataFromCSV from '../utils/import/extractDataFromCSV.ts';
 import createOperationFromTinkoffData, { OperationData } from '../utils/import/createOperationFromTinkoffData.ts';
 import filterMutuallyExclusiveOperations from '../utils/import/filterMutuallyExclusiveOperations.ts';
+import applyImportPresets from '../utils/import/applyImportPresets.ts';
 import DefaultCategory from '../../db/models/DefaultCategory.ts';
 import forEachAsync from '../utils/iterators/forEachAsync.ts';
 import { cyanLog } from '../utils/console/coloredLogs.ts';
@@ -88,17 +89,23 @@ async function importCSVTinkoff(req: AuthedRequest, res: Response) {
     const rawData = await extractDataFromCSV(req.file);
     if (!rawData) return serverError(res, 'rawData');
 
-    rawData.shift();
-    const operationsData = await createOperationFromTinkoffData(rawData);
-    const filteredOperationsData = filterMutuallyExclusiveOperations(operationsData);
-    const existingOperations = await Operation.find({
-      user: authedUser,
-      time: { $exists: true }
-    });
-    const uniqOperationsData = filteredOperationsData.filter((newOperation) => {
-      const result = existingOperations.some((operation: OperationDocument) => isOperationDuplicate(newOperation, operation));
-      return !result;
-    });
+     rawData.shift();
+     let operationsData = await createOperationFromTinkoffData(rawData);
+     let filteredOperationsData = filterMutuallyExclusiveOperations(operationsData);
+
+     // Применяем типовые операции (пресеты) к отфильтрованным данным
+     if (filteredOperationsData.length > 0) {
+       filteredOperationsData = await applyImportPresets(filteredOperationsData, authedUser);
+     }
+
+     const existingOperations = await Operation.find({
+       user: authedUser,
+       time: { $exists: true }
+     });
+     const uniqOperationsData = filteredOperationsData.filter((newOperation) => {
+       const result = existingOperations.some((operation: OperationDocument) => isOperationDuplicate(newOperation, operation));
+       return !result;
+     });
     
 
     const operations = await Promise.all(uniqOperationsData.map(async (operationData) => {

@@ -18,6 +18,7 @@ export type GlobalState = {
   accounts: CRUDState<Account>,
   goals: CRUDState<Goal>,
   icons: CRUDState<Icon>,
+  importPresets: CRUDState<ImportPreset>,
 };
 export type StoreName = keyof Omit<RootState, "user">;
 export type CRUDGlobalState = Omit<RootState, 'user'>;
@@ -122,3 +123,18 @@ export interface CRUDObject {
 }
 
 export type GetStateFuncion = () => GlobalState;
+
+export interface ImportPreset extends CRUDObject {
+  user: string;
+  serialNumber: number;
+  importConditions: {
+    name?: string;
+    category?: string;
+    amount?: number;
+  };
+  assignValues: {
+    name?: string;
+    category?: string;
+    amount?: number;
+  };
+}
