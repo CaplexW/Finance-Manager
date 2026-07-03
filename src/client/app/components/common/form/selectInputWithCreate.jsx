@@ -47,6 +47,9 @@ export default function SelectInputWithCreate({
     onValueChange(result);
     onChange(result);
   }
+
+  // Конвертируем пустую строку в null для CreatableSelect
+  const selectValue = value === '' ? null : value;
   async function handleCreate(inputValue) {
     await onCreate(inputValue);
   };
@@ -66,7 +69,7 @@ export default function SelectInputWithCreate({
           onCreateOption={handleCreate}
           options={options}
           placeholder="Выберите категорию"
-          value={value}
+          value={selectValue}
         />
       </div>
     </div>

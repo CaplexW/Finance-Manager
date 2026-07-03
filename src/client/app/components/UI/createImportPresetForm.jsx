@@ -13,13 +13,13 @@ import { loadImportPresets } from '../../store/importPresets';
 
 const emptyImportConditions = {
   importName: '',
-  importCategory: null,
+  importCategory: '',
   importAmount: '',
 };
 
 const emptyAssignValues = {
   assignName: '',
-  assignCategory: null,
+  assignCategory: '',
   assignAmount: '',
 };
 
@@ -29,19 +29,9 @@ export default function CreateImportPresetForm({ onClose = null, onCreateCategor
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validatorConfig = {
-    importName: {
-      isRequired: {
-        message: 'Введите название',
-      },
-    },
     importAmount: {
       isNumber: {
         message: 'Сумма должна быть числом',
-      },
-    },
-    assignName: {
-      isRequired: {
-        message: 'Введите название',
       },
     },
     assignAmount: {
