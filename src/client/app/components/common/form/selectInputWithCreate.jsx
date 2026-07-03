@@ -41,7 +41,7 @@ export default function SelectInputWithCreate({
 
   function handleChange(inputValue) {
     const result = {
-      name: 'category',
+      name: name,
       value: inputValue,
     };
     onValueChange(result);

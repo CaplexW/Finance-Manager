@@ -9,6 +9,7 @@ import { getUserDataStatus, getUser, loadUserData } from '../../store/user';
 import userService from '../../services/user.service';
 import { removeAuthData } from '../../services/storage.service';
 import CreateImportPresetForm from './createImportPresetForm';
+import ModalWindow from '../common/modalWindow';
 import { loadImportPresets } from '../../store/importPresets';
 import { getCategoriesList } from '../../store/categories';
 
@@ -67,15 +68,9 @@ export default function NavProfile() {
         </div>
       </div>
       
-      <dialog className="dialog" open={isPresetModalOpen} onClose={closePresetModal}>
-        <div className="modal-header">
-          <h2>Создание типовой операции</h2>
-          <button className="close-button" onClick={closePresetModal} type="button">×</button>
-        </div>
-        <div className="dialog-content">
-          <CreateImportPresetForm onClose={closePresetModal} onCreateCategory={null} />
-        </div>
-      </dialog>
+      <ModalWindow headTitle="Создание типовой операции" isOpen={isPresetModalOpen} onClose={closePresetModal}>
+        <CreateImportPresetForm onClose={closePresetModal} />
+      </ModalWindow>
     </>
   );
 };

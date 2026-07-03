@@ -23,31 +23,25 @@ const emptyAssignValues = {
   assignAmount: '',
 };
 
-export default function CreateImportPresetForm({ onClose = null, onCreateCategory = null }) {
+export default function CreateImportPresetForm({ onClose = null, onCreateCategory = null, parent = null }) {
   const dispatch = useDispatch();
   const categories = useSelector(getCategoriesList());
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validatorConfig = {
-    importConditions: {
-      custom: {
-        message: 'Необходимо заполнить поле для импорта',
-        isValid: (value) => {
-          return value.importName !== '' || value.importCategory !== null || value.importAmount !== '';
-        },
-      },
-    },
-    assignValues: {
-      custom: {
-        message: 'Необходимо заполнить поле для обработки',
-        isValid: (value) => {
-          return value.assignName !== '' || value.assignCategory !== null || value.assignAmount !== '';
-        },
+    importName: {
+      isRequired: {
+        message: 'Введите название',
       },
     },
     importAmount: {
       isNumber: {
         message: 'Сумма должна быть числом',
+      },
+    },
+    assignName: {
+      isRequired: {
+        message: 'Введите название',
       },
     },
     assignAmount: {
@@ -57,24 +51,51 @@ export default function CreateImportPresetForm({ onClose = null, onCreateCategor
     },
   };
 
+  function validateFormData(data) {
+    const importConditions = {};
+    if (data.importName !== '') importConditions.name = data.importName;
+    if (data.importCategory !== null && data.importCategory !== undefined) {
+      importConditions.category = data.importCategory.value;
+    }
+    if (data.importAmount !== '' && !isNaN(parseFloat(data.importAmount))) {
+      importConditions.amount = parseFloat(data.importAmount);
+    }
+
+    const assignValues = {};
+    if (data.assignName !== '') assignValues.name = data.assignName;
+    if (data.assignCategory !== null && data.assignCategory !== undefined) {
+      assignValues.category = data.assignCategory.value;
+    }
+    if (data.assignAmount !== '' && !isNaN(parseFloat(data.assignAmount))) {
+      assignValues.amount = parseFloat(data.assignAmount);
+    }
+
+    if (Object.keys(importConditions).length === 0) {
+      displayError('Необходимо заполнить поле для импорта');
+      return null;
+    }
+
+    if (Object.keys(assignValues).length === 0) {
+      displayError('Необходимо заполнить поле для обработки');
+      return null;
+    }
+
+    return { importConditions, assignValues };
+  }
+
   async function handleCreate(rawData) {
     setIsSubmitting(true);
     const loadingToast = displayLoading('Создание типовой операции...');
 
     try {
-      const importConditions = {};
-      if (rawData.importName !== '') importConditions.name = rawData.importName;
-      if (rawData.importCategory !== null) importConditions.category = rawData.importCategory.value;
-      if (rawData.importAmount !== '') importConditions.amount = parseFloat(rawData.importAmount);
-
-      const assignValues = {};
-      if (rawData.assignName !== '') assignValues.name = rawData.assignName;
-      if (rawData.assignCategory !== null) assignValues.category = rawData.assignCategory.value;
-      if (rawData.assignAmount !== '') assignValues.amount = parseFloat(rawData.assignAmount);
+      const validatedData = validateFormData(rawData);
+      if (!validatedData) {
+        return;
+      }
 
       const presetData = {
-        importConditions,
-        assignValues,
+        importConditions: validatedData.importConditions,
+        assignValues: validatedData.assignValues,
       };
 
       const newPreset = await importPresetService.create(presetData);
@@ -92,11 +113,15 @@ export default function CreateImportPresetForm({ onClose = null, onCreateCategor
   }
 
   function handleCreateCategory(enteredName) {
-    onCreateCategory(enteredName);
+    if (onCreateCategory) {
+      onCreateCategory(enteredName);
+    }
   }
 
   function handleClose() {
-    onClose();
+    if (onClose) {
+      onClose();
+    }
   }
 
   return (
@@ -113,7 +138,7 @@ export default function CreateImportPresetForm({ onClose = null, onCreateCategor
         onCreate={handleCreateCategory}
       />
       <FieldInput label="Название" name="importName" />
-      <FieldInput label="Сумма" name="importAmount" type="number" />
+      <FieldInput label="Сумма" name="importAmount" type="number" step="0.01" />
 
       <h3>Присваиваемые значения</h3>
       <SelectInputWithCreate
@@ -123,7 +148,7 @@ export default function CreateImportPresetForm({ onClose = null, onCreateCategor
         onCreate={handleCreateCategory}
       />
       <FieldInput label="Название" name="assignName" />
-      <FieldInput label="Сумма" name="assignAmount" type="number" />
+      <FieldInput label="Сумма" name="assignAmount" type="number" step="0.01" />
 
       <div className="button-container">
         <button className='add-btn' type='submit' disabled={isSubmitting}>
